@@ -16,8 +16,8 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
 import styled from "styled-components";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
 
 // 메뉴 토글 버튼
 const ToggleButton = styled.div`
@@ -63,6 +63,14 @@ export const useStyles = makeStyles((theme) => ({
   },
   // necessary for content to be below app bar
   toolbar: theme.mixins.toolbar,
+  toolbarCustomising: {
+    height: 110,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    color: "white",
+    fontSize: 24,
+  },
   drawerPaper: {
     width: drawerWidth,
     backgroundColor: "#0c2a40",
@@ -87,7 +95,9 @@ const AppLayout = ({ children, window }) => {
 
   const drawer = (
     <div>
-      <div className={classes.toolbar} />
+      <div className={(classes.toolbar, classes.toolbarCustomising)}>
+        Full stack Web developer <br /> 최종호
+      </div>
       {/* <Divider /> */}
       <List>
         {["Web", "Starred", "Send email", "Drafts"].map((text, index) => (
@@ -112,19 +122,6 @@ const AppLayout = ({ children, window }) => {
   return (
     <div className={classes.root}>
       <CssBaseline />
-      {/* <AppBar position='fixed' className={classes.appBar}>
-        <Toolbar>
-          <IconButton
-            color='inherit'
-            aria-label='open drawer'
-            edge='start'
-            onClick={handleDrawerToggle}
-            className={classes.menuButton}
-          >
-            {mobileOpen ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-          </IconButton>
-        </Toolbar>
-      </AppBar> */}
 
       <nav className={classes.drawer} aria-label='mailbox folders'>
         {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
