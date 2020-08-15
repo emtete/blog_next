@@ -18,6 +18,7 @@ import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import styled from "styled-components";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
+import Link from "next/link";
 
 // 메뉴 토글 버튼
 const ToggleButton = styled.div`
@@ -112,6 +113,11 @@ const AppLayout = ({ children, window }) => {
             <ListItemText primary={text} style={{ color: "#dbdfe2" }} />
           </ListItem>
         ))}
+        <ListItem button style={{ color: "#dbdfe2" }} key='login'>
+          <Link href='/login'>
+            <a>Login</a>
+          </Link>
+        </ListItem>
       </List>
     </div>
   );
