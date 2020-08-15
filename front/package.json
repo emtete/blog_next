@@ -1,0 +1,11 @@
+{
+  "name": "blog_next_front",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next"
+  },
+  "author": "jongho",
+  "license": "MIT"
+}
