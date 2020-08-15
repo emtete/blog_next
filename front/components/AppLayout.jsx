@@ -17,6 +17,25 @@ import Typography from "@material-ui/core/Typography";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
+import styled from "styled-components";
+
+// 메뉴 토글 버튼
+const ToggleButton = styled.div`
+  background-color: gray;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  height: 64px;
+  width: 64px;
+  background-size: 64px;
+  cursor: pointer;
+  z-index: 1;
+`;
 
 const drawerWidth = 320;
 
@@ -89,8 +108,11 @@ const AppLayout = ({ children, window }) => {
 
   return (
     <div className={classes.root}>
+      <ToggleButton onClick={handleDrawerToggle}>
+        <ChevronRightIcon />
+      </ToggleButton>
       <CssBaseline />
-      <AppBar position='fixed' className={classes.appBar}>
+      {/* <AppBar position='fixed' className={classes.appBar}>
         <Toolbar>
           <IconButton
             color='inherit'
@@ -102,7 +124,7 @@ const AppLayout = ({ children, window }) => {
             {mobileOpen ? <ChevronLeftIcon /> : <ChevronRightIcon />}
           </IconButton>
         </Toolbar>
-      </AppBar>
+      </AppBar> */}
       <nav className={classes.drawer} aria-label='mailbox folders'>
         {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
         <Hidden smUp implementation='css'>
