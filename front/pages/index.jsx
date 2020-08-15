@@ -8,7 +8,7 @@ const Home = () => {
 
   return (
     <AppLayout>
-      <div className={classes.toolbar} />
+      {/* <div className={classes.toolbar} /> */}
       <Typography paragraph>
         Full stack web developer. view my work Lorem ipsum dolor sit amet,
         consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore

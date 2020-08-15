@@ -14,8 +14,8 @@ import MailIcon from "@material-ui/icons/Mail";
 import MenuIcon from "@material-ui/icons/Menu";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
+import ExpandLessIcon from "@material-ui/icons/ExpandLess";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import styled from "styled-components";
 
@@ -67,6 +67,10 @@ export const useStyles = makeStyles((theme) => ({
     width: drawerWidth,
     backgroundColor: "#0c2a40",
   },
+  drawerPaperMobile: {
+    width: "100%",
+    backgroundColor: "#0c2a40",
+  },
   content: {
     flexGrow: 1,
     padding: theme.spacing(3),
@@ -77,7 +81,6 @@ const AppLayout = ({ children, window }) => {
   const classes = useStyles();
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = React.useState(false);
-
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
@@ -108,9 +111,6 @@ const AppLayout = ({ children, window }) => {
 
   return (
     <div className={classes.root}>
-      <ToggleButton onClick={handleDrawerToggle}>
-        <ChevronRightIcon />
-      </ToggleButton>
       <CssBaseline />
       {/* <AppBar position='fixed' className={classes.appBar}>
         <Toolbar>
@@ -125,17 +125,21 @@ const AppLayout = ({ children, window }) => {
           </IconButton>
         </Toolbar>
       </AppBar> */}
+
       <nav className={classes.drawer} aria-label='mailbox folders'>
         {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
         <Hidden smUp implementation='css'>
+          <ToggleButton onClick={handleDrawerToggle}>
+            {mobileOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+          </ToggleButton>
           <Drawer
             container={container}
-            variant='temporary'
-            anchor={theme.direction === "rtl" ? "right" : "left"}
+            variant='persistent'
+            anchor={theme.direction === "rtl" ? "right" : "top"} // 메뉴가 위에서 나오도록..
             open={mobileOpen}
             onClose={handleDrawerToggle}
             classes={{
-              paper: classes.drawerPaper,
+              paper: classes.drawerPaperMobile,
             }}
             ModalProps={{
               keepMounted: true, // Better open performance on mobile.
@@ -161,12 +165,12 @@ const AppLayout = ({ children, window }) => {
   );
 };
 
-// AppLayout.propTypes = {
-/**
- * Injected by the documentation to work in an iframe.
- * You won't need it on your project.
- */
-// window: PropTypes.func,
-// };
+AppLayout.propTypes = {
+  /**
+   * Injected by the documentation to work in an iframe.
+   * You won't need it on your project.
+   */
+  window: PropTypes.func,
+};
 
 export default AppLayout;
