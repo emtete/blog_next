@@ -18,7 +18,7 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 
-const drawerWidth = 240;
+const drawerWidth = 320;
 
 export const useStyles = makeStyles((theme) => ({
   root: {
@@ -46,6 +46,7 @@ export const useStyles = makeStyles((theme) => ({
   toolbar: theme.mixins.toolbar,
   drawerPaper: {
     width: drawerWidth,
+    backgroundColor: "#0c2a40",
   },
   content: {
     flexGrow: 1,
@@ -67,12 +68,16 @@ const AppLayout = ({ children, window }) => {
       <div className={classes.toolbar} />
       {/* <Divider /> */}
       <List>
-        {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
+        {["Web", "Starred", "Send email", "Drafts"].map((text, index) => (
           <ListItem button key={text}>
             <ListItemIcon>
-              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+              {index % 2 === 0 ? (
+                <InboxIcon style={{ color: "#dbdfe2" }} />
+              ) : (
+                <MailIcon style={{ color: "#dbdfe2" }} />
+              )}
             </ListItemIcon>
-            <ListItemText primary={text} />
+            <ListItemText primary={text} style={{ color: "#dbdfe2" }} />
           </ListItem>
         ))}
       </List>
