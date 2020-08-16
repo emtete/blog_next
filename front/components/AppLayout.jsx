@@ -77,8 +77,8 @@ const AppLayout = ({ children, window }) => {
       </div>
       {/* <Divider /> */}
       <List>
-        <Link href='/board' variant='board' style={{ textDecoration: "none" }}>
-          <a>
+        <Link href='/board' variant='board'>
+          <a style={{ textDecoration: "none" }}>
             <ListItem button={true} style={{ color: "#dbdfe2" }} key='board'>
               <ListItemIcon>
                 <InboxIcon style={{ color: "#dbdfe2" }} />
