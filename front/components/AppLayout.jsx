@@ -18,7 +18,8 @@ import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import styled from "styled-components";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import Link from "next/link";
+// import Link from "next/link";
+import { Link } from "@material-ui/core";
 import { useMemo } from "react";
 import Modal from "@material-ui/core/Modal";
 import { FormControl, TextField, Button } from "@material-ui/core";
@@ -76,7 +77,17 @@ const AppLayout = ({ children, window }) => {
       </div>
       {/* <Divider /> */}
       <List>
-        {["Web", "Starred", "Send email", "Drafts"].map((text, index) => (
+        <Link href='/board' variant='board'>
+          <ListItem button={true} style={{ color: "#dbdfe2" }} key='board'>
+            {/* <a> */}
+            <ListItemIcon>
+              <InboxIcon style={{ color: "#dbdfe2" }} />
+            </ListItemIcon>
+            <ListItemText primary='게시판' style={{ color: "#dbdfe2" }} />
+            {/* </a> */}
+          </ListItem>
+        </Link>
+        {["Starred", "Send email", "Drafts"].map((text, index) => (
           <ListItem button key={text}>
             <ListItemIcon>
               {index % 2 === 0 ? (
