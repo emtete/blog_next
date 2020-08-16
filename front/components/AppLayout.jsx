@@ -22,7 +22,7 @@ import Link from "next/link";
 import { useMemo } from "react";
 import Modal from "@material-ui/core/Modal";
 
-import { modalStyles, getModalStyle } from "./LoginModal";
+import { modalStyles, getModalStyle } from "./LoginStyles";
 import { ToggleButton, menuStyles } from "./styles";
 
 const AppLayout = ({ children, window }) => {

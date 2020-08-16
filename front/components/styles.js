@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 
-// 메뉴 토글 버튼
+// 메뉴 토글 버튼 스타일
 export const ToggleButton = styled.div`
   background-color: gray;
   color: white;
@@ -21,6 +21,7 @@ export const ToggleButton = styled.div`
 
 const drawerWidth = 320;
 
+// 메뉴 스타일
 export const menuStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
