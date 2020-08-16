@@ -1,7 +1,7 @@
 import Typography from "@material-ui/core/Typography";
 
 import AppLayout from "../components/AppLayout";
-import { menuStyles } from "../components/styles";
+import { menuStyles } from "../components/layout/styles";
 
 const Home = () => {
   const classes = menuStyles();
