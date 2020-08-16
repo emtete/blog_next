@@ -21,6 +21,7 @@ import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Link from "next/link";
 import { useMemo } from "react";
 import Modal from "@material-ui/core/Modal";
+import { FormControl, TextField, Button } from "@material-ui/core";
 
 import { modalStyles, getModalStyle } from "./layout/LoginStyles";
 import { ToggleButton, menuStyles } from "./layout/styles";
@@ -48,10 +49,22 @@ const AppLayout = ({ children, window }) => {
 
   const body = (
     <div style={modalStyle} className={modalClasses.paper}>
-      <h2 id='simple-modal-title'>Text in a modal</h2>
-      <p id='simple-modal-description'>
+      <h2 id='simple-modal-title'>로그인</h2>
+      {/* <p id='simple-modal-description'>
         Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-      </p>
+      </p> */}
+      <form>
+        <form className={classes.root} noValidate autoComplete='off'>
+          <FormControl>
+            <TextField id='id' label='id' />
+            <TextField id='id' label='password' />
+            <br />
+            <Button variant='contained' color='primary'>
+              로그인
+            </Button>
+          </FormControl>
+        </form>
+      </form>
     </div>
   );
   // modal end---
