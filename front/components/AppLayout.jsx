@@ -94,6 +94,18 @@ const AppLayout = ({ children, window }) => {
     setMobileOpen(!mobileOpen);
   };
 
+  // modal start
+  const [open, setOpen] = React.useState(false);
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+  // modal end
+
   const drawer = (
     <div>
       <div className={(classes.toolbar, classes.toolbarCustomising)}>
