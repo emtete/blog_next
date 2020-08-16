@@ -1,16 +1,12 @@
-import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import Modal from "@material-ui/core/Modal";
 
-// import AppLayout from "../components/AppLayout";
-
-function rand() {
-  return Math.round(Math.random() * 20) - 10;
-}
-
-function getModalStyle() {
+export function getModalStyle() {
   const top = 50 + rand();
   const left = 50 + rand();
+
+  function rand() {
+    return Math.round(Math.random() * 20) - 10;
+  }
 
   return {
     top: `${top}%`,
@@ -19,7 +15,7 @@ function getModalStyle() {
   };
 }
 
-const useStyles2 = makeStyles((theme) => ({
+export const modalStyles = makeStyles((theme) => ({
   paper: {
     position: "absolute",
     width: 400,
@@ -29,34 +25,3 @@ const useStyles2 = makeStyles((theme) => ({
     padding: theme.spacing(2, 4, 3),
   },
 }));
-
-const LoginModal = ({ open, handleClose }) => {
-  const classes = useStyles();
-  // getModalStyle is not a pure function, we roll the style only on the first render
-  const [modalStyle] = React.useState(getModalStyle);
-  console.log("test2");
-  const body = (
-    <div style={modalStyle} className={classes.paper}>
-      <h2 id='simple-modal-title'>Text in a modal</h2>
-      <p id='simple-modal-description'>
-        Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-      </p>
-    </div>
-  );
-
-  return (
-    // <AppLayout>
-    <div>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby='simple-modal-title'
-        aria-describedby='simple-modal-description'
-      >
-        {body}
-      </Modal>
-    </div>
-  );
-};
-
-export default LoginModal;

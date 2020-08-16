@@ -22,7 +22,7 @@ import Link from "next/link";
 import { useMemo } from "react";
 import Modal from "@material-ui/core/Modal";
 
-// import LoginModal from "./LoginModal";
+import { modalStyles, getModalStyle } from "./LoginModal";
 
 // 메뉴 토글 버튼
 const ToggleButton = styled.div`
@@ -90,32 +90,6 @@ export const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const useStyles2 = makeStyles((theme) => ({
-  paper: {
-    position: "absolute",
-    width: 400,
-    backgroundColor: theme.palette.background.paper,
-    border: "2px solid #000",
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
-  },
-}));
-
-function rand() {
-  return Math.round(Math.random() * 20) - 10;
-}
-
-function getModalStyle() {
-  const top = 50 + rand();
-  const left = 50 + rand();
-
-  return {
-    top: `${top}%`,
-    left: `${left}%`,
-    transform: `translate(-${top}%, -${left}%)`,
-  };
-}
-
 const AppLayout = ({ children, window }) => {
   const classes = useStyles();
   const theme = useTheme();
@@ -123,13 +97,12 @@ const AppLayout = ({ children, window }) => {
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
-  console.log("test");
 
   // modal start
-  const classes2 = useStyles2();
+  const modalClasses = modalStyles();
   const [modalStyle] = React.useState(getModalStyle);
   const [open, setOpen] = React.useState(false);
-  const [opend, setOpend] = React.useState(false);
+
   const handleOpen = () => {
     setOpen(true);
   };
@@ -139,7 +112,7 @@ const AppLayout = ({ children, window }) => {
   };
 
   const body = (
-    <div style={modalStyle} className={classes2.paper}>
+    <div style={modalStyle} className={modalClasses.paper}>
       <h2 id='simple-modal-title'>Text in a modal</h2>
       <p id='simple-modal-description'>
         Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
