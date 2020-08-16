@@ -18,8 +18,8 @@ import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import styled from "styled-components";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-// import Link from "next/link";
-import { Link } from "@material-ui/core";
+import Link from "next/link";
+// import { Link } from "@material-ui/core";
 import { useMemo } from "react";
 import Modal from "@material-ui/core/Modal";
 import { FormControl, TextField, Button } from "@material-ui/core";
@@ -77,15 +77,15 @@ const AppLayout = ({ children, window }) => {
       </div>
       {/* <Divider /> */}
       <List>
-        <Link href='/board' variant='board'>
-          <ListItem button={true} style={{ color: "#dbdfe2" }} key='board'>
-            {/* <a> */}
-            <ListItemIcon>
-              <InboxIcon style={{ color: "#dbdfe2" }} />
-            </ListItemIcon>
-            <ListItemText primary='게시판' style={{ color: "#dbdfe2" }} />
-            {/* </a> */}
-          </ListItem>
+        <Link href='/board' variant='board' style={{ textDecoration: "none" }}>
+          <a>
+            <ListItem button={true} style={{ color: "#dbdfe2" }} key='board'>
+              <ListItemIcon>
+                <InboxIcon style={{ color: "#dbdfe2" }} />
+              </ListItemIcon>
+              <ListItemText primary='게시판' style={{ color: "#dbdfe2" }} />
+            </ListItem>
+          </a>
         </Link>
         {["Starred", "Send email", "Drafts"].map((text, index) => (
           <ListItem button key={text}>
@@ -172,6 +172,7 @@ AppLayout.propTypes = {
    * Injected by the documentation to work in an iframe.
    * You won't need it on your project.
    */
+  children: PropTypes.node.isRequired,
   window: PropTypes.func,
 };
 
