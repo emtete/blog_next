@@ -37,6 +37,16 @@ class Wyzywig extends Component {
           editorState={editorState}
           wrapperClassName='demo-wrapper'
           editorClassName='demo-editor'
+          // wrapperStyle={{ border: "1px solid black" }}
+          editorStyle={{
+            height: "275px",
+            borderWidth: "1px",
+            borderStyle: "solid",
+            borderColor: "rgb(241, 241, 241)",
+            borderImage: "initial",
+            padding: "5px",
+            borderRadius: "2px",
+          }}
           onEditorStateChange={this.onEditorStateChange}
         />
         <textarea
