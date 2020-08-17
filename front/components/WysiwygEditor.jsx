@@ -1,0 +1,60 @@
+import dynamic from "next/dynamic";
+import * as React from "react";
+import { Editor as EditorType, EditorProps } from "@toast-ui/react-editor";
+// import { TuiEditorWithForwardedProps } from "./TuiEditorWrapper";
+
+// interface EditorPropsWithHandlers extends EditorProps {
+//   onChange?(value: string): void;
+// }
+
+const Editor = dynamic(() => import("./TuiEditorWrapper"), { ssr: false });
+const EditorWithForwardedRef = React.forwardRef((props, ref) => (
+  <Editor {...props} forwardedRef={ref} />
+));
+
+// interface Props extends EditorProps {
+//   onChange(value: string): void;
+
+//   valueType?: "markdown" | "html";
+// }
+
+const WysiwygEditor = (props) => {
+  const {
+    initialValue,
+    previewStyle,
+    height,
+    initialEditType,
+    useCommandShortcut,
+  } = props;
+
+  const editorRef = React.useRef();
+  const handleChange = React.useCallback(() => {
+    if (!editorRef.current) {
+      return;
+    }
+
+    const instance = editorRef.current.getInstance();
+    const valueType = props.valueType || "markdown";
+
+    props.onChange(
+      valueType === "markdown" ? instance.getMarkdown() : instance.getHtml()
+    );
+  }, [props, editorRef]);
+
+  return (
+    <div>
+      <EditorWithForwardedRef
+        {...props}
+        initialValue={initialValue || "hello react editor world!"}
+        previewStyle={previewStyle || "vertical"}
+        height={height || "600px"}
+        initialEditType={initialEditType || "markdown"}
+        useCommandShortcut={useCommandShortcut || true}
+        ref={editorRef}
+        onChange={handleChange}
+      />
+    </div>
+  );
+};
+
+export default WysiwygEditor;
