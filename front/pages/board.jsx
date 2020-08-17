@@ -1,5 +1,10 @@
 import "jquery";
-import ReactSummernoteLite from "@easylogic/react-summernote";
+import dynamic from "next/dynamic";
+// import ReactSummernoteLite from "@easylogic/react-summernote";
+const ReactSummernoteLite = dynamic(
+  () => import("@easylogic/react-summernote").then((mod) => mod.Editor),
+  { ssr: false }
+);
 
 // Dependency Component
 import AppLayout from "../components/AppLayout";
