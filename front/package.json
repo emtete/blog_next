@@ -13,7 +13,9 @@
     "@material-ui/icons": "^4.9.1",
     "axios": "^0.19.2",
     "draft-js": "^0.11.6",
+    "draft-js-export-html": "^1.4.1",
     "draftjs-to-html": "^0.9.1",
+    "escape-html": "^1.0.3",
     "html-to-draftjs": "^1.5.0",
     "immutable": "^3.8.2",
     "next": "^9.5.2",
@@ -25,6 +27,7 @@
     "react-redux": "^7.2.1",
     "redux": "^4.0.5",
     "redux-devtools-extension": "^2.13.8",
+    "style-to-object": "^0.3.0",
     "styled-components": "^5.1.1"
   },
   "devDependencies": {
