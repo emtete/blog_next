@@ -19,13 +19,16 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import styled from "styled-components";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Link from "next/link";
-// import { Link } from "@material-ui/core";
-import { useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import Modal from "@material-ui/core/Modal";
 import { FormControl, TextField, Button } from "@material-ui/core";
+import { useSelector, useDispatch } from "react-redux";
 
 import { modalStyles, getModalStyle } from "./layout/LoginStyles";
 import { ToggleButton, menuStyles } from "./layout/styles";
+import { loginAction, logoutAction } from "../reducers";
+import useInput from "../hooks/useInput";
+// import {  }
 
 const AppLayout = ({ children, window }) => {
   const classes = menuStyles();
@@ -35,10 +38,15 @@ const AppLayout = ({ children, window }) => {
     setMobileOpen(!mobileOpen);
   };
 
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  const dispatch = useDispatch();
+
   // modal start---
   const modalClasses = modalStyles();
   const [modalStyle] = React.useState(getModalStyle);
   const [open, setOpen] = React.useState(false);
+  const [id, onChangeId] = useInput("");
+  const [password, onChangePassword] = useInput("");
 
   const handleOpen = () => {
     setOpen(true);
@@ -48,19 +56,29 @@ const AppLayout = ({ children, window }) => {
     setOpen(false);
   };
 
+  const handleHandle = () => {
+    if (isLoggedIn) {
+      dispatch(logoutAction());
+    } else {
+      handleOpen();
+    }
+  };
+
+  const onSubmitForm = () => {
+    dispatch(loginAction());
+    handleClose();
+  };
+
   const body = (
     <div style={modalStyle} className={modalClasses.paper}>
       <h2 id='simple-modal-title'>로그인</h2>
-      {/* <p id='simple-modal-description'>
-        Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-      </p> */}
-      <form>
+      <form onSubmit={onSubmitForm}>
         <form className={classes.root} noValidate autoComplete='off'>
           <FormControl>
-            <TextField id='id' label='id' />
-            <TextField id='id' label='password' />
+            <TextField id='id' label='id' onChange={onChangeId} />
+            <TextField id='id' label='password' onChange={onChangePassword} />
             <br />
-            <Button variant='contained' color='primary'>
+            <Button variant='contained' color='primary' type='submit'>
               로그인
             </Button>
           </FormControl>
@@ -118,8 +136,9 @@ const AppLayout = ({ children, window }) => {
           {/* <Link href='/login'>
             <a>Login</a>
           </Link> */}
-          <button type='button' onClick={handleOpen}>
-            Open Modal
+          <button type='button' onClick={handleHandle}>
+            {/* 로그인 */}
+            {isLoggedIn ? "로그아웃" : "로그인"}
           </button>
           <div>
             <Modal

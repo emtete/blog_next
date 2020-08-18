@@ -1,22 +1,49 @@
 const initialState = {
-  name: "최종호",
-  age: "32",
-  password: "12345",
+  user: {
+    isLoggedIn: false,
+    user: null,
+    signUpdata: {},
+    loginData: {},
+  },
+  post: {
+    mainPosts: [],
+  },
 };
 
-const changeNickname = {
-  type: "CHANGE_NICKNAME",
-  data: "최한울",
+export const loginAction = (data) => {
+  return {
+    type: "LOG_IN",
+    data,
+  };
+};
+
+export const logoutAction = (data) => {
+  return {
+    type: "LOG_OUT",
+    data,
+  };
 };
 
 const rootReducer = (state = initialState, action) => {
   switch (action.type) {
-    case "CHANGE_NICKNAME":
+    case "LOG_IN":
       return {
         ...state,
-        name: action.data,
+        user: {
+          ...state.user,
+          isLoggedIn: true,
+        },
+      };
+    case "LOG_OUT":
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          isLoggedIn: false,
+        },
       };
     default:
+      return state;
   }
 };
 

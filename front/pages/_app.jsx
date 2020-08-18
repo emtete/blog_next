@@ -6,7 +6,9 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import theme from "../src/theme";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
-export default function MyApp(props) {
+import wrapper from "../store/configureStore";
+
+const MyApp = (props) => {
   const { Component, pageProps } = props;
 
   React.useEffect(() => {
@@ -33,9 +35,11 @@ export default function MyApp(props) {
       </ThemeProvider>
     </React.Fragment>
   );
-}
+};
 
 MyApp.propTypes = {
   Component: PropTypes.elementType.isRequired,
   pageProps: PropTypes.object.isRequired,
 };
+
+export default wrapper.withRedux(MyApp);
