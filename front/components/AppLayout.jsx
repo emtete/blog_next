@@ -73,7 +73,9 @@ const AppLayout = ({ children, window }) => {
   const drawer = (
     <div>
       <div className={(classes.toolbar, classes.toolbarCustomising)}>
-        Full stack Web developer <br /> 최종호
+        {/* <br /> */}
+        Front-End
+        <br /> Web developer
       </div>
       {/* <Divider /> */}
       <List>
@@ -83,11 +85,24 @@ const AppLayout = ({ children, window }) => {
               <ListItemIcon>
                 <InboxIcon style={{ color: "#dbdfe2" }} />
               </ListItemIcon>
-              <ListItemText primary='게시판' style={{ color: "#dbdfe2" }} />
+              <ListItemText
+                primary='글 작성하기'
+                style={{ color: "#dbdfe2" }}
+              />
             </ListItem>
           </a>
         </Link>
-        {["Starred", "Send email", "Drafts"].map((text, index) => (
+        <Link href='/post'>
+          <a style={{ textDecoration: "none" }}>
+            <ListItem button={true} style={{ color: "#dbdfe2" }} key='board'>
+              <ListItemIcon>
+                <MailIcon style={{ color: "#dbdfe2" }} />
+              </ListItemIcon>
+              <ListItemText primary='POST' style={{ color: "#dbdfe2" }} />
+            </ListItem>
+          </a>
+        </Link>
+        {["Send email", "Drafts"].map((text, index) => (
           <ListItem button key={text}>
             <ListItemIcon>
               {index % 2 === 0 ? (
@@ -136,7 +151,7 @@ const AppLayout = ({ children, window }) => {
           </ToggleButton>
           <Drawer
             container={container}
-            variant='persistent'
+            variant='temporary'
             anchor={theme.direction === "rtl" ? "right" : "top"} // 메뉴가 위에서 나오도록..
             open={mobileOpen}
             onClose={handleDrawerToggle}
