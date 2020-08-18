@@ -48,6 +48,9 @@ class Wyzywig extends Component {
             borderRadius: "2px",
           }}
           onEditorStateChange={this.onEditorStateChange}
+          localization={{
+            locale: "ko",
+          }}
         />
         <textarea
           disabled
