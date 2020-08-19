@@ -4,9 +4,8 @@ import MuiAccordion from "@material-ui/core/Accordion";
 import MuiAccordionSummary from "@material-ui/core/AccordionSummary";
 import MuiAccordionDetails from "@material-ui/core/AccordionDetails";
 import Typography from "@material-ui/core/Typography";
-import parser from "style-to-object";
 
-import Wyzywig from "./Wyzywig";
+import PostDetail from "./PostDetail";
 
 const Accordion = withStyles({
   root: {
@@ -74,7 +73,7 @@ export default function PostList() {
         </AccordionSummary>
         <AccordionDetails>
           <Typography>
-            <Wyzywig />
+            <PostDetail />
           </Typography>
         </AccordionDetails>
       </Accordion>
