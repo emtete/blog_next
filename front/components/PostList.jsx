@@ -4,6 +4,7 @@ import MuiAccordion from "@material-ui/core/Accordion";
 import MuiAccordionSummary from "@material-ui/core/AccordionSummary";
 import MuiAccordionDetails from "@material-ui/core/AccordionDetails";
 import Typography from "@material-ui/core/Typography";
+import { useDispatch, useSelector } from "react-redux";
 
 import PostDetail from "./PostDetail";
 
@@ -50,67 +51,38 @@ const AccordionDetails = withStyles((theme) => ({
 }))(MuiAccordionDetails);
 
 export default function PostList() {
-  const [expanded, setExpanded] = React.useState("panel1");
+  const [expanded, setExpanded] = React.useState("");
+  const dispatch = useDispatch();
+  const mainPosts = useSelector((state) => state.post.mainPosts);
 
   const handleChange = (panel) => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : false);
   };
 
+  console.log("test", mainPosts.length);
   return (
     <div>
-      <Accordion
-        square
-        expanded={expanded === "panel1"}
-        onChange={handleChange("panel1")}
-      >
-        <AccordionSummary
-          aria-controls='panel1d-content'
-          id='panel1d-header'
-          style={{ justifyContent: "space-between" }}
+      {mainPosts.map((v, i) => (
+        <Accordion
+          square
+          expanded={expanded === `panel1${i}`}
+          onChange={handleChange(`panel1${i}`)}
         >
-          <Typography>Collapsible Group Item #1</Typography>
-          <Typography>1년 전</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Typography>
-            <PostDetail />
-          </Typography>
-        </AccordionDetails>
-      </Accordion>
-      <Accordion
-        square
-        expanded={expanded === "panel2"}
-        onChange={handleChange("panel2")}
-      >
-        <AccordionSummary aria-controls='panel2d-content' id='panel2d-header'>
-          <Typography>Collapsible Group Item #2</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Typography>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-            malesuada lacus ex, sit amet blandit leo lobortis eget. Lorem ipsum
-            dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada
-            lacus ex, sit amet blandit leo lobortis eget.
-          </Typography>
-        </AccordionDetails>
-      </Accordion>
-      <Accordion
-        square
-        expanded={expanded === "panel3"}
-        onChange={handleChange("panel3")}
-      >
-        <AccordionSummary aria-controls='panel3d-content' id='panel3d-header'>
-          <Typography>Collapsible Group Item #3</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Typography>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-            malesuada lacus ex, sit amet blandit leo lobortis eget. Lorem ipsum
-            dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada
-            lacus ex, sit amet blandit leo lobortis eget.
-          </Typography>
-        </AccordionDetails>
-      </Accordion>
+          <AccordionSummary
+            aria-controls='panel1d-content'
+            id='panel1d-header'
+            style={{ justifyContent: "space-between" }}
+          >
+            <Typography>{v.title}</Typography>
+            <Typography>{v.date}</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Typography>
+              <PostDetail postContent={v.content} />
+            </Typography>
+          </AccordionDetails>
+        </Accordion>
+      ))}
     </div>
   );
 }

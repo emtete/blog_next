@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
 import dynamic from "next/dynamic";
 import draftToHtml from "draftjs-to-html";
+import PropTypes from "prop-types";
 
 const Editor = dynamic(
   () => import("react-draft-wysiwyg").then((mod) => mod.Editor),
@@ -69,10 +70,17 @@ const contentObject = {
   entityMap: {},
 };
 
-class Wyzywig extends Component {
-  state = {
-    editorState: EditorState.createWithContent(convertFromRaw(contentObject)),
-  };
+class PostDetail extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      // editorState: EditorState.createWithContent(convertFromRaw(contentObject)),
+      editorState: EditorState.createWithContent(
+        convertFromRaw(this.props.postContent)
+      ),
+    };
+  }
 
   onEditorStateChange = (editorState) => {
     this.setState({
@@ -82,6 +90,7 @@ class Wyzywig extends Component {
   };
 
   render() {
+    console.log("test", this.props.postContent);
     const { editorState } = this.state;
     return (
       <div>
@@ -114,4 +123,8 @@ class Wyzywig extends Component {
   }
 }
 
-export default Wyzywig;
+PostDetail.propTypes = {
+  postContent: PropTypes.object.isRequired,
+};
+
+export default PostDetail;

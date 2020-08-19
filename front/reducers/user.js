@@ -1,4 +1,4 @@
-const initialState = {
+export const initialState = {
   isLoggedIn: false,
   user: null,
   signUpdata: {},
