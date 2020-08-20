@@ -180,8 +180,30 @@ export const initialState = {
   ],
 };
 
+export const addPost = (data) => {
+  return {
+    type: "ADD_POST",
+    data,
+  };
+};
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case "ADD_POST":
+      console.log("test1: title ", action.data.title);
+      console.log("test2: mainPost ", action.data.content);
+      return {
+        ...state,
+        // title: action.data.title,
+        mainPosts: [
+          {
+            title: action.data.title,
+            date: action.data.date,
+            content: action.data.content,
+          },
+          ...state.mainPosts,
+        ],
+      };
     default:
       return state;
   }

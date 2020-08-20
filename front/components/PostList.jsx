@@ -59,7 +59,7 @@ export default function PostList() {
     setExpanded(newExpanded ? panel : false);
   };
 
-  console.log("test", mainPosts.length);
+  // console.log("test", mainPosts.length);
   return (
     <div>
       {mainPosts.map((v, i) => (

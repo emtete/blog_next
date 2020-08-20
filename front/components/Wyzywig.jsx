@@ -1,8 +1,11 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
 import dynamic from "next/dynamic";
 import draftToHtml from "draftjs-to-html";
 import { TextField, FormControl, Button } from "@material-ui/core";
+import { useDispatch, useSelector } from "react-redux";
+
+import { addPost } from "../reducers/post";
 
 const Editor = dynamic(
   () => import("react-draft-wysiwyg").then((mod) => mod.Editor),
@@ -14,22 +17,32 @@ const htmlToDraft = dynamic(
   { ssr: false }
 );
 
-class Wyzywig extends Component {
-  state = {
-    editorState: EditorState.createEmpty(),
+const Wyzywig = () => {
+  const dispatch = useDispatch();
+  const mainPosts = useSelector((state) => state.post.mainPosts);
+
+  const [editorState, setEditorState] = useState(EditorState.createEmpty());
+  const [title, setTitle] = useState("");
+
+  const onEditorStateChange = (editorState) => {
+    setEditorState(editorState);
   };
 
-  onEditorStateChange = (editorState) => {
-    this.setState({
-      editorState,
-    });
+  const onSubmitForm = (e) => {
+    e.preventDefault();
+    const content = convertToRaw(editorState.getCurrentContent());
+    const date = "1년 전";
+    dispatch(addPost({ title, date, content }), [title, date, content]);
   };
 
-  render() {
-    const { editorState } = this.state;
-    return (
+  const onChangeText = (e) => {
+    setTitle(e.target.value);
+  };
+
+  return (
+    <form onSubmit={onSubmitForm}>
       <FormControl>
-        <TextField id='title' label='title' />
+        <TextField id='title' label='title' onChange={onChangeText} />
         <br />
         <Editor
           editorState={editorState}
@@ -44,7 +57,7 @@ class Wyzywig extends Component {
             padding: "5px",
             borderRadius: "2px",
           }}
-          onEditorStateChange={this.onEditorStateChange}
+          onEditorStateChange={onEditorStateChange}
           localization={{
             locale: "ko",
           }}
@@ -71,8 +84,8 @@ class Wyzywig extends Component {
           </Button>
         </div>
       </FormControl>
-    );
-  }
-}
+    </form>
+  );
+};
 
 export default Wyzywig;
