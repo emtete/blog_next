@@ -21,10 +21,16 @@ const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
     maxWidth: 360,
-    backgroundColor: theme.palette.background.paper,
+    backgroundColor: "#424242",
+    color: "#ffffff",
   },
   nested: {
     paddingLeft: theme.spacing(4),
+  },
+  checkbox: {
+    root: {
+      color: "#ffffff",
+    },
   },
 }));
 
@@ -75,6 +81,7 @@ export default function settings() {
               tabIndex={-1}
               disableRipple
               inputProps={{ "aria-labelledby": labelId }}
+              style={{ color: "#ffffff" }}
             />
           </ListItemIcon>
           <ListItemText primary='Sent mail' />
@@ -103,13 +110,21 @@ export default function settings() {
           {open ? (
             <ListItemSecondaryAction>
               <IconButton edge='end' aria-label='expand'>
-                <ExpandLess button onClick={handleClick} />
+                <ExpandLess
+                  button
+                  onClick={handleClick}
+                  style={{ color: "#ffffff" }}
+                />
               </IconButton>
             </ListItemSecondaryAction>
           ) : (
             <ListItemSecondaryAction>
               <IconButton edge='end' aria-label='expand'>
-                <ExpandMore button onClick={handleClick} />
+                <ExpandMore
+                  button
+                  onClick={handleClick}
+                  style={{ color: "#ffffff" }}
+                />
               </IconButton>
             </ListItemSecondaryAction>
           )}
