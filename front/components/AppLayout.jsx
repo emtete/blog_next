@@ -120,7 +120,17 @@ const AppLayout = ({ children, window }) => {
             </ListItem>
           </a>
         </Link>
-        {["Send email", "Drafts"].map((text, index) => (
+        <Link href='/settings'>
+          <a style={{ textDecoration: "none" }}>
+            <ListItem button={true} style={{ color: "#dbdfe2" }} key='settings'>
+              <ListItemIcon>
+                <MailIcon style={{ color: "#dbdfe2" }} />
+              </ListItemIcon>
+              <ListItemText primary='Settings' style={{ color: "#dbdfe2" }} />
+            </ListItem>
+          </a>
+        </Link>
+        {/* {["Send email", "Drafts"].map((text, index) => (
           <ListItem button key={text}>
             <ListItemIcon>
               {index % 2 === 0 ? (
@@ -131,7 +141,7 @@ const AppLayout = ({ children, window }) => {
             </ListItemIcon>
             <ListItemText primary={text} style={{ color: "#dbdfe2" }} />
           </ListItem>
-        ))}
+        ))} */}
         <ListItem button style={{ color: "#dbdfe2" }} key='login'>
           {/* <Link href='/login'>
             <a>Login</a>
