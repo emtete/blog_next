@@ -1,9 +1,30 @@
 export const initialState = {
-  menuList: [
-    { name: "글 작성하기", id: 0, upperId: null },
-    { name: "POST", id: 1, upperId: null },
-    { name: "Settings", id: 2, upperId: null },
-  ],
+  menuList: {
+    id: "root",
+    name: "Parent",
+    order: 0,
+    upperId: null,
+    children: [
+      {
+        id: "0",
+        name: "글 작성하기",
+        order: 0,
+        upperId: "root",
+      },
+      {
+        id: "1",
+        name: "POST",
+        order: 1,
+        upperId: "root",
+      },
+      {
+        id: "2",
+        name: "Settings",
+        order: 2,
+        upperId: "root",
+      },
+    ],
+  },
 };
 
 export const reorderMenuAction = (data) => {

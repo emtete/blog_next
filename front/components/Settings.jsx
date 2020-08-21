@@ -4,27 +4,7 @@ import TreeView from "@material-ui/lab/TreeView";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import { TreeItem } from "@material-ui/lab";
-
-const data = {
-  id: "root",
-  name: "Parent",
-  children: [
-    {
-      id: "1",
-      name: "Child - 1",
-    },
-    {
-      id: "3",
-      name: "Child - 3",
-      children: [
-        {
-          id: "4",
-          name: "Child - 4",
-        },
-      ],
-    },
-  ],
-};
+import { useSelector } from "react-redux";
 
 const useStyles = makeStyles({
   root: {
@@ -34,11 +14,19 @@ const useStyles = makeStyles({
   },
 });
 
+const onLabelClick = () => {};
+
 export default function Settings() {
   const classes = useStyles();
+  const menuList = useSelector((state) => state.menu.menuList);
 
   const renderTree = (nodes) => (
-    <TreeItem key={nodes.id} nodeId={nodes.id} label={nodes.name}>
+    <TreeItem
+      key={nodes.id}
+      nodeId={nodes.id}
+      label={nodes.name}
+      onLabelClick={onLabelClick}
+    >
       {Array.isArray(nodes.children)
         ? nodes.children.map((node) => renderTree(node))
         : null}
@@ -53,7 +41,7 @@ export default function Settings() {
         defaultExpanded={["root"]}
         defaultExpandIcon={<ChevronRightIcon />}
       >
-        {renderTree(data)}
+        {renderTree(menuList)}
       </TreeView>
     </div>
   );
