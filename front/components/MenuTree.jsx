@@ -6,7 +6,7 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import { TreeItem } from "@material-ui/lab";
 import { useSelector, useDispatch } from "react-redux";
 
-import { reorderMenuAction } from "../reducers/menu";
+import { reorderMenuAction, selectMenuAction } from "../reducers/menu";
 
 const useStyles = makeStyles({
   root: {
@@ -36,23 +36,17 @@ const flatToHierarchy = (arr, parent, order) => {
   return result;
 };
 
-export default function MenuTree({ getSelected }) {
+export default function MenuTree() {
   const dispatch = useDispatch();
   const classes = useStyles();
-  const menuList = useSelector((state) => state.menu.menuList);
-  const [selected, setSelected] = React.useState([]);
+  const node = useSelector((state) => state.menu.node);
+  const selected = useSelector((state) => state.menu.selected);
+  // const [selected, setSelected] = React.useState([]);
 
   const onLabelClick = () => {
-    dispatch(reorderMenuAction());
+    // dispatch(reorderMenuAction());
   };
 
-  // const roots = menuList.find((e) => e.id === "root");
-  // roots["children"] = flatToHierarchy(menuList, "root", 0);
-  // console.log("menuList type : ", typeof menuList);
-  // console.log(JSON.stringify(menuList));
-  // console.log(JSON.stringify(roots));
-  // console.log(JSON.stringify(data));
-  // console.log(typeof roots);
   const renderTree = (nodes) => (
     <TreeItem
       key={nodes.id}
@@ -67,9 +61,7 @@ export default function MenuTree({ getSelected }) {
   );
 
   const handleSelect = (event, nodeIds) => {
-    // nodeId == menu order
-    setSelected(nodeIds);
-    getSelected(nodeIds);
+    dispatch(selectMenuAction(nodeIds));
   };
 
   return (
@@ -82,7 +74,7 @@ export default function MenuTree({ getSelected }) {
         selected={selected}
         onNodeSelect={handleSelect}
       >
-        {renderTree(menuList)}
+        {renderTree(node)}
       </TreeView>
     </div>
   );

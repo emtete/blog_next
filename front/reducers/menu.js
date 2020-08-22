@@ -1,5 +1,6 @@
 export const initialState = {
-  menuList: {
+  selected: "/",
+  node: {
     key: "root",
     id: "/",
     name: "root",
@@ -36,6 +37,13 @@ export const initialState = {
 export const reorderMenuAction = (data) => {
   return {
     type: "REORDER_MENU_ACTION",
+    data,
+  };
+};
+
+export const selectMenuAction = (data) => {
+  return {
+    type: "SELECT_MENU_ACTION",
     data,
   };
 };
@@ -87,24 +95,90 @@ export const saveMenuAction = (data) => {
 //   };
 // };
 
+//         ...menuList.children.slice(0, selected),
+//         menuList.children[cutted[n]],
+//         menuList.children[cutted[n]-1],
+//         ...manuList.children.slice(selected + 2),
+
+// abc(node, path, 0);
+// const abc = (parentNode, path, n) => {
+//   const lastIndex = parentNode.children.length-1;
+//   const lastDepth = path.length -1;
+
+//   // last
+//   if (lastDepth == n) {
+//     if (path[n] == 0) {
+//       console.log("get1");
+//     return {
+//       ...parentNode,
+//       // children: [
+//       //   abc(parentNode.children[0], path, n++),
+//       //   ...parentNode.children.slice(1)
+//       // ],
+//     };
+//     } else if (path[n] > 0 && path[n] < lastIndex) {
+//       console.log("get2");
+//       return {
+//         ...parentNode,
+//         // children: [
+//         //   ...parentNode.children.slice(0,path[n]),
+//         //   abc(),
+//         //   ...parentNode.children.slice(path[n]+1, lastIndex+1)
+//         // ],
+//       };
+//     } else if (path[n] == lastIndex) {
+//       console.log("get3");
+//       return {
+//         ...parentNode,
+//         // children: [
+//         //   ...parentNode.children.slice(0,lastIndex)
+//         //   abc(),
+//         // ],
+//       };
+//     }
+//   }
+
+//   // lastDepth가 아닌 경우
+//   if (path[n] == 0) {
+//     return {
+//       ...parentNode,
+//       children: [
+//         abc(parentNode.children[0], path, n++),
+//         ...parentNode.children.slice(1)
+//       ],
+//     };
+//   } else if (path[n] > 0 && path[n] < lastIndex) {
+//     return {
+//       ...parentNode,
+//       children: [
+//         ...parentNode.children.slice(0,path[n]),
+//         abc(),
+//         ...parentNode.children.slice(path[n]+1, lastIndex+1)
+//       ],
+//     };
+//   } else if (path[n] == lastIndex) {
+//     return {
+//       ...parentNode,
+//       children: [
+//         ...parentNode.children.slice(0,lastIndex)
+//         abc(),
+//       ],
+//     };
+//   }
+
+// }
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case "REORDER_MENU_ACTION":
       return {
         ...state,
-        menuList: {
-          ...state.menuList,
-          children: [
-            (state.menuList.children[1] = {
-              ...state.menuList.children[1],
-              id: "/0",
-            }),
-            (state.menuList.children[0] = {
-              ...state.menuList.children[0],
-              id: "/1",
-            }),
-          ],
-        },
+        node: { ...action.data },
+      };
+    case "SELECT_MENU_ACTION":
+      return {
+        ...state,
+        selected: action.data,
       };
     case "SAVE_MENU_ACTION":
       return {

@@ -11,9 +11,10 @@ import BackspaceOutlinedIcon from "@material-ui/icons/BackspaceOutlined";
 import CreateIcon from "@material-ui/icons/Create";
 import AddIcon from "@material-ui/icons/Add";
 import { Divider } from "@material-ui/core";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import MenuTree from "./MenuTree";
+import { reorderMenuAction, selectMenuAction } from "../reducers/menu";
 
 function a11yProps(index) {
   return {
@@ -34,36 +35,93 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const getUpperNode = (parentNode, path) => {
+  let result = { ...parentNode };
+  for (let i = 0; i < path.length - 1; i++) {
+    result = result.children[path[i]];
+  }
+  return result;
+};
+
+const getNode = (parentNode, path) => {
+  let result = { ...parentNode };
+  for (let i = 0; i < path.length; i++) {
+    result = result.children[path[i]];
+  }
+  return result;
+};
+
 export default function SettingsTabs({ children }) {
   const classes = useStyles();
+  const dispatch = useDispatch();
   const [value, setValue] = React.useState(0);
-  const [selectedTree, setSelectedTree] = React.useState([]);
-  const menuList = useSelector((state) => state.menu.menuList);
+  // const [selectedTree, setSelectedTree] = React.useState([]);
+  const node = useSelector((state) => state.menu.node);
+  const selected = useSelector((state) => state.menu.selected);
 
   const handleChange = (event, newValue) => {
+    // setValue(newValue);
     // console.log("test : ", newValue);
     // console.log("selectedTree : ", selectedTree);
-    // setValue(newValue);
-    // switch (newValue) {
-    //   case "UP":
-    //     if (selectedTree !== 0) {
-    //       const selected = menuList.findIndex((e) => e === selectedTree);
-    //     }
-    //     break;
-    //   default:
-    //     break;
-    // }
+    const path = selected.split("/").slice(1);
+    let targetNode;
+    let ti; // targetIndex
+    switch (newValue) {
+      case "UP":
+        targetNode = getUpperNode(node, path);
+        ti = parseInt(path[path.length - 1]);
+        const isFirst = path[path.length - 1] == 0;
+        if (!isFirst) {
+          const temp = targetNode.children[ti - 1];
+          targetNode.children[ti - 1] = targetNode.children[ti];
+          targetNode.children[ti] = temp;
+          targetNode.children[ti - 1].id =
+            "/" + path.slice(0, path.length - 1).join("/") + (ti - 1);
+          targetNode.children[ti].id =
+            "/" + path.slice(0, path.length - 1).join("/") + ti;
+          dispatch(reorderMenuAction(targetNode));
+          dispatch(
+            selectMenuAction(
+              "/" + path.slice(0, path.length - 1).join("/") + (ti - 1)
+            )
+          );
+        }
+        break;
+      case "DOWN":
+        targetNode = getUpperNode(node, path);
+        ti = parseInt(path[path.length - 1]); // targetIndex
+        const lastChildIndex = targetNode.children.length - 1;
+        const isLast = lastChildIndex == ti;
+        if (!isLast) {
+          const temp = targetNode.children[ti];
+          targetNode.children[ti] = targetNode.children[ti + 1];
+          targetNode.children[ti + 1] = temp;
+          targetNode.children[ti].id =
+            "/" + path.slice(0, path.length - 1).join("/") + ti;
+          targetNode.children[ti + 1].id =
+            "/" + path.slice(0, path.length - 1).join("/") + (ti + 1);
+          dispatch(reorderMenuAction(targetNode));
+          dispatch(
+            selectMenuAction(
+              "/" + path.slice(0, path.length - 1).join("/") + (ti + 1)
+            )
+          );
+        }
+        break;
+      default:
+        break;
+    }
   };
 
   // nodeId == menu order
-  const getSelected = (nodeIds) => {
-    setSelectedTree(parseInt(nodeIds));
-  };
+  // const getSelected = (nodeIds) => {
+  //   setSelectedTree(nodeIds);
+  // };
 
   return (
     <div>
       <div className={classes.root}>
-        <MenuTree getSelected={getSelected} />
+        <MenuTree />
         <Tabs
           orientation='vertical'
           variant='scrollable'
