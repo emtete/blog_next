@@ -11,34 +11,9 @@ import BackspaceOutlinedIcon from "@material-ui/icons/BackspaceOutlined";
 import CreateIcon from "@material-ui/icons/Create";
 import AddIcon from "@material-ui/icons/Add";
 import { Divider } from "@material-ui/core";
+import { useSelector } from "react-redux";
 
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-  // return (
-  //   <div
-  //     role='tabpanel'
-  //     hidden={value !== index}
-  //     id={`vertical-tabpanel-${index}`}
-  //     aria-labelledby={`vertical-tab-${index}`}
-  //     {...other}
-  //   >
-  //     {value === index && (
-  //       <Box p={5}>
-  //         <Typography>{children}</Typography>
-  //       </Box>
-  //     )}
-  //   </div>
-  // );
-
-  return <div>{value === index && <div>{children}</div>}</div>;
-}
-
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.any.isRequired,
-  value: PropTypes.any.isRequired,
-};
+import MenuTree from "./MenuTree";
 
 function a11yProps(index) {
   return {
@@ -62,35 +37,33 @@ const useStyles = makeStyles((theme) => ({
 export default function SettingsTabs({ children }) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
+  const [selectedTree, setSelectedTree] = React.useState([]);
+  const menuList = useSelector((state) => state.menu.menuList);
 
   const handleChange = (event, newValue) => {
-    setValue(newValue);
+    // console.log("test : ", newValue);
+    // console.log("selectedTree : ", selectedTree);
+    // setValue(newValue);
+    // switch (newValue) {
+    //   case "UP":
+    //     if (selectedTree !== 0) {
+    //       const selected = menuList.findIndex((e) => e === selectedTree);
+    //     }
+    //     break;
+    //   default:
+    //     break;
+    // }
+  };
+
+  // nodeId == menu order
+  const getSelected = (nodeIds) => {
+    setSelectedTree(parseInt(nodeIds));
   };
 
   return (
     <div>
       <div className={classes.root}>
-        <TabPanel value={value} index={0}>
-          {children}
-        </TabPanel>
-        <TabPanel value={value} index={1}>
-          Item Two
-        </TabPanel>
-        <TabPanel value={value} index={2}>
-          Item Three
-        </TabPanel>
-        <TabPanel value={value} index={3}>
-          Item Four
-        </TabPanel>
-        <TabPanel value={value} index={4}>
-          Item Five
-        </TabPanel>
-        <TabPanel value={value} index={5}>
-          Item Six
-        </TabPanel>
-        <TabPanel value={value} index={6}>
-          Item Seven
-        </TabPanel>
+        <MenuTree getSelected={getSelected} />
         <Tabs
           orientation='vertical'
           variant='scrollable'
@@ -104,26 +77,42 @@ export default function SettingsTabs({ children }) {
             button
             label='UP'
             icon={<ArrowUpwardOutlinedIcon color='primary' />}
+            // disabled={true}
+            value='UP'
             {...a11yProps(0)}
           />
           <Divider />
           <Tab
             button
             label='DOWN'
-            icon={<ArrowDownwardOutlinedIcon />}
+            icon={<ArrowDownwardOutlinedIcon color='primary' />}
+            value='DOWN'
             {...a11yProps(1)}
           />
           <Divider />
           <Tab
             button
             label='DELETE'
-            icon={<BackspaceOutlinedIcon />}
+            icon={<BackspaceOutlinedIcon color='primary' />}
+            value='DELETE'
             {...a11yProps(2)}
           />
           <Divider />
-          <Tab button label='UPDATE' icon={<CreateIcon />} {...a11yProps(2)} />
+          <Tab
+            button
+            label='UPDATE'
+            icon={<CreateIcon color='primary' />}
+            value='UPDATE'
+            {...a11yProps(3)}
+          />
           <Divider />
-          <Tab button label='ADD' icon={<AddIcon />} {...a11yProps(2)} />
+          <Tab
+            button
+            label='ADD'
+            icon={<AddIcon color='primary' />}
+            value='ADD'
+            {...a11yProps(4)}
+          />
           <Divider />
         </Tabs>
       </div>

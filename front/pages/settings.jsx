@@ -1,15 +1,10 @@
 import AppLayout from "../components/AppLayout";
-import Settings from "../components/Settings";
 import SettingTabs from "../components/SettingTabs";
 
 const settings = () => {
   return (
     <AppLayout>
-      <SettingTabs>
-        <Settings>
-          <div>abc</div>
-        </Settings>
-      </SettingTabs>
+      <SettingTabs>{/* <Settings></Settings> */}</SettingTabs>
     </AppLayout>
   );
 };
