@@ -27,6 +27,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { modalStyles, getModalStyle } from "./layout/LoginStyles";
 import { ToggleButton, menuStyles } from "./layout/styles";
 import { loginAction, logoutAction } from "../reducers/user";
+import { setUpdateAction } from "../reducers/menu";
 import useInput from "../hooks/useInput";
 // import {  }
 
@@ -34,13 +35,17 @@ const AppLayout = ({ children, window }) => {
   const classes = menuStyles();
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [update, setUpdate] = React.useState(true);
+
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
-  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   const dispatch = useDispatch();
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   const menuList = useSelector((state) => state.menu.node.children);
+
+  dispatch(setUpdateAction(setUpdate));
 
   // modal start---
   const modalClasses = modalStyles();
@@ -92,46 +97,9 @@ const AppLayout = ({ children, window }) => {
   const drawer = (
     <div>
       <div className={(classes.toolbar, classes.toolbarCustomising)}>
-        {/* <br /> */}
-        Front-End
-        <br /> Web developer
+        DEV LIFE
       </div>
-      {/* <Divider /> */}
       <List>
-        {/* <Link href='/board'>
-          <a style={{ textDecoration: "none" }}>
-            <ListItem button={true} style={{ color: "#dbdfe2" }} key='board'>
-              <ListItemIcon>
-                <InboxIcon style={{ color: "#dbdfe2" }} />
-              </ListItemIcon>
-              <ListItemText
-                primary='글 작성하기'
-                style={{ color: "#dbdfe2" }}
-              />
-            </ListItem>
-          </a>
-        </Link>
-        <Link href='/post'>
-          <a style={{ textDecoration: "none" }}>
-            <ListItem button={true} style={{ color: "#dbdfe2" }} key='board'>
-              <ListItemIcon>
-                <MailIcon style={{ color: "#dbdfe2" }} />
-              </ListItemIcon>
-              <ListItemText primary='POST' style={{ color: "#dbdfe2" }} />
-            </ListItem>
-          </a>
-        </Link>
-        <Link href='/settings'>
-          <a style={{ textDecoration: "none" }}>
-            <ListItem button={true} style={{ color: "#dbdfe2" }} key='settings'>
-              <ListItemIcon>
-                <MailIcon style={{ color: "#dbdfe2" }} />
-              </ListItemIcon>
-              <ListItemText primary='Settings' style={{ color: "#dbdfe2" }} />
-            </ListItem>
-          </a>
-        </Link> */}
-
         {menuList.map((e, index) => (
           <Link href={e.href} key={e.href}>
             <a style={{ textDecoration: "none" }}>

@@ -1,5 +1,6 @@
 export const initialState = {
   selected: "/",
+  setUpdate: null,
   node: {
     key: "root",
     id: "/",
@@ -41,9 +42,9 @@ export const initialState = {
   },
 };
 
-export const reorderMenuAction = (data) => {
+export const setUpdateAction = (data) => {
   return {
-    type: "REORDER_MENU_ACTION",
+    type: "SET_UPDATE_ACTION",
     data,
   };
 };
@@ -187,10 +188,11 @@ const reducer = (state = initialState, action) => {
         ...state,
         selected: action.data,
       };
-    // case "SAVE_MENU_ACTION":
-    //   return {
-    //     menuList: { ...state.menuList },
-    //   };
+    case "SET_UPDATE_ACTION":
+      return {
+        ...state,
+        setUpdate: action.data,
+      };
     default:
       return state;
   }

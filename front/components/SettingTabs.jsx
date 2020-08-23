@@ -89,6 +89,7 @@ export default function SettingsTabs({ children }) {
   const classes = useStyles();
   const dispatch = useDispatch();
   const initialStoredNode = useSelector((state) => state.menu.node);
+  const setUpdate = useSelector((state) => state.menu.setUpdate);
   const [value, setValue] = React.useState(0);
   const [node, setNode] = React.useState(initialStoredNode);
   const [selected, setSelected] = React.useState("/");
@@ -135,6 +136,7 @@ export default function SettingsTabs({ children }) {
         break;
       case "SAVE":
         dispatch(saveMenuAction(node));
+        setUpdate((prev) => !prev);
         break;
       default:
         break;
