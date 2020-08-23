@@ -55,8 +55,8 @@ export default function SettingsTabs({ children }) {
   const onUp = (e) => {
     if (selected == "/") return;
     const path = selected.split("/").slice(1);
-    let targetNode = getUpperNode(node, path);
-    let ti = parseInt(path[path.length - 1]);
+    const targetNode = getUpperNode(node, path);
+    const ti = parseInt(path[path.length - 1]);
     const isFirst = path[path.length - 1] == 0;
     if (!isFirst) {
       const temp = targetNode.children[ti - 1];
@@ -69,11 +69,12 @@ export default function SettingsTabs({ children }) {
       setSelected("/" + path.slice(0, path.length - 1).join("/") + (ti - 1));
     }
   };
+
   const onDown = (e) => {
     if (selected == "/") return;
     const path = selected.split("/").slice(1);
-    let targetNode = getUpperNode(node, path);
-    let ti = parseInt(path[path.length - 1]); // targetIndex
+    const targetNode = getUpperNode(node, path);
+    const ti = parseInt(path[path.length - 1]); // targetIndex
     const lastChildIndex = targetNode.children.length - 1;
     const isLast = lastChildIndex == ti;
     if (!isLast) {

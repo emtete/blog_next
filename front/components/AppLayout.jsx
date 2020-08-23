@@ -78,17 +78,20 @@ const AppLayout = ({ children, window }) => {
   const body = (
     <div style={modalStyle} className={modalClasses.paper}>
       <h2 id='simple-modal-title'>로그인</h2>
-      <form onSubmit={onSubmitForm}>
-        <form className={classes.root} noValidate autoComplete='off'>
-          <FormControl>
-            <TextField id='id' label='id' onChange={onChangeId} />
-            <TextField id='id' label='password' onChange={onChangePassword} />
-            <br />
-            <Button variant='contained' color='primary' type='submit'>
-              로그인
-            </Button>
-          </FormControl>
-        </form>
+      <form
+        onSubmit={onSubmitForm}
+        className={classes.root}
+        noValidate
+        autoComplete='off'
+      >
+        <FormControl>
+          <TextField id='id' label='id' onChange={onChangeId} />
+          <TextField id='id' label='password' onChange={onChangePassword} />
+          <br />
+          <Button variant='contained' color='primary' type='submit'>
+            로그인
+          </Button>
+        </FormControl>
       </form>
     </div>
   );
