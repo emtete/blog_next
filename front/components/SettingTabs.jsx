@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import Tabs from "@material-ui/core/Tabs";
@@ -10,11 +10,16 @@ import ArrowDownwardOutlinedIcon from "@material-ui/icons/ArrowDownwardOutlined"
 import BackspaceOutlinedIcon from "@material-ui/icons/BackspaceOutlined";
 import CreateIcon from "@material-ui/icons/Create";
 import AddIcon from "@material-ui/icons/Add";
+import SaveIcon from "@material-ui/icons/Save";
 import { Divider } from "@material-ui/core";
 import { useSelector, useDispatch } from "react-redux";
 
 import MenuTree from "./MenuTree";
-import { reorderMenuAction, selectMenuAction } from "../reducers/menu";
+import {
+  saveMenuAction,
+  selectMenuAction,
+  initialState,
+} from "../reducers/menu";
 
 function a11yProps(index) {
   return {
@@ -51,44 +56,42 @@ const getNode = (parentNode, path) => {
   return result;
 };
 
-const initialNode = {
-  key: "root",
-  id: "/",
-  name: "root",
-  parent: null,
-  children: [
-    {
-      key: "1",
-      id: "/0",
-      name: "Child - 1",
-      parent: "root",
-    },
-    {
-      key: "3",
-      id: "/1",
-      name: "Child - 3",
-      parent: "root",
-      children: [
-        {
-          key: "4",
-          id: "/1/0",
-          name: "Child - 4",
-          parent: "3",
-        },
-      ],
-    },
-  ],
-};
+// const initialNode = {
+//   key: "root",
+//   id: "/",
+//   name: "root",
+//   parent: null,
+//   children: [
+//     {
+//       key: "1",
+//       id: "/0",
+//       name: "Child - 1",
+//       parent: "root",
+//     },
+//     {
+//       key: "3",
+//       id: "/1",
+//       name: "Child - 3",
+//       parent: "root",
+//       children: [
+//         {
+//           key: "4",
+//           id: "/1/0",
+//           name: "Child - 4",
+//           parent: "3",
+//         },
+//       ],
+//     },
+//   ],
+// };
 
 export default function SettingsTabs({ children }) {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const initialStoredNode = useSelector((state) => state.menu.node);
   const [value, setValue] = React.useState(0);
-  const [node, setNode] = React.useState(initialNode);
+  const [node, setNode] = React.useState(initialStoredNode);
   const [selected, setSelected] = React.useState("/");
-
-  // const node = useSelector((state) => state.menu.node);
-  // const selected = useSelector((state) => state.menu.selected);
 
   const handleChange = (event, newValue) => {
     const path = selected.split("/").slice(1);
@@ -107,13 +110,6 @@ export default function SettingsTabs({ children }) {
             "/" + path.slice(0, path.length - 1).join("/") + (ti - 1);
           targetNode.children[ti].id =
             "/" + path.slice(0, path.length - 1).join("/") + ti;
-          // dispatch(reorderMenuAction(targetNode));
-          // set
-          // dispatch(
-          //   selectMenuAction(
-          //     "/" + path.slice(0, path.length - 1).join("/") + (ti - 1)
-          //   )
-          // );
           setSelected(
             "/" + path.slice(0, path.length - 1).join("/") + (ti - 1)
           );
@@ -132,16 +128,13 @@ export default function SettingsTabs({ children }) {
             "/" + path.slice(0, path.length - 1).join("/") + ti;
           targetNode.children[ti + 1].id =
             "/" + path.slice(0, path.length - 1).join("/") + (ti + 1);
-          // dispatch(reorderMenuAction(targetNode));
-          // dispatch(
-          //   selectMenuAction(
-          //     "/" + path.slice(0, path.length - 1).join("/") + (ti + 1)
-          //   )
-          // );
           setSelected(
             "/" + path.slice(0, path.length - 1).join("/") + (ti + 1)
           );
         }
+        break;
+      case "SAVE":
+        dispatch(saveMenuAction(node));
         break;
       default:
         break;
@@ -200,6 +193,14 @@ export default function SettingsTabs({ children }) {
             icon={<AddIcon color='primary' />}
             value='ADD'
             {...a11yProps(4)}
+          />
+          <Divider />
+          <Tab
+            button
+            label='SAVE'
+            icon={<SaveIcon color='primary' />}
+            value='SAVE'
+            {...a11yProps(5)}
           />
           <Divider />
         </Tabs>

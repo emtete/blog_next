@@ -170,7 +170,7 @@ export const saveMenuAction = (data) => {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case "REORDER_MENU_ACTION":
+    case "SAVE_MENU_ACTION":
       return {
         ...state,
         node: { ...action.data },
@@ -180,10 +180,10 @@ const reducer = (state = initialState, action) => {
         ...state,
         selected: action.data,
       };
-    case "SAVE_MENU_ACTION":
-      return {
-        menuList: { ...state.menuList },
-      };
+    // case "SAVE_MENU_ACTION":
+    //   return {
+    //     menuList: { ...state.menuList },
+    //   };
     default:
       return state;
   }

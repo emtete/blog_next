@@ -61,8 +61,6 @@ export default function MenuTree({ node, selected, setSelected }) {
   );
 
   const handleSelect = (event, nodeIds) => {
-    console.log("menuTree");
-    // dispatch(selectMenuAction(nodeIds));
     setSelected(nodeIds);
   };
 
