@@ -103,7 +103,7 @@ const AppLayout = ({ children, window }) => {
         {menuList.map((e, index) => (
           <Link href={e.href} key={e.href}>
             <a style={{ textDecoration: "none" }}>
-              <ListItem button={true} key={e.id} style={{ color: "#dbdfe2" }}>
+              <ListItem button key={e.id} style={{ color: "#dbdfe2" }}>
                 <ListItemIcon>
                   {index % 2 === 0 ? (
                     <InboxIcon style={{ color: "#dbdfe2" }} />
