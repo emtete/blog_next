@@ -5,6 +5,9 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
+import Button from "@material-ui/core/Button";
+import ButtonGroup from "@material-ui/core/ButtonGroup";
+
 import ArrowUpwardOutlinedIcon from "@material-ui/icons/ArrowUpwardOutlined";
 import ArrowDownwardOutlinedIcon from "@material-ui/icons/ArrowDownwardOutlined";
 import BackspaceOutlinedIcon from "@material-ui/icons/BackspaceOutlined";
@@ -37,6 +40,15 @@ const useStyles = makeStyles((theme) => ({
   },
   tabs: {
     // borderRight: `1px solid ${theme.palette.divider}`,
+  },
+}));
+
+const buttonGroupStyles = makeStyles((theme) => ({
+  root: {
+    display: "flex",
+    "& > *": {
+      margin: theme.spacing(1),
+    },
   },
 }));
 
@@ -87,125 +99,115 @@ const getNode = (parentNode, path) => {
 
 export default function SettingsTabs({ children }) {
   const classes = useStyles();
+  // const buttonGroupClasses = buttonGroupStyles();
   const dispatch = useDispatch();
   const initialStoredNode = useSelector((state) => state.menu.node);
   const setUpdate = useSelector((state) => state.menu.setUpdate);
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = React.useState("UP");
   const [node, setNode] = React.useState(initialStoredNode);
   const [selected, setSelected] = React.useState("/");
 
-  const handleChange = (event, newValue) => {
+  const onUp = (e) => {
+    if (selected == "/") return;
     const path = selected.split("/").slice(1);
-    let targetNode;
-    let ti; // targetIndex
-    switch (newValue) {
-      case "UP":
-        targetNode = getUpperNode(node, path);
-        ti = parseInt(path[path.length - 1]);
-        const isFirst = path[path.length - 1] == 0;
-        if (!isFirst) {
-          const temp = targetNode.children[ti - 1];
-          targetNode.children[ti - 1] = targetNode.children[ti];
-          targetNode.children[ti] = temp;
-          targetNode.children[ti - 1].id =
-            "/" + path.slice(0, path.length - 1).join("/") + (ti - 1);
-          targetNode.children[ti].id =
-            "/" + path.slice(0, path.length - 1).join("/") + ti;
-          setSelected(
-            "/" + path.slice(0, path.length - 1).join("/") + (ti - 1)
-          );
-        }
-        break;
-      case "DOWN":
-        targetNode = getUpperNode(node, path);
-        ti = parseInt(path[path.length - 1]); // targetIndex
-        const lastChildIndex = targetNode.children.length - 1;
-        const isLast = lastChildIndex == ti;
-        if (!isLast) {
-          const temp = targetNode.children[ti];
-          targetNode.children[ti] = targetNode.children[ti + 1];
-          targetNode.children[ti + 1] = temp;
-          targetNode.children[ti].id =
-            "/" + path.slice(0, path.length - 1).join("/") + ti;
-          targetNode.children[ti + 1].id =
-            "/" + path.slice(0, path.length - 1).join("/") + (ti + 1);
-          setSelected(
-            "/" + path.slice(0, path.length - 1).join("/") + (ti + 1)
-          );
-        }
-        break;
-      case "SAVE":
-        dispatch(saveMenuAction(node));
-        setUpdate((prev) => !prev);
-        break;
-      default:
-        break;
+    let targetNode = getUpperNode(node, path);
+    let ti = parseInt(path[path.length - 1]);
+    const isFirst = path[path.length - 1] == 0;
+    if (!isFirst) {
+      const temp = targetNode.children[ti - 1];
+      targetNode.children[ti - 1] = targetNode.children[ti];
+      targetNode.children[ti] = temp;
+      targetNode.children[ti - 1].id =
+        "/" + path.slice(0, path.length - 1).join("/") + (ti - 1);
+      targetNode.children[ti].id =
+        "/" + path.slice(0, path.length - 1).join("/") + ti;
+      setSelected("/" + path.slice(0, path.length - 1).join("/") + (ti - 1));
     }
   };
+  const onDown = (e) => {
+    if (selected == "/") return;
+    const path = selected.split("/").slice(1);
+    let targetNode = getUpperNode(node, path);
+    let ti = parseInt(path[path.length - 1]); // targetIndex
+    const lastChildIndex = targetNode.children.length - 1;
+    const isLast = lastChildIndex == ti;
+    if (!isLast) {
+      const temp = targetNode.children[ti];
+      targetNode.children[ti] = targetNode.children[ti + 1];
+      targetNode.children[ti + 1] = temp;
+      targetNode.children[ti].id =
+        "/" + path.slice(0, path.length - 1).join("/") + ti;
+      targetNode.children[ti + 1].id =
+        "/" + path.slice(0, path.length - 1).join("/") + (ti + 1);
+      setSelected("/" + path.slice(0, path.length - 1).join("/") + (ti + 1));
+    }
+  };
+  const onDelete = (e) => {};
+  const onUpdate = (e) => {};
+  const onAdd = (e) => {};
+  const onSave = (e) => {
+    dispatch(saveMenuAction(node));
+    setUpdate((prev) => !prev);
+  };
+
+  const data = [
+    {
+      onClick: onUp,
+      name: "UP",
+      icon: <ArrowUpwardOutlinedIcon color='primary' />,
+    },
+    {
+      onClick: onDown,
+      name: "DOWN",
+      icon: <ArrowDownwardOutlinedIcon color='primary' />,
+    },
+    {
+      onClick: onDelete,
+      name: "DELETE",
+      icon: <BackspaceOutlinedIcon color='primary' />,
+    },
+    {
+      onClick: onUpdate,
+      name: "UPDATE",
+      icon: <CreateIcon color='primary' />,
+    },
+    {
+      onClick: onAdd,
+      name: "ADD",
+      icon: <AddIcon color='primary' />,
+    },
+    {
+      onClick: onSave,
+      name: "SAVE",
+      icon: <SaveIcon color='primary' />,
+    },
+  ];
 
   return (
     <div>
       <div className={classes.root}>
         <MenuTree node={node} selected={selected} setSelected={setSelected} />
-        <Tabs
+        <ButtonGroup
           orientation='vertical'
-          variant='scrollable'
-          value={value}
-          onChange={handleChange}
-          aria-label='Vertical tabs example'
-          className={classes.tabs}
+          color='primary'
+          aria-label='vertical contained primary button group'
+          variant='text'
         >
-          <Divider />
-          <Tab
-            button
-            label='UP'
-            icon={<ArrowUpwardOutlinedIcon color='primary' />}
-            // disabled={true}
-            value='UP'
-            {...a11yProps(0)}
-          />
-          <Divider />
-          <Tab
-            button
-            label='DOWN'
-            icon={<ArrowDownwardOutlinedIcon color='primary' />}
-            value='DOWN'
-            {...a11yProps(1)}
-          />
-          <Divider />
-          <Tab
-            button
-            label='DELETE'
-            icon={<BackspaceOutlinedIcon color='primary' />}
-            value='DELETE'
-            {...a11yProps(2)}
-          />
-          <Divider />
-          <Tab
-            button
-            label='UPDATE'
-            icon={<CreateIcon color='primary' />}
-            value='UPDATE'
-            {...a11yProps(3)}
-          />
-          <Divider />
-          <Tab
-            button
-            label='ADD'
-            icon={<AddIcon color='primary' />}
-            value='ADD'
-            {...a11yProps(4)}
-          />
-          <Divider />
-          <Tab
-            button
-            label='SAVE'
-            icon={<SaveIcon color='primary' />}
-            value='SAVE'
-            {...a11yProps(5)}
-          />
-          <Divider />
-        </Tabs>
+          {data.map((e) => (
+            <Button onClick={e.onClick}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                {e.icon}
+                {e.name}
+              </div>
+            </Button>
+          ))}
+        </ButtonGroup>
       </div>
     </div>
   );
