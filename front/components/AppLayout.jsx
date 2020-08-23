@@ -19,83 +19,44 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import styled from "styled-components";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Link from "next/link";
-import { useState, useMemo, useCallback } from "react";
-import Modal from "@material-ui/core/Modal";
-import { FormControl, TextField, Button } from "@material-ui/core";
+import { useState, useMemo, useCallback, useEffect } from "react";
+
+// import { FormControl, TextField, Button } from "@material-ui/core";
 import { useSelector, useDispatch } from "react-redux";
 
-import { modalStyles, getModalStyle } from "./layout/LoginStyles";
 import { ToggleButton, menuStyles } from "./layout/styles";
 import { loginAction, logoutAction } from "../reducers/user";
 import { setUpdateAction } from "../reducers/menu";
+import { openningLoginModalAction } from "../reducers/modal";
 import useInput from "../hooks/useInput";
+import LoginModal from "./LoginModal";
 // import {  }
 
 const AppLayout = ({ children, window }) => {
   const classes = menuStyles();
   const theme = useTheme();
+  const dispatch = useDispatch();
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [update, setUpdate] = React.useState(true);
-
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
-
-  const dispatch = useDispatch();
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   const menuList = useSelector((state) => state.menu.node.children);
+  // const setOpenModal = useSelector((state) => state.menu.setOpenModalAction);
 
-  dispatch(setUpdateAction(setUpdate));
-
-  // modal start---
-  const modalClasses = modalStyles();
-  const [modalStyle] = React.useState(getModalStyle);
-  const [open, setOpen] = React.useState(false);
-  const [id, onChangeId] = useInput("");
-  const [password, onChangePassword] = useInput("");
-
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
+  const handleDrawerToggle = async () => {
+    setMobileOpen(!mobileOpen);
   };
 
   const handleHandle = () => {
     if (isLoggedIn) {
       dispatch(logoutAction());
     } else {
-      handleOpen();
+      // handleOpen();
+
+      dispatch(openningLoginModalAction());
     }
   };
 
-  const onSubmitForm = () => {
-    dispatch(loginAction());
-    handleClose();
-  };
-
-  const body = (
-    <div style={modalStyle} className={modalClasses.paper}>
-      <h2 id='simple-modal-title'>로그인</h2>
-      <form
-        onSubmit={onSubmitForm}
-        className={classes.root}
-        noValidate
-        autoComplete='off'
-      >
-        <FormControl>
-          <TextField id='id' label='id' onChange={onChangeId} />
-          <TextField id='id' label='password' onChange={onChangePassword} />
-          <br />
-          <Button variant='contained' color='primary' type='submit'>
-            로그인
-          </Button>
-        </FormControl>
-      </form>
-    </div>
-  );
-  // modal end---
+  dispatch(setUpdateAction(setUpdate));
 
   const drawer = (
     <div>
@@ -126,14 +87,15 @@ const AppLayout = ({ children, window }) => {
             {isLoggedIn ? "로그아웃" : "로그인"}
           </button>
           <div>
-            <Modal
+            {/* <Modal
               open={open}
               onClose={handleClose}
               aria-labelledby='simple-modal-title'
               aria-describedby='simple-modal-description'
             >
               {body}
-            </Modal>
+            </Modal> */}
+            <LoginModal />
           </div>
         </ListItem>
       </List>

@@ -4,6 +4,7 @@ import { combineReducers } from "redux";
 import user from "./user";
 import post from "./post";
 import menu from "./menu";
+import modal from "./modal";
 
 const rootReducer = combineReducers({
   index: (state = {}, action) => {
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
   user,
   post,
   menu,
+  modal,
 });
 
 export default rootReducer;

@@ -183,6 +183,7 @@ const reducer = (state = initialState, action) => {
         ...state,
         node: { ...action.data },
       };
+
     case "SELECT_MENU_ACTION":
       return {
         ...state,
