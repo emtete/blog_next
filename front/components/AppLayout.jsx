@@ -121,9 +121,6 @@ const AppLayout = ({ children, window }) => {
         ))}
 
         <ListItem button style={{ color: "#dbdfe2" }} key='login'>
-          {/* <Link href='/login'>
-            <a>Login</a>
-          </Link> */}
           <button type='button' onClick={handleHandle}>
             {/* 로그인 */}
             {isLoggedIn ? "로그아웃" : "로그인"}
