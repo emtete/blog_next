@@ -17,30 +17,30 @@ const useStyles = makeStyles({
 });
 
 // 객체를 담은 배열을 계층형식으로 변환시킨다.
-const flatToHierarchy = (arr, parent, order) => {
-  const result = [];
-  let index = arr.findIndex((e) => e.parent === parent && e.order === order);
+// const flatToHierarchy = (arr, parent, order) => {
+//   const result = [];
+//   let index = arr.findIndex((e) => e.parent === parent && e.order === order);
 
-  while (index !== -1) {
-    let child = arr[index];
-    let havaChildren = arr.findIndex((e) => e.parent === child.id);
+//   while (index !== -1) {
+//     let child = arr[index];
+//     let havaChildren = arr.findIndex((e) => e.parent === child.id);
 
-    if (havaChildren !== -1) {
-      child["children"] = flatToHierarchy(arr, child.id, 0);
-    }
-    order++;
-    result.push(child);
-    arr.splice(index, 1);
-    index = arr.findIndex((e) => e.parent === parent && e.order === order);
-  }
-  return result;
-};
+//     if (havaChildren !== -1) {
+//       child["children"] = flatToHierarchy(arr, child.id, 0);
+//     }
+//     order++;
+//     result.push(child);
+//     arr.splice(index, 1);
+//     index = arr.findIndex((e) => e.parent === parent && e.order === order);
+//   }
+//   return result;
+// };
 
-export default function MenuTree() {
+export default function MenuTree({ node, selected, setSelected }) {
   const dispatch = useDispatch();
   const classes = useStyles();
-  const node = useSelector((state) => state.menu.node);
-  const selected = useSelector((state) => state.menu.selected);
+  // const node = useSelector((state) => state.menu.node);
+  // const selected = useSelector((state) => state.menu.selected);
   // const [selected, setSelected] = React.useState([]);
 
   const onLabelClick = () => {
@@ -61,7 +61,9 @@ export default function MenuTree() {
   );
 
   const handleSelect = (event, nodeIds) => {
-    dispatch(selectMenuAction(nodeIds));
+    console.log("menuTree");
+    // dispatch(selectMenuAction(nodeIds));
+    setSelected(nodeIds);
   };
 
   return (

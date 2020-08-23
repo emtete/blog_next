@@ -51,18 +51,46 @@ const getNode = (parentNode, path) => {
   return result;
 };
 
+const initialNode = {
+  key: "root",
+  id: "/",
+  name: "root",
+  parent: null,
+  children: [
+    {
+      key: "1",
+      id: "/0",
+      name: "Child - 1",
+      parent: "root",
+    },
+    {
+      key: "3",
+      id: "/1",
+      name: "Child - 3",
+      parent: "root",
+      children: [
+        {
+          key: "4",
+          id: "/1/0",
+          name: "Child - 4",
+          parent: "3",
+        },
+      ],
+    },
+  ],
+};
+
 export default function SettingsTabs({ children }) {
   const classes = useStyles();
   const dispatch = useDispatch();
   const [value, setValue] = React.useState(0);
-  // const [selectedTree, setSelectedTree] = React.useState([]);
-  const node = useSelector((state) => state.menu.node);
-  const selected = useSelector((state) => state.menu.selected);
+  const [node, setNode] = React.useState(initialNode);
+  const [selected, setSelected] = React.useState("/");
+
+  // const node = useSelector((state) => state.menu.node);
+  // const selected = useSelector((state) => state.menu.selected);
 
   const handleChange = (event, newValue) => {
-    // setValue(newValue);
-    // console.log("test : ", newValue);
-    // console.log("selectedTree : ", selectedTree);
     const path = selected.split("/").slice(1);
     let targetNode;
     let ti; // targetIndex
@@ -79,11 +107,15 @@ export default function SettingsTabs({ children }) {
             "/" + path.slice(0, path.length - 1).join("/") + (ti - 1);
           targetNode.children[ti].id =
             "/" + path.slice(0, path.length - 1).join("/") + ti;
-          dispatch(reorderMenuAction(targetNode));
-          dispatch(
-            selectMenuAction(
-              "/" + path.slice(0, path.length - 1).join("/") + (ti - 1)
-            )
+          // dispatch(reorderMenuAction(targetNode));
+          // set
+          // dispatch(
+          //   selectMenuAction(
+          //     "/" + path.slice(0, path.length - 1).join("/") + (ti - 1)
+          //   )
+          // );
+          setSelected(
+            "/" + path.slice(0, path.length - 1).join("/") + (ti - 1)
           );
         }
         break;
@@ -100,11 +132,14 @@ export default function SettingsTabs({ children }) {
             "/" + path.slice(0, path.length - 1).join("/") + ti;
           targetNode.children[ti + 1].id =
             "/" + path.slice(0, path.length - 1).join("/") + (ti + 1);
-          dispatch(reorderMenuAction(targetNode));
-          dispatch(
-            selectMenuAction(
-              "/" + path.slice(0, path.length - 1).join("/") + (ti + 1)
-            )
+          // dispatch(reorderMenuAction(targetNode));
+          // dispatch(
+          //   selectMenuAction(
+          //     "/" + path.slice(0, path.length - 1).join("/") + (ti + 1)
+          //   )
+          // );
+          setSelected(
+            "/" + path.slice(0, path.length - 1).join("/") + (ti + 1)
           );
         }
         break;
@@ -113,15 +148,10 @@ export default function SettingsTabs({ children }) {
     }
   };
 
-  // nodeId == menu order
-  // const getSelected = (nodeIds) => {
-  //   setSelectedTree(nodeIds);
-  // };
-
   return (
     <div>
       <div className={classes.root}>
-        <MenuTree />
+        <MenuTree node={node} selected={selected} setSelected={setSelected} />
         <Tabs
           orientation='vertical'
           variant='scrollable'
