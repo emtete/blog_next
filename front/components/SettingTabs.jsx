@@ -1,10 +1,6 @@
 import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
-import Typography from "@material-ui/core/Typography";
-import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 
@@ -14,7 +10,6 @@ import BackspaceOutlinedIcon from "@material-ui/icons/BackspaceOutlined";
 import CreateIcon from "@material-ui/icons/Create";
 import AddIcon from "@material-ui/icons/Add";
 import SaveIcon from "@material-ui/icons/Save";
-import { Divider } from "@material-ui/core";
 import { useSelector, useDispatch } from "react-redux";
 
 import MenuTree from "./MenuTree";
@@ -24,31 +19,12 @@ import {
   initialState,
 } from "../reducers/menu";
 
-function a11yProps(index) {
-  return {
-    id: `vertical-tab-${index}`,
-    "aria-controls": `vertical-tabpanel-${index}`,
-  };
-}
-
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
     display: "flex",
     height: "100%",
-  },
-  tabs: {
-    // borderRight: `1px solid ${theme.palette.divider}`,
-  },
-}));
-
-const buttonGroupStyles = makeStyles((theme) => ({
-  root: {
-    display: "flex",
-    "& > *": {
-      margin: theme.spacing(1),
-    },
   },
 }));
 
@@ -68,42 +44,11 @@ const getNode = (parentNode, path) => {
   return result;
 };
 
-// const initialNode = {
-//   key: "root",
-//   id: "/",
-//   name: "root",
-//   parent: null,
-//   children: [
-//     {
-//       key: "1",
-//       id: "/0",
-//       name: "Child - 1",
-//       parent: "root",
-//     },
-//     {
-//       key: "3",
-//       id: "/1",
-//       name: "Child - 3",
-//       parent: "root",
-//       children: [
-//         {
-//           key: "4",
-//           id: "/1/0",
-//           name: "Child - 4",
-//           parent: "3",
-//         },
-//       ],
-//     },
-//   ],
-// };
-
 export default function SettingsTabs({ children }) {
   const classes = useStyles();
-  // const buttonGroupClasses = buttonGroupStyles();
   const dispatch = useDispatch();
   const initialStoredNode = useSelector((state) => state.menu.node);
   const setUpdate = useSelector((state) => state.menu.setUpdate);
-  const [value, setValue] = React.useState("UP");
   const [node, setNode] = React.useState(initialStoredNode);
   const [selected, setSelected] = React.useState("/");
 
@@ -194,7 +139,7 @@ export default function SettingsTabs({ children }) {
           variant='text'
         >
           {data.map((e) => (
-            <Button onClick={e.onClick}>
+            <Button onClick={e.onClick} key={e.name}>
               <div
                 style={{
                   display: "flex",
