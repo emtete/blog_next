@@ -40,6 +40,7 @@ const AppLayout = ({ children, window }) => {
 
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   const dispatch = useDispatch();
+  const menuList = useSelector((state) => state.menu.node.children);
 
   // modal start---
   const modalClasses = modalStyles();
@@ -97,7 +98,7 @@ const AppLayout = ({ children, window }) => {
       </div>
       {/* <Divider /> */}
       <List>
-        <Link href='/board'>
+        {/* <Link href='/board'>
           <a style={{ textDecoration: "none" }}>
             <ListItem button={true} style={{ color: "#dbdfe2" }} key='board'>
               <ListItemIcon>
@@ -129,19 +130,25 @@ const AppLayout = ({ children, window }) => {
               <ListItemText primary='Settings' style={{ color: "#dbdfe2" }} />
             </ListItem>
           </a>
-        </Link>
-        {/* {["Send email", "Drafts"].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>
-              {index % 2 === 0 ? (
-                <InboxIcon style={{ color: "#dbdfe2" }} />
-              ) : (
-                <MailIcon style={{ color: "#dbdfe2" }} />
-              )}
-            </ListItemIcon>
-            <ListItemText primary={text} style={{ color: "#dbdfe2" }} />
-          </ListItem>
-        ))} */}
+        </Link> */}
+
+        {menuList.map((e, index) => (
+          <Link href={e.href} key={e.href}>
+            <a style={{ textDecoration: "none" }}>
+              <ListItem button={true} key={e.id} style={{ color: "#dbdfe2" }}>
+                <ListItemIcon>
+                  {index % 2 === 0 ? (
+                    <InboxIcon style={{ color: "#dbdfe2" }} />
+                  ) : (
+                    <MailIcon style={{ color: "#dbdfe2" }} />
+                  )}
+                </ListItemIcon>
+                <ListItemText primary={e.name} style={{ color: "#dbdfe2" }} />
+              </ListItem>
+            </a>
+          </Link>
+        ))}
+
         <ListItem button style={{ color: "#dbdfe2" }} key='login'>
           {/* <Link href='/login'>
             <a>Login</a>
