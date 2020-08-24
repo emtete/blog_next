@@ -193,13 +193,12 @@ export const addPost = (data) => {
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case "ADD_POST":
-      console.log("test1: title ", action.data.title);
-      console.log("test2: mainPost ", action.data.content);
       return {
         ...state,
         // title: action.data.title,
         mainPosts: [
           {
+            id: action.data.id,
             title: action.data.title,
             date: action.data.date,
             content: action.data.content,

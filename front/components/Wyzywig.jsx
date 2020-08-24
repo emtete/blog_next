@@ -17,6 +17,19 @@ const htmlToDraft = dynamic(
   { ssr: false }
 );
 
+const getDateStr = (date) => {
+  let sYear = date.getFullYear();
+  let sMonth = date.getMonth() + 1;
+  let sDate = date.getDate();
+  let sHours = date.getHours();
+  let sMinutes = date.getMinutes();
+  let sSeconds = date.getSeconds();
+
+  sMonth = sMonth > 9 ? sMonth : "0" + sMonth;
+  sDate = sDate > 9 ? sDate : "0" + sDate;
+  return sYear + sMonth + sDate + sHours + sMinutes + sSeconds;
+};
+
 const Wyzywig = () => {
   const dispatch = useDispatch();
   const mainPosts = useSelector((state) => state.post.mainPosts);
@@ -32,7 +45,8 @@ const Wyzywig = () => {
     e.preventDefault();
     const content = convertToRaw(editorState.getCurrentContent());
     const date = "1년 전";
-    dispatch(addPost({ title, date, content }), [title, date, content]);
+    const id = getDateStr(new Date());
+    dispatch(addPost({ title, date, content, id }), [title, date, content, id]);
   };
 
   const onChangeText = (e) => {
