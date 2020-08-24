@@ -27,9 +27,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { modalStyles, getModalStyle } from "./layout/LoginStyles";
 import { ToggleButton, menuStyles } from "./layout/styles";
 import { loginAction, logoutAction } from "../reducers/user";
-import { setUpdateAction } from "../reducers/menu";
 import useInput from "../hooks/useInput";
-// import {  }
 
 const AppLayout = ({ children, window }) => {
   const classes = menuStyles();
@@ -44,8 +42,7 @@ const AppLayout = ({ children, window }) => {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   const menuList = useSelector((state) => state.menu.node.children);
-
-  dispatch(setUpdateAction(setUpdate));
+  const isUpdate = useSelector((state) => state.menu.isUpdate);
 
   // modal start---
   const modalClasses = modalStyles();

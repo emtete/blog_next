@@ -1,6 +1,6 @@
 export const initialState = {
   selected: "/",
-  setUpdate: null,
+  isUpdate: false,
   node: {
     key: "root",
     id: "/",
@@ -42,9 +42,9 @@ export const initialState = {
   },
 };
 
-export const setUpdateAction = (data) => {
+export const toggleUpdateAction = (data) => {
   return {
-    type: "SET_UPDATE_ACTION",
+    type: "TOGGLE_UPDATE_ACTION",
     data,
   };
 };
@@ -188,10 +188,10 @@ const reducer = (state = initialState, action) => {
         ...state,
         selected: action.data,
       };
-    case "SET_UPDATE_ACTION":
+    case "TOGGLE_UPDATE_ACTION":
       return {
         ...state,
-        setUpdate: action.data,
+        isUpdate: !state.isUpdate,
       };
     default:
       return state;

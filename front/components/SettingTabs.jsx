@@ -17,6 +17,7 @@ import {
   saveMenuAction,
   selectMenuAction,
   initialState,
+  toggleUpdateAction,
 } from "../reducers/menu";
 
 const useStyles = makeStyles((theme) => ({
@@ -48,7 +49,6 @@ export default function SettingsTabs({ children }) {
   const classes = useStyles();
   const dispatch = useDispatch();
   const initialStoredNode = useSelector((state) => state.menu.node);
-  const setUpdate = useSelector((state) => state.menu.setUpdate);
   const [node, setNode] = React.useState(initialStoredNode);
   const [selected, setSelected] = React.useState("/");
 
@@ -93,7 +93,7 @@ export default function SettingsTabs({ children }) {
   const onAdd = (e) => {};
   const onSave = (e) => {
     dispatch(saveMenuAction(node));
-    setUpdate((prev) => !prev);
+    dispatch(toggleUpdateAction());
   };
 
   const data = [
