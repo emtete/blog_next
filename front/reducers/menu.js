@@ -2,21 +2,21 @@ export const initialState = {
   selected: "/",
   isUpdate: false,
   node: {
-    key: "root",
+    key: "202010112311",
     id: "/",
     name: "root",
     parent: null,
     href: "/",
     children: [
       {
-        key: "1",
+        key: "202010112312",
         id: "/0",
         name: "글 작성하기",
         parent: "root",
         href: "/board",
       },
       {
-        key: "3",
+        key: "202010112313",
         id: "/1",
         name: "POST",
         parent: "root",
@@ -32,7 +32,7 @@ export const initialState = {
         // ],
       },
       {
-        key: "4",
+        key: "202010112314",
         id: "/2",
         name: "Settings",
         parent: "root",
