@@ -1,5 +1,5 @@
 import React from "react";
-import { withStyles } from "@material-ui/core/styles";
+import { withStyles, makeStyles } from "@material-ui/core/styles";
 import MuiAccordion from "@material-ui/core/Accordion";
 import MuiAccordionSummary from "@material-ui/core/AccordionSummary";
 import MuiAccordionDetails from "@material-ui/core/AccordionDetails";
@@ -7,6 +7,13 @@ import Typography from "@material-ui/core/Typography";
 import { useDispatch, useSelector } from "react-redux";
 
 import PostDetail from "./PostDetail";
+
+const useStyles = makeStyles((theme) => ({
+  content: {
+    flexGrow: 1,
+    padding: theme.spacing(3),
+  },
+}));
 
 const Accordion = withStyles({
   root: {
@@ -51,6 +58,7 @@ const AccordionDetails = withStyles((theme) => ({
 }))(MuiAccordionDetails);
 
 export default function PostList() {
+  const classes = useStyles();
   const [expanded, setExpanded] = React.useState("");
   const dispatch = useDispatch();
   const mainPosts = useSelector((state) => state.post.mainPosts);
@@ -60,27 +68,29 @@ export default function PostList() {
   };
 
   return (
-    <div>
-      {mainPosts.map((v, i) => (
-        <Accordion
-          square
-          expanded={expanded === `panel1${i}`}
-          onChange={handleChange(`panel1${i}`)}
-          key={v.id}
-        >
-          <AccordionSummary
-            aria-controls='panel1d-content'
-            id='panel1d-header'
-            style={{ justifyContent: "space-between" }}
+    <main className={classes.content}>
+      <div>
+        {mainPosts.map((v, i) => (
+          <Accordion
+            square
+            expanded={expanded === `panel1${i}`}
+            onChange={handleChange(`panel1${i}`)}
+            key={v.id}
           >
-            <Typography>{v.title}</Typography>
-            <Typography>{v.date}</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <PostDetail postContent={v.content} />
-          </AccordionDetails>
-        </Accordion>
-      ))}
-    </div>
+            <AccordionSummary
+              aria-controls='panel1d-content'
+              id='panel1d-header'
+              style={{ justifyContent: "space-between" }}
+            >
+              <Typography>{v.title}</Typography>
+              <Typography>{v.date}</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <PostDetail postContent={v.content} />
+            </AccordionDetails>
+          </Accordion>
+        ))}
+      </div>
+    </main>
   );
 }

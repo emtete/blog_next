@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import draftToHtml from "draftjs-to-html";
 import { TextField, FormControl, Button } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
+import { makeStyles } from "@material-ui/core/styles";
 
 import { addPost } from "../reducers/post";
 
@@ -16,6 +17,13 @@ const htmlToDraft = dynamic(
   () => import("html-to-draftjs").then((mod) => mod.htmlToDraft),
   { ssr: false }
 );
+
+const useStyles = makeStyles((theme) => ({
+  content: {
+    flexGrow: 1,
+    padding: theme.spacing(3),
+  },
+}));
 
 const getDateStr = (date) => {
   let sYear = date.getFullYear();
@@ -31,6 +39,7 @@ const getDateStr = (date) => {
 };
 
 const Wyzywig = () => {
+  const classes = useStyles();
   const dispatch = useDispatch();
   const mainPosts = useSelector((state) => state.post.mainPosts);
 
@@ -54,51 +63,53 @@ const Wyzywig = () => {
   };
 
   return (
-    <form onSubmit={onSubmitForm}>
-      <FormControl>
-        <TextField id='title' label='title' onChange={onChangeText} />
-        <br />
-        <Editor
-          editorState={editorState}
-          wrapperClassName='demo-wrapper'
-          editorClassName='demo-editor'
-          editorStyle={{
-            height: "275px",
-            borderWidth: "1px",
-            borderStyle: "solid",
-            borderColor: "rgb(241, 241, 241)",
-            borderImage: "initial",
-            padding: "5px",
-            borderRadius: "2px",
-          }}
-          onEditorStateChange={onEditorStateChange}
-          localization={{
-            locale: "ko",
-          }}
-        />
-        {/* <textarea
+    <main className={classes.content}>
+      <form onSubmit={onSubmitForm}>
+        <FormControl>
+          <TextField id='title' label='title' onChange={onChangeText} />
+          <br />
+          <Editor
+            editorState={editorState}
+            wrapperClassName='demo-wrapper'
+            editorClassName='demo-editor'
+            editorStyle={{
+              height: "275px",
+              borderWidth: "1px",
+              borderStyle: "solid",
+              borderColor: "rgb(241, 241, 241)",
+              borderImage: "initial",
+              padding: "5px",
+              borderRadius: "2px",
+            }}
+            onEditorStateChange={onEditorStateChange}
+            localization={{
+              locale: "ko",
+            }}
+          />
+          {/* <textarea
             disabled
             value={draftToHtml(convertToRaw(editorState.getCurrentContent()))}
           /> */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            marginTop: "10px",
-          }}
-        >
-          <Button
-            variant='contained'
-            color='primary'
-            type='submit'
-            fullWidth={false}
-            size='large'
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              marginTop: "10px",
+            }}
           >
-            등록
-          </Button>
-        </div>
-      </FormControl>
-    </form>
+            <Button
+              variant='contained'
+              color='primary'
+              type='submit'
+              fullWidth={false}
+              size='large'
+            >
+              등록
+            </Button>
+          </div>
+        </FormControl>
+      </form>
+    </main>
   );
 };
 

@@ -27,6 +27,10 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     height: "100%",
   },
+  content: {
+    flexGrow: 1,
+    padding: theme.spacing(3),
+  },
 }));
 
 const getUpperNode = (parentNode, path) => {
@@ -130,31 +134,36 @@ export default function SettingsTabs({ children }) {
   ];
 
   return (
-    <div>
-      <div className={classes.root}>
-        <MenuTree node={node} selected={selected} setSelected={setSelected} />
-        <ButtonGroup
-          orientation='vertical'
-          color='primary'
-          aria-label='vertical contained primary button group'
-          variant='text'
-        >
-          {data.map((e) => (
-            <Button onClick={e.onClick} key={e.name}>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                }}
-              >
-                {e.icon}
-                {e.name}
-              </div>
-            </Button>
-          ))}
-        </ButtonGroup>
+    <main
+      className={classes.content}
+      style={{ display: "flex", justifyContent: "center" }}
+    >
+      <div>
+        <div className={classes.root}>
+          <MenuTree node={node} selected={selected} setSelected={setSelected} />
+          <ButtonGroup
+            orientation='vertical'
+            color='primary'
+            aria-label='vertical contained primary button group'
+            variant='text'
+          >
+            {data.map((e) => (
+              <Button onClick={e.onClick} key={e.name}>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                  }}
+                >
+                  {e.icon}
+                  {e.name}
+                </div>
+              </Button>
+            ))}
+          </ButtonGroup>
+        </div>
       </div>
-    </div>
+    </main>
   );
 }

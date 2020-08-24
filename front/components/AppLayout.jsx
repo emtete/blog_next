@@ -178,12 +178,12 @@ const AppLayout = ({ children, window }) => {
           </Drawer>
         </Hidden>
       </nav>
-      <main
+      {/* <main
         className={classes.content}
-        style={{ display: "flex", justifyContent: "center" }}
-      >
-        {children}
-      </main>
+        // style={{ display: "flex", justifyContent: "center" }}
+      > */}
+      {children}
+      {/* </main> */}
     </div>
   );
 };
