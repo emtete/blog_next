@@ -17,9 +17,6 @@ const htmlToDraft = dynamic(
 class PostDetail extends Component {
   constructor(props) {
     super(props);
-
-    console.log(this.props.postContent);
-
     this.state = {
       editorState: EditorState.createWithContent(
         convertFromRaw(this.props.postContent)
@@ -31,7 +28,7 @@ class PostDetail extends Component {
     this.setState({
       editorState,
     });
-    console.log(JSON.stringify(convertToRaw(editorState.getCurrentContent())));
+    // console.log(JSON.stringify(convertToRaw(editorState.getCurrentContent())));
   };
 
   render() {
