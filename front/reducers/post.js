@@ -1,6 +1,7 @@
 export const initialState = {
   mainPosts: [
     {
+      id: "0",
       title: "Collapsible Group Item #1",
       date: "1년 전",
       content: {
@@ -60,6 +61,7 @@ export const initialState = {
       },
     },
     {
+      id: "1",
       title: "Collapsible Group Item #2",
       date: "2년 전",
       content: {
@@ -119,6 +121,7 @@ export const initialState = {
       },
     },
     {
+      id: "2",
       title: "Collapsible Group Item #3",
       date: "3년 전",
       content: {

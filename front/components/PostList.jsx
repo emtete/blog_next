@@ -59,7 +59,6 @@ export default function PostList() {
     setExpanded(newExpanded ? panel : false);
   };
 
-  // console.log("test", mainPosts.length);
   return (
     <div>
       {mainPosts.map((v, i) => (
@@ -67,6 +66,7 @@ export default function PostList() {
           square
           expanded={expanded === `panel1${i}`}
           onChange={handleChange(`panel1${i}`)}
+          key={v.id}
         >
           <AccordionSummary
             aria-controls='panel1d-content'
@@ -77,9 +77,7 @@ export default function PostList() {
             <Typography>{v.date}</Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <Typography>
-              <PostDetail postContent={v.content} />
-            </Typography>
+            <PostDetail postContent={v.content} />
           </AccordionDetails>
         </Accordion>
       ))}

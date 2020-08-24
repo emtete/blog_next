@@ -35,7 +35,6 @@ class PostDetail extends Component {
   };
 
   render() {
-    console.log("test", this.props.postContent);
     const { editorState } = this.state;
     return (
       <div>
