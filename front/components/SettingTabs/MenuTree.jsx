@@ -6,7 +6,7 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import { TreeItem } from "@material-ui/lab";
 import { useSelector, useDispatch } from "react-redux";
 
-import { reorderMenuAction, selectMenuAction } from "../reducers/menu";
+import { reorderMenuAction, selectMenuAction } from "../../reducers/menu";
 
 const useStyles = makeStyles({
   root: {

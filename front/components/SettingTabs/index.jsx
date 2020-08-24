@@ -18,7 +18,7 @@ import {
   selectMenuAction,
   initialState,
   toggleUpdateAction,
-} from "../reducers/menu";
+} from "../../reducers/menu";
 
 const useStyles = makeStyles((theme) => ({
   root: {
