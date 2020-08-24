@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import ButtonGroup from "@material-ui/core/ButtonGroup";
+import Modal from "@material-ui/core/Modal";
+import { FormControl, TextField, Button, ButtonGroup } from "@material-ui/core";
 
 import ArrowUpwardOutlinedIcon from "@material-ui/icons/ArrowUpwardOutlined";
 import ArrowDownwardOutlinedIcon from "@material-ui/icons/ArrowDownwardOutlined";
@@ -12,6 +12,7 @@ import AddIcon from "@material-ui/icons/Add";
 import SaveIcon from "@material-ui/icons/Save";
 import { useSelector, useDispatch } from "react-redux";
 
+import { modalStyles, getModalStyle } from "../layout/LoginStyles";
 import MenuTree from "./MenuTree";
 import {
   saveMenuAction,
@@ -19,6 +20,7 @@ import {
   initialState,
   toggleUpdateAction,
 } from "../../reducers/menu";
+import useInput from "../../hooks/useInput";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,16 +35,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const getUpperNode = (parentNode, path) => {
-  let result = { ...parentNode };
+const getUpperNode = (rootNode, path) => {
+  let result = { ...rootNode };
   for (let i = 0; i < path.length - 1; i++) {
     result = result.children[path[i]];
   }
   return result;
 };
 
-const getNode = (parentNode, path) => {
-  let result = { ...parentNode };
+const getNode = (rootNode, path) => {
+  let result = { ...rootNode };
   for (let i = 0; i < path.length; i++) {
     result = result.children[path[i]];
   }
@@ -93,7 +95,17 @@ export default function SettingsTabs({ children }) {
     }
   };
   const onDelete = (e) => {};
-  const onUpdate = (e) => {};
+  const onUpdate = (e) => {
+    if (selected == "/") return;
+    const path = selected.split("/").slice(1);
+    const upperNode = getUpperNode(node, path);
+    const currentNode = getNode(node, path);
+    setName(currentNode.name);
+    setHref(currentNode.href);
+    setParent(currentNode.parent);
+    setTitle("UPDATE");
+    handleOpen();
+  };
   const onAdd = (e) => {};
   const onSave = (e) => {
     dispatch(saveMenuAction(node));
@@ -133,11 +145,89 @@ export default function SettingsTabs({ children }) {
     },
   ];
 
+  // modal start---
+  const modalClasses = modalStyles();
+  const [modalStyle] = React.useState(getModalStyle);
+  const [open, setOpen] = React.useState(false);
+  const [title, setTitle] = React.useState("");
+
+  const [name, onChangeName, setName] = useInput("");
+  const [href, onChangeHref, setHref] = useInput("");
+  const [parent, onChangeParent, setParent] = useInput("");
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  // const handleHandle = () => {
+  //   if (isLoggedIn) {
+  //     dispatch(logoutAction());
+  //   } else {
+  //     handleOpen();
+  //   }
+  // };
+
+  // const onSubmitForm = () => {
+  // dispatch(loginAction());
+  // handleClose();
+  // };
+
+  const body = (
+    <div style={modalStyle} className={modalClasses.paper}>
+      <h2 id='simple-modal-title'>{title}</h2>
+      <form
+        // onSubmit={onSubmitForm}
+        className={classes.root}
+        noValidate
+        autoComplete='off'
+      >
+        {/* 수정 할 수 있는 내용 : name, href, parent */}
+        <FormControl>
+          <TextField
+            id='name'
+            label='name'
+            value={name}
+            onChange={onChangeName}
+          />
+          <TextField
+            id='href'
+            label='href'
+            value={href}
+            onChange={onChangeHref}
+          />
+          <TextField
+            id='parent'
+            label='parent'
+            value={parent}
+            onChange={onChangeParent}
+          />
+          <br />
+          <Button variant='contained' color='primary' type='submit'>
+            로그인
+          </Button>
+        </FormControl>
+      </form>
+    </div>
+  );
+  // modal end---
+
   return (
     <main
       className={classes.content}
       style={{ display: "flex", justifyContent: "center" }}
     >
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby='simple-modal-title'
+        aria-describedby='simple-modal-description'
+      >
+        {body}
+      </Modal>
       <div>
         <div className={classes.root}>
           <MenuTree node={node} selected={selected} setSelected={setSelected} />
