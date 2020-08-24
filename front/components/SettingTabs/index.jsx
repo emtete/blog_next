@@ -2,7 +2,14 @@ import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
-import { FormControl, TextField, Button, ButtonGroup } from "@material-ui/core";
+import {
+  FormControl,
+  TextField,
+  Button,
+  ButtonGroup,
+  Select,
+  MenuItem,
+} from "@material-ui/core";
 
 import ArrowUpwardOutlinedIcon from "@material-ui/icons/ArrowUpwardOutlined";
 import ArrowDownwardOutlinedIcon from "@material-ui/icons/ArrowDownwardOutlined";
@@ -51,6 +58,31 @@ const getNode = (rootNode, path) => {
   return result;
 };
 
+const getNodeToFlat = (rootNode, currentNode) => {
+  let result = [];
+  if (rootNode.id === "/") {
+    result.push(rootNode);
+  }
+  for (let i = 0; i < rootNode.children.length; i++) {
+    const node = rootNode.children[i];
+
+    let isFamily;
+    if (currentNode.id.length === node.id.length) {
+      isFamily = currentNode.id === node.id;
+    } else if (currentNode.id.length > node.id.length) {
+      isFamily = currentNode.id.slice(0, node.id.length) === node.id;
+    } else if (currentNode.id.length < node.id.length) {
+      isFamily = node.id.slice(0, currentNode.id.length) === node.id;
+    }
+
+    if (!isFamily) result.push(node);
+    if (Array.isArray(node.children) && node.children.length !== 0) {
+      result.push(...getNodeToFlat(node, currentNode));
+    }
+  }
+  return result;
+};
+
 export default function SettingsTabs({ children }) {
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -58,19 +90,22 @@ export default function SettingsTabs({ children }) {
   const [node, setNode] = React.useState(initialStoredNode);
   const [selected, setSelected] = React.useState("/");
 
+  const path = selected.split("/").slice(1);
+  const upperNode = getUpperNode(node, path);
+  const currentNode = getNode(node, path) || node;
+
   const onUp = (e) => {
     if (selected == "/") return;
-    const path = selected.split("/").slice(1);
-    const targetNode = getUpperNode(node, path);
+
     const ti = parseInt(path[path.length - 1]);
     const isFirst = path[path.length - 1] == 0;
     if (!isFirst) {
-      const temp = targetNode.children[ti - 1];
-      targetNode.children[ti - 1] = targetNode.children[ti];
-      targetNode.children[ti] = temp;
-      targetNode.children[ti - 1].id =
+      const temp = upperNode.children[ti - 1];
+      upperNode.children[ti - 1] = upperNode.children[ti];
+      upperNode.children[ti] = temp;
+      upperNode.children[ti - 1].id =
         "/" + path.slice(0, path.length - 1).join("/") + (ti - 1);
-      targetNode.children[ti].id =
+      upperNode.children[ti].id =
         "/" + path.slice(0, path.length - 1).join("/") + ti;
       setSelected("/" + path.slice(0, path.length - 1).join("/") + (ti - 1));
     }
@@ -78,18 +113,16 @@ export default function SettingsTabs({ children }) {
 
   const onDown = (e) => {
     if (selected == "/") return;
-    const path = selected.split("/").slice(1);
-    const targetNode = getUpperNode(node, path);
     const ti = parseInt(path[path.length - 1]); // targetIndex
-    const lastChildIndex = targetNode.children.length - 1;
+    const lastChildIndex = upperNode.children.length - 1;
     const isLast = lastChildIndex == ti;
     if (!isLast) {
-      const temp = targetNode.children[ti];
-      targetNode.children[ti] = targetNode.children[ti + 1];
-      targetNode.children[ti + 1] = temp;
-      targetNode.children[ti].id =
+      const temp = upperNode.children[ti];
+      upperNode.children[ti] = upperNode.children[ti + 1];
+      upperNode.children[ti + 1] = temp;
+      upperNode.children[ti].id =
         "/" + path.slice(0, path.length - 1).join("/") + ti;
-      targetNode.children[ti + 1].id =
+      upperNode.children[ti + 1].id =
         "/" + path.slice(0, path.length - 1).join("/") + (ti + 1);
       setSelected("/" + path.slice(0, path.length - 1).join("/") + (ti + 1));
     }
@@ -97,13 +130,12 @@ export default function SettingsTabs({ children }) {
   const onDelete = (e) => {};
   const onUpdate = (e) => {
     if (selected == "/") return;
-    const path = selected.split("/").slice(1);
-    const upperNode = getUpperNode(node, path);
-    const currentNode = getNode(node, path);
     setName(currentNode.name);
     setHref(currentNode.href);
     setParent(currentNode.parent);
     setTitle("UPDATE");
+    // setSelectedId(currentNode.id);
+    // setSelectedParent(upperNode.id);
     handleOpen();
   };
   const onAdd = (e) => {};
@@ -151,9 +183,15 @@ export default function SettingsTabs({ children }) {
   const [open, setOpen] = React.useState(false);
   const [title, setTitle] = React.useState("");
 
+  const [selectedId, setSelectedId] = React.useState("");
+  const [selectedParent, setSelectedParent] = React.useState("/");
   const [name, onChangeName, setName] = useInput("");
   const [href, onChangeHref, setHref] = useInput("");
   const [parent, onChangeParent, setParent] = useInput("");
+
+  const handleChange = (event) => {
+    setSelectedParent(event.target.value);
+  };
 
   const handleOpen = () => {
     setOpen(true);
@@ -163,24 +201,31 @@ export default function SettingsTabs({ children }) {
     setOpen(false);
   };
 
-  // const handleHandle = () => {
-  //   if (isLoggedIn) {
-  //     dispatch(logoutAction());
-  //   } else {
-  //     handleOpen();
-  //   }
-  // };
+  const renderMenuItem = (arrNode) => {
+    return arrNode.map((e) => (
+      <MenuItem value={e.id} key={e.key}>
+        {e.name}
+      </MenuItem>
+    ));
+  };
 
-  // const onSubmitForm = () => {
-  // dispatch(loginAction());
-  // handleClose();
-  // };
+  const applyModalContent = (e) => {
+    e.preventDefault();
+    currentNode.name = name;
+    currentNode.href = href;
+    const targetMenu = getNode(node, selectedParent.split("/").slice(1));
+    targetMenu.children.push(currentNode);
+    currentNode.id = targetMenu.id + "/" + (targetMenu.children.length - 1);
+    // currentNode를 트리에서 삭제
+    upperNode.children.splice(path[path.length - 1], 1);
+    handleClose();
+  };
 
   const body = (
     <div style={modalStyle} className={modalClasses.paper}>
       <h2 id='simple-modal-title'>{title}</h2>
       <form
-        // onSubmit={onSubmitForm}
+        onSubmit={applyModalContent}
         className={classes.root}
         noValidate
         autoComplete='off'
@@ -199,15 +244,18 @@ export default function SettingsTabs({ children }) {
             value={href}
             onChange={onChangeHref}
           />
-          <TextField
+          <br />
+          <Select
+            labelId='parent-select-label'
             id='parent'
-            label='parent'
-            value={parent}
-            onChange={onChangeParent}
-          />
+            value={selectedParent}
+            onChange={handleChange}
+          >
+            {renderMenuItem(getNodeToFlat(node, currentNode))}
+          </Select>
           <br />
           <Button variant='contained' color='primary' type='submit'>
-            로그인
+            수정하기
           </Button>
         </FormControl>
       </form>
