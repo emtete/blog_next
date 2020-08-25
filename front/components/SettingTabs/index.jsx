@@ -66,6 +66,7 @@ const getUpperNode = (rootNode, path) => {
 const getNode = (rootNode, path) => {
   let result = { ...rootNode };
   for (let i = 0; i < path.length; i++) {
+    // console.log("result : ", result);
     result = result.children[path[i]];
   }
   return result;
@@ -103,6 +104,9 @@ const combineMenuAndPost = (menu, postObject) => {
   const keys = Object.keys(postObject);
   for (let i = 0; i < keys.length; i++) {
     postObject[keys[i]].map((post) => {
+      console.log("result : ", result);
+      // console.log("path", post.parentId.split("/").slice(1));
+      console.log("path", post.parentId);
       const parentMenu = getNode(result, post.parentId.split("/").slice(1));
       parentMenu.children.push(post);
     });
@@ -123,21 +127,27 @@ const interChangeArrId = (arr, index, upperPath) => {
   arr1.id = upperPath + (index - 1);
   arr2.id = upperPath + index;
 
+  console.log("upperPath", upperPath);
+  // console.log("upperPath", upperPath);
+  // console.log("arr1 id : ", arr1.id);
+  // console.log("arr2 id : ", arr2.id);
+
   if (Array.isArray(arr1.children) && arr1.children.length > 0) {
-    changeParentId(arr1, arr1.id);
+    changeChildrenId(arr1, arr1.id);
   }
   if (Array.isArray(arr2.children) && arr2.children.length > 0) {
-    changeParentId(arr2, arr2.id);
+    changeChildrenId(arr2, arr2.id);
   }
 };
 
-const changeParentId = (parent, parentId) => {
+const changeChildrenId = (parent, parentId) => {
   parent.children.map((e) => {
     const path = e.id.split("/");
     e.parentId = parentId;
     e.id = parentId + "/" + path[path.length - 1];
+    console.log("parentId : ", parentId);
     if (Array.isArray(e.children) && e.children.length > 0) {
-      changeParentId(e, e.id);
+      changeChildrenId(e, e.id);
     }
   });
 };
@@ -155,6 +165,8 @@ export default function SettingsTabs({ children }) {
   const path = selected.split("/").slice(1);
   const upperNode = getUpperNode(node, path);
   const currentNode = getNode(node, path) || node;
+  let upperPath = "/" + path.slice(0, path.length - 1).join("/");
+  upperPath += upperPath.trim().length > 1 ? "/" : "";
 
   const changeMenuState = (role, upperPath) => {
     const path = selected.split("/").slice(1);
@@ -243,8 +255,8 @@ export default function SettingsTabs({ children }) {
     if (!isFirst) {
       const nodeKeys = Object.keys(currentNode);
       const isMenu = nodeKeys.find((key) => key === "children");
-      let upperPath = "/" + path.slice(0, path.length - 1).join("/");
-      upperPath += upperPath.length > 1 ? "/" : "";
+      // let upperPath = "/" + path.slice(0, path.length - 1).join("/");
+      // upperPath += upperPath.trim().length > 1 ? "/" : "";
 
       if (isMenu) {
         changeMenuState("UP", upperPath);
@@ -267,7 +279,8 @@ export default function SettingsTabs({ children }) {
     if (!isLast) {
       const nodeKeys = Object.keys(currentNode);
       const isMenu = nodeKeys.find((key) => key === "children");
-      const upperPath = "/" + path.slice(0, path.length - 1).join("/") + "/";
+      // let upperPath = "/" + path.slice(0, path.length - 1).join("/");
+      // upperPath += upperPath.trim().length > 1 ? "/" : "";
 
       if (isMenu) {
         changeMenuState("DOWN", upperPath);
