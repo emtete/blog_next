@@ -127,7 +127,12 @@ export default function SettingsTabs({ children }) {
       setSelected("/" + path.slice(0, path.length - 1).join("/") + (ti + 1));
     }
   };
-  const onDelete = (e) => {};
+  const onDelete = (e) => {
+    upperNode.children[path[path.length - 1]].name = "";
+    // currentNode를 트리에서 삭제
+    upperNode.children.splice(path[path.length - 1], 1);
+    setSelected("/");
+  };
   const onUpdate = (e) => {
     if (selected == "/") return;
     setName(currentNode.name);
