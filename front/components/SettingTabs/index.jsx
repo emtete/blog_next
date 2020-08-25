@@ -124,20 +124,122 @@ export default function SettingsTabs({ children }) {
   const upperNode = getUpperNode(node, path);
   const currentNode = getNode(node, path) || node;
 
+  const changeMenuState = (role) => {
+    switch (role) {
+      case "UP":
+        const path = selected.split("/").slice(1);
+        const ti = parseInt(path[path.length - 1]);
+        const upperNode = getUpperNode(initialStoredNode, path);
+        const temp = upperNode.children[ti - 1];
+        upperNode.children[ti - 1] = upperNode.children[ti];
+        upperNode.children[ti] = temp;
+        upperNode.children[ti - 1].id =
+          "/" + path.slice(0, path.length - 1).join("/") + (ti - 1);
+        upperNode.children[ti].id =
+          "/" + path.slice(0, path.length - 1).join("/") + ti;
+        break;
+      case "DOWN":
+        break;
+      case "DELETE":
+        break;
+      case "UPDATE":
+        break;
+      case "ADD":
+        break;
+      case "SAVE":
+        break;
+    }
+  };
+
+  const changePostState = (role) => {
+    switch (role) {
+      case "UP":
+        const path = selected.split("/").slice(1);
+        const ti = parseInt(path[path.length - 1]);
+        // const upperNode = getUpperNode(initialStoredPost, path);
+        const upperNode =
+          initialStoredPost[selected.slice(0, selected.length - 2)];
+        const temp = upperNode[ti - 1];
+        upperNode[ti - 1] = upperNode[ti];
+        upperNode[ti] = temp;
+        upperNode[ti - 1].id =
+          "/" + path.slice(0, path.length - 1).join("/") + (ti - 1);
+        upperNode[ti].id = "/" + path.slice(0, path.length - 1).join("/") + ti;
+        break;
+      case "DOWN":
+        break;
+      case "DELETE":
+        break;
+      case "UPDATE":
+        break;
+      case "ADD":
+        break;
+      case "SAVE":
+        break;
+    }
+  };
+
+  const changeCombineState = (role) => {
+    switch (role) {
+      case "UP":
+        // const currentNode = getNode(node, path) || node;
+        const path = selected.split("/").slice(1);
+        const ti = parseInt(path[path.length - 1]);
+        const upperNode = getUpperNode(node, path);
+
+        const temp = upperNode.children[ti - 1];
+        upperNode.children[ti - 1] = upperNode.children[ti];
+        upperNode.children[ti] = temp;
+        upperNode.children[ti - 1].id =
+          "/" + path.slice(0, path.length - 1).join("/") + "/" + (ti - 1);
+        upperNode.children[ti].id =
+          "/" + path.slice(0, path.length - 1).join("/") + "/" + ti;
+
+        break;
+      case "DOWN":
+        break;
+      case "DELETE":
+        break;
+      case "UPDATE":
+        break;
+      case "ADD":
+        break;
+      case "SAVE":
+        break;
+    }
+  };
+
   const onUp = (e) => {
     if (selected == "/") return;
 
     const ti = parseInt(path[path.length - 1]);
     const isFirst = path[path.length - 1] == 0;
     if (!isFirst) {
-      const temp = upperNode.children[ti - 1];
-      upperNode.children[ti - 1] = upperNode.children[ti];
-      upperNode.children[ti] = temp;
-      upperNode.children[ti - 1].id =
-        "/" + path.slice(0, path.length - 1).join("/") + (ti - 1);
-      upperNode.children[ti].id =
-        "/" + path.slice(0, path.length - 1).join("/") + ti;
-      setSelected("/" + path.slice(0, path.length - 1).join("/") + (ti - 1));
+      // const temp = upperNode.children[ti - 1];
+      // upperNode.children[ti - 1] = upperNode.children[ti];
+      // upperNode.children[ti] = temp;
+      // upperNode.children[ti - 1].id =
+      //   "/" + path.slice(0, path.length - 1).join("/") + (ti - 1);
+      // upperNode.children[ti].id =
+      //   "/" + path.slice(0, path.length - 1).join("/") + ti;
+      // const currentNode = getNode();
+      console.log("currentNode : ", currentNode);
+      console.log("getNode : ", getNode(node, path));
+      console.log(path);
+      const nodeKeys = Object.keys(currentNode);
+      const isMenu = nodeKeys.find((key) => key === "children");
+      console.log("isMenu : ", isMenu);
+
+      if (isMenu) {
+        changeMenuState("UP");
+      } else {
+        changePostState("UP");
+      }
+
+      changeCombineState("UP");
+      setSelected(
+        "/" + path.slice(0, path.length - 1).join("/") + "/" + (ti - 1)
+      );
     }
   };
 
