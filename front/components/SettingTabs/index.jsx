@@ -110,10 +110,15 @@ const combineMenuAndPost = (menu, postObject) => {
   return result;
 };
 
-const changeArrOrder = (arr, index) => {
+const interChangeArrOrder = (arr, index) => {
   const temp = arr[index - 1];
   arr[index - 1] = arr[index];
   arr[index] = temp;
+};
+
+const interChangeArrId = (arr, index, upperPath) => {
+  arr[index - 1].id = upperPath + (index - 1);
+  arr[index].id = upperPath + index;
 };
 
 export default function SettingsTabs({ children }) {
@@ -136,13 +141,9 @@ export default function SettingsTabs({ children }) {
         const path = selected.split("/").slice(1);
         const ti = parseInt(path[path.length - 1]);
         const upperNode = getUpperNode(initialStoredNode, path);
-        changeArrOrder(upperNode.children, ti);
-        // const temp = upperNode.children[ti - 1];
-        // upperNode.children[ti - 1] = upperNode.children[ti];
-        // upperNode.children[ti] = temp;
 
-        upperNode.children[ti - 1].id = upperPath + (ti - 1);
-        upperNode.children[ti].id = upperPath + ti;
+        interChangeArrOrder(upperNode.children, ti);
+        interChangeArrId(upperNode.children, ti, upperPath);
         break;
       case "DOWN":
         break;
@@ -165,13 +166,9 @@ export default function SettingsTabs({ children }) {
         const upperNode =
           initialStoredPost[selected.slice(0, selected.length - 2)];
 
-        changeArrOrder(upperNode, ti);
-        // const temp = upperNode[ti - 1];
-        // upperNode[ti - 1] = upperNode[ti];
-        // upperNode[ti] = temp;
+        interChangeArrOrder(upperNode, ti);
+        interChangeArrId(upperNode, ti, upperPath);
 
-        upperNode[ti - 1].id = upperPath + (ti - 1);
-        upperNode[ti].id = upperPath + ti;
         break;
       case "DOWN":
         break;
@@ -193,13 +190,8 @@ export default function SettingsTabs({ children }) {
         const ti = parseInt(path[path.length - 1]);
         const upperNode = getUpperNode(node, path);
 
-        changeArrOrder(upperNode.children, ti);
-        // const temp = upperNode.children[ti - 1];
-        // upperNode.children[ti - 1] = upperNode.children[ti];
-        // upperNode.children[ti] = temp;
-
-        upperNode.children[ti - 1].id = upperPath + (ti - 1);
-        upperNode.children[ti].id = upperPath + ti;
+        interChangeArrOrder(upperNode.children, ti);
+        interChangeArrId(upperNode.children, ti, upperPath);
 
         break;
       case "DOWN":
