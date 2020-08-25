@@ -136,16 +136,18 @@ export default function SettingsTabs({ children }) {
   const currentNode = getNode(node, path) || node;
 
   const changeMenuState = (role, upperPath) => {
+    const path = selected.split("/").slice(1);
+    const ti = parseInt(path[path.length - 1]);
+    const upperNode = getUpperNode(initialStoredNode, path);
     switch (role) {
       case "UP":
-        const path = selected.split("/").slice(1);
-        const ti = parseInt(path[path.length - 1]);
-        const upperNode = getUpperNode(initialStoredNode, path);
-
         interChangeArrOrder(upperNode.children, ti);
         interChangeArrId(upperNode.children, ti, upperPath);
         break;
+
       case "DOWN":
+        interChangeArrOrder(upperNode.children, ti + 1);
+        interChangeArrId(upperNode.children, ti + 1, upperPath);
         break;
       case "DELETE":
         break;
@@ -159,18 +161,19 @@ export default function SettingsTabs({ children }) {
   };
 
   const changePostState = (role, upperPath) => {
+    const path = selected.split("/").slice(1);
+    const ti = parseInt(path[path.length - 1]);
+    const upperNode = initialStoredPost[selected.slice(0, selected.length - 2)];
+
     switch (role) {
       case "UP":
-        const path = selected.split("/").slice(1);
-        const ti = parseInt(path[path.length - 1]);
-        const upperNode =
-          initialStoredPost[selected.slice(0, selected.length - 2)];
-
         interChangeArrOrder(upperNode, ti);
         interChangeArrId(upperNode, ti, upperPath);
 
         break;
       case "DOWN":
+        interChangeArrOrder(upperNode, ti + 1);
+        interChangeArrId(upperNode, ti + 1, upperPath);
         break;
       case "DELETE":
         break;
@@ -184,17 +187,19 @@ export default function SettingsTabs({ children }) {
   };
 
   const changeCombineState = (role, upperPath) => {
+    const path = selected.split("/").slice(1);
+    const ti = parseInt(path[path.length - 1]);
+    const upperNode = getUpperNode(node, path);
+
     switch (role) {
       case "UP":
-        const path = selected.split("/").slice(1);
-        const ti = parseInt(path[path.length - 1]);
-        const upperNode = getUpperNode(node, path);
-
         interChangeArrOrder(upperNode.children, ti);
         interChangeArrId(upperNode.children, ti, upperPath);
 
         break;
       case "DOWN":
+        interChangeArrOrder(upperNode.children, ti + 1);
+        interChangeArrId(upperNode.children, ti + 1, upperPath);
         break;
       case "DELETE":
         break;
@@ -212,10 +217,12 @@ export default function SettingsTabs({ children }) {
 
     const ti = parseInt(path[path.length - 1]);
     const isFirst = path[path.length - 1] == 0;
+
     if (!isFirst) {
       const nodeKeys = Object.keys(currentNode);
       const isMenu = nodeKeys.find((key) => key === "children");
       const upperPath = "/" + path.slice(0, path.length - 1).join("/") + "/";
+
       if (isMenu) {
         changeMenuState("UP", upperPath);
       } else {
@@ -229,20 +236,27 @@ export default function SettingsTabs({ children }) {
 
   const onDown = (e) => {
     if (selected == "/") return;
+
     const ti = parseInt(path[path.length - 1]); // targetIndex
     const lastChildIndex = upperNode.children.length - 1;
     const isLast = lastChildIndex == ti;
+
     if (!isLast) {
-      const temp = upperNode.children[ti];
-      upperNode.children[ti] = upperNode.children[ti + 1];
-      upperNode.children[ti + 1] = temp;
-      upperNode.children[ti].id =
-        "/" + path.slice(0, path.length - 1).join("/") + ti;
-      upperNode.children[ti + 1].id =
-        "/" + path.slice(0, path.length - 1).join("/") + (ti + 1);
-      setSelected("/" + path.slice(0, path.length - 1).join("/") + (ti + 1));
+      const nodeKeys = Object.keys(currentNode);
+      const isMenu = nodeKeys.find((key) => key === "children");
+      const upperPath = "/" + path.slice(0, path.length - 1).join("/") + "/";
+
+      if (isMenu) {
+        changeMenuState("DOWN", upperPath);
+      } else {
+        changePostState("DOWN", upperPath);
+      }
+
+      changeCombineState("DOWN", upperPath);
+      setSelected(upperPath + (ti + 1));
     }
   };
+
   const onDelete = (e) => {
     upperNode.children[path[path.length - 1]].name = "";
     // currentNode를 트리에서 삭제
