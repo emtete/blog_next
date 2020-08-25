@@ -42,6 +42,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const getDateStr = (date) => {
+  let sYear = date.getFullYear();
+  let sMonth = date.getMonth() + 1;
+  let sDate = date.getDate();
+  let sHours = date.getHours();
+  let sMinutes = date.getMinutes();
+  let sSeconds = date.getSeconds();
+
+  sMonth = sMonth > 9 ? sMonth : "0" + sMonth;
+  sDate = sDate > 9 ? sDate : "0" + sDate;
+  return sYear + sMonth + sDate + sHours + sMinutes + sSeconds;
+};
+
 const getUpperNode = (rootNode, path) => {
   let result = { ...rootNode };
   for (let i = 0; i < path.length - 1; i++) {
@@ -141,9 +154,17 @@ export default function SettingsTabs({ children }) {
     setTitle("UPDATE");
     // setSelectedId(currentNode.id);
     // setSelectedParent(upperNode.id);
+    setShowSelect({ display: "block" });
     handleOpen();
   };
-  const onAdd = (e) => {};
+  const onAdd = (e) => {
+    setTitle("ADD");
+    setName("");
+    setHref("");
+    setParent("");
+    setShowSelect({ display: "none" });
+    handleOpen();
+  };
   const onSave = (e) => {
     dispatch(saveMenuAction(node));
     dispatch(toggleUpdateAction());
@@ -187,6 +208,7 @@ export default function SettingsTabs({ children }) {
   const [modalStyle] = React.useState(getModalStyle);
   const [open, setOpen] = React.useState(false);
   const [title, setTitle] = React.useState("");
+  const [showSelect, setShowSelect] = React.useState({ display: "block" });
 
   const [selectedId, setSelectedId] = React.useState("");
   const [selectedParent, setSelectedParent] = React.useState("/");
@@ -216,13 +238,36 @@ export default function SettingsTabs({ children }) {
 
   const applyModalContent = (e) => {
     e.preventDefault();
-    currentNode.name = name;
-    currentNode.href = href;
-    const targetMenu = getNode(node, selectedParent.split("/").slice(1));
-    targetMenu.children.push(currentNode);
-    currentNode.id = targetMenu.id + "/" + (targetMenu.children.length - 1);
-    // currentNode를 트리에서 삭제
-    upperNode.children.splice(path[path.length - 1], 1);
+
+    switch (title) {
+      case "ADD":
+        const newKey = getDateStr(new Date());
+        const newId = currentNode.id + "/" + (currentNode.children.length - 1);
+        const newName = name;
+        const newHref = href;
+        const newParentName = currentNode.name;
+        const newParentId = currentNode.id;
+        const newNode = {
+          key: newKey,
+          id: newId,
+          name: newName,
+          parentId: newParentId,
+          parentName: newParentName,
+          href: newHref,
+          children: [],
+        };
+        currentNode.children.push(newNode);
+        break;
+      case "UPDATE":
+        currentNode.name = name;
+        currentNode.href = href;
+        const targetMenu = getNode(node, selectedParent.split("/").slice(1));
+        targetMenu.children.push(currentNode);
+        currentNode.id = targetMenu.id + "/" + (targetMenu.children.length - 1);
+        // currentNode를 트리에서 삭제
+        upperNode.children.splice(path[path.length - 1], 1);
+        break;
+    }
     handleClose();
   };
 
@@ -255,12 +300,13 @@ export default function SettingsTabs({ children }) {
             id='parent'
             value={selectedParent}
             onChange={handleChange}
+            style={showSelect}
           >
             {renderMenuItem(getNodeToFlat(node, currentNode))}
           </Select>
           <br />
           <Button variant='contained' color='primary' type='submit'>
-            수정하기
+            확인
           </Button>
         </FormControl>
       </form>
