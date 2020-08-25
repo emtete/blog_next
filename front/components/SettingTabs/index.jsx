@@ -117,8 +117,29 @@ const interChangeArrOrder = (arr, index) => {
 };
 
 const interChangeArrId = (arr, index, upperPath) => {
-  arr[index - 1].id = upperPath + (index - 1);
-  arr[index].id = upperPath + index;
+  const arr1 = arr[index - 1];
+  const arr2 = arr[index];
+
+  arr1.id = upperPath + (index - 1);
+  arr2.id = upperPath + index;
+
+  if (Array.isArray(arr1.children) && arr1.children.length > 0) {
+    changeParentId(arr1, arr1.id);
+  }
+  if (Array.isArray(arr2.children) && arr2.children.length > 0) {
+    changeParentId(arr2, arr2.id);
+  }
+};
+
+const changeParentId = (parent, parentId) => {
+  parent.children.map((e) => {
+    const path = e.id.split("/");
+    e.parentId = parentId;
+    e.id = parentId + "/" + path[path.length - 1];
+    if (Array.isArray(e.children) && e.children.length > 0) {
+      changeParentId(e, e.id);
+    }
+  });
 };
 
 export default function SettingsTabs({ children }) {
@@ -126,10 +147,10 @@ export default function SettingsTabs({ children }) {
   const dispatch = useDispatch();
   const initialStoredNode = useSelector((state) => state.menu.node);
   const initialStoredPost = useSelector((state) => state.post.mainPosts);
+  const [selected, setSelected] = React.useState("/");
   const [node, setNode] = React.useState(
     combineMenuAndPost(initialStoredNode, initialStoredPost)
   );
-  const [selected, setSelected] = React.useState("/");
 
   const path = selected.split("/").slice(1);
   const upperNode = getUpperNode(node, path);
@@ -139,6 +160,7 @@ export default function SettingsTabs({ children }) {
     const path = selected.split("/").slice(1);
     const ti = parseInt(path[path.length - 1]);
     const upperNode = getUpperNode(initialStoredNode, path);
+
     switch (role) {
       case "UP":
         interChangeArrOrder(upperNode.children, ti);
@@ -221,7 +243,8 @@ export default function SettingsTabs({ children }) {
     if (!isFirst) {
       const nodeKeys = Object.keys(currentNode);
       const isMenu = nodeKeys.find((key) => key === "children");
-      const upperPath = "/" + path.slice(0, path.length - 1).join("/") + "/";
+      let upperPath = "/" + path.slice(0, path.length - 1).join("/");
+      upperPath += upperPath.length > 1 ? "/" : "";
 
       if (isMenu) {
         changeMenuState("UP", upperPath);
@@ -263,6 +286,7 @@ export default function SettingsTabs({ children }) {
     upperNode.children.splice(path[path.length - 1], 1);
     setSelected("/");
   };
+
   const onUpdate = (e) => {
     if (selected == "/") return;
     setName(currentNode.name);
