@@ -124,7 +124,7 @@ export default function SettingsTabs({ children }) {
   const upperNode = getUpperNode(node, path);
   const currentNode = getNode(node, path) || node;
 
-  const changeMenuState = (role) => {
+  const changeMenuState = (role, upperPath) => {
     switch (role) {
       case "UP":
         const path = selected.split("/").slice(1);
@@ -133,10 +133,8 @@ export default function SettingsTabs({ children }) {
         const temp = upperNode.children[ti - 1];
         upperNode.children[ti - 1] = upperNode.children[ti];
         upperNode.children[ti] = temp;
-        upperNode.children[ti - 1].id =
-          "/" + path.slice(0, path.length - 1).join("/") + (ti - 1);
-        upperNode.children[ti].id =
-          "/" + path.slice(0, path.length - 1).join("/") + ti;
+        upperNode.children[ti - 1].id = upperPath + (ti - 1);
+        upperNode.children[ti].id = upperPath + ti;
         break;
       case "DOWN":
         break;
@@ -151,20 +149,18 @@ export default function SettingsTabs({ children }) {
     }
   };
 
-  const changePostState = (role) => {
+  const changePostState = (role, upperPath) => {
     switch (role) {
       case "UP":
         const path = selected.split("/").slice(1);
         const ti = parseInt(path[path.length - 1]);
-        // const upperNode = getUpperNode(initialStoredPost, path);
         const upperNode =
           initialStoredPost[selected.slice(0, selected.length - 2)];
         const temp = upperNode[ti - 1];
         upperNode[ti - 1] = upperNode[ti];
         upperNode[ti] = temp;
-        upperNode[ti - 1].id =
-          "/" + path.slice(0, path.length - 1).join("/") + (ti - 1);
-        upperNode[ti].id = "/" + path.slice(0, path.length - 1).join("/") + ti;
+        upperNode[ti - 1].id = upperPath + (ti - 1);
+        upperNode[ti].id = upperPath + ti;
         break;
       case "DOWN":
         break;
@@ -179,10 +175,9 @@ export default function SettingsTabs({ children }) {
     }
   };
 
-  const changeCombineState = (role) => {
+  const changeCombineState = (role, upperPath) => {
     switch (role) {
       case "UP":
-        // const currentNode = getNode(node, path) || node;
         const path = selected.split("/").slice(1);
         const ti = parseInt(path[path.length - 1]);
         const upperNode = getUpperNode(node, path);
@@ -190,10 +185,8 @@ export default function SettingsTabs({ children }) {
         const temp = upperNode.children[ti - 1];
         upperNode.children[ti - 1] = upperNode.children[ti];
         upperNode.children[ti] = temp;
-        upperNode.children[ti - 1].id =
-          "/" + path.slice(0, path.length - 1).join("/") + "/" + (ti - 1);
-        upperNode.children[ti].id =
-          "/" + path.slice(0, path.length - 1).join("/") + "/" + ti;
+        upperNode.children[ti - 1].id = upperPath + (ti - 1);
+        upperNode.children[ti].id = upperPath + ti;
 
         break;
       case "DOWN":
@@ -219,14 +212,13 @@ export default function SettingsTabs({ children }) {
       const isMenu = nodeKeys.find((key) => key === "children");
       const upperPath = "/" + path.slice(0, path.length - 1).join("/") + "/";
       if (isMenu) {
-        changeMenuState("UP");
+        changeMenuState("UP", upperPath);
       } else {
-        changePostState("UP");
+        changePostState("UP", upperPath);
       }
 
-      changeCombineState("UP");
+      changeCombineState("UP", upperPath);
       setSelected(upperPath + (ti - 1));
-      // "/" + path.slice(0, path.length - 1).join("/") + "/" + (ti - 1)
     }
   };
 
