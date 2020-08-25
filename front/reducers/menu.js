@@ -16,6 +16,7 @@ export const initialState = {
         parentId: "/",
         parentName: "root",
         href: "/board",
+        children: [],
       },
       {
         key: "202010112313",
@@ -32,6 +33,7 @@ export const initialState = {
             parentId: "/1",
             parentName: "POST",
             href: "/post",
+            children: [],
           },
         ],
       },

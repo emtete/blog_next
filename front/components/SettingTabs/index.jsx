@@ -96,11 +96,28 @@ const getNodeToFlat = (rootNode, currentNode) => {
   return result;
 };
 
+const deepCopy = (obj) => JSON.parse(JSON.stringify(obj));
+
+const combineMenuAndPost = (menu, postObject) => {
+  const result = deepCopy(menu);
+  const keys = Object.keys(postObject);
+  for (let i = 0; i < keys.length; i++) {
+    postObject[keys[i]].map((post) => {
+      const parentMenu = getNode(result, post.parentId.split("/").slice(1));
+      parentMenu.children.push(post);
+    });
+  }
+  return result;
+};
+
 export default function SettingsTabs({ children }) {
   const classes = useStyles();
   const dispatch = useDispatch();
   const initialStoredNode = useSelector((state) => state.menu.node);
-  const [node, setNode] = React.useState(initialStoredNode);
+  const initialStoredPost = useSelector((state) => state.post.mainPosts);
+  const [node, setNode] = React.useState(
+    combineMenuAndPost(initialStoredNode, initialStoredPost)
+  );
   const [selected, setSelected] = React.useState("/");
 
   const path = selected.split("/").slice(1);
