@@ -110,6 +110,12 @@ const combineMenuAndPost = (menu, postObject) => {
   return result;
 };
 
+const changeArrOrder = (arr, index) => {
+  const temp = arr[index - 1];
+  arr[index - 1] = arr[index];
+  arr[index] = temp;
+};
+
 export default function SettingsTabs({ children }) {
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -130,9 +136,11 @@ export default function SettingsTabs({ children }) {
         const path = selected.split("/").slice(1);
         const ti = parseInt(path[path.length - 1]);
         const upperNode = getUpperNode(initialStoredNode, path);
-        const temp = upperNode.children[ti - 1];
-        upperNode.children[ti - 1] = upperNode.children[ti];
-        upperNode.children[ti] = temp;
+        changeArrOrder(upperNode.children, ti);
+        // const temp = upperNode.children[ti - 1];
+        // upperNode.children[ti - 1] = upperNode.children[ti];
+        // upperNode.children[ti] = temp;
+
         upperNode.children[ti - 1].id = upperPath + (ti - 1);
         upperNode.children[ti].id = upperPath + ti;
         break;
@@ -156,9 +164,12 @@ export default function SettingsTabs({ children }) {
         const ti = parseInt(path[path.length - 1]);
         const upperNode =
           initialStoredPost[selected.slice(0, selected.length - 2)];
-        const temp = upperNode[ti - 1];
-        upperNode[ti - 1] = upperNode[ti];
-        upperNode[ti] = temp;
+
+        changeArrOrder(upperNode, ti);
+        // const temp = upperNode[ti - 1];
+        // upperNode[ti - 1] = upperNode[ti];
+        // upperNode[ti] = temp;
+
         upperNode[ti - 1].id = upperPath + (ti - 1);
         upperNode[ti].id = upperPath + ti;
         break;
@@ -182,9 +193,11 @@ export default function SettingsTabs({ children }) {
         const ti = parseInt(path[path.length - 1]);
         const upperNode = getUpperNode(node, path);
 
-        const temp = upperNode.children[ti - 1];
-        upperNode.children[ti - 1] = upperNode.children[ti];
-        upperNode.children[ti] = temp;
+        changeArrOrder(upperNode.children, ti);
+        // const temp = upperNode.children[ti - 1];
+        // upperNode.children[ti - 1] = upperNode.children[ti];
+        // upperNode.children[ti] = temp;
+
         upperNode.children[ti - 1].id = upperPath + (ti - 1);
         upperNode.children[ti].id = upperPath + ti;
 
