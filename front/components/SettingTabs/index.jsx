@@ -215,21 +215,9 @@ export default function SettingsTabs({ children }) {
     const ti = parseInt(path[path.length - 1]);
     const isFirst = path[path.length - 1] == 0;
     if (!isFirst) {
-      // const temp = upperNode.children[ti - 1];
-      // upperNode.children[ti - 1] = upperNode.children[ti];
-      // upperNode.children[ti] = temp;
-      // upperNode.children[ti - 1].id =
-      //   "/" + path.slice(0, path.length - 1).join("/") + (ti - 1);
-      // upperNode.children[ti].id =
-      //   "/" + path.slice(0, path.length - 1).join("/") + ti;
-      // const currentNode = getNode();
-      console.log("currentNode : ", currentNode);
-      console.log("getNode : ", getNode(node, path));
-      console.log(path);
       const nodeKeys = Object.keys(currentNode);
       const isMenu = nodeKeys.find((key) => key === "children");
-      console.log("isMenu : ", isMenu);
-
+      const upperPath = "/" + path.slice(0, path.length - 1).join("/") + "/";
       if (isMenu) {
         changeMenuState("UP");
       } else {
@@ -237,9 +225,8 @@ export default function SettingsTabs({ children }) {
       }
 
       changeCombineState("UP");
-      setSelected(
-        "/" + path.slice(0, path.length - 1).join("/") + "/" + (ti - 1)
-      );
+      setSelected(upperPath + (ti - 1));
+      // "/" + path.slice(0, path.length - 1).join("/") + "/" + (ti - 1)
     }
   };
 
