@@ -141,8 +141,15 @@ const interChangeArrId = (arr, index, upperPath) => {
 };
 
 // parent의 id가 바뀔 경우, 그 parent의 id에 맞게 children의 id와 parentId를 바꿔준다.
-const changeChildrenId = (parent, parentId) => {
-  if (!parent.children) return;
+const changeChildrenId = (parent, parentId, initialStoredPost) => {
+  if (!(Array.isArray(parent.children) && parent.children.length > 0)) return;
+  if (typeof parent.children[0].content === "object") {
+    // console.log("initialStoredPost");
+    const prevParentId = parent.children[0].parentId;
+    const temp = initialStoredPost[prevParentId];
+    initialStoredPost[parentId] = temp;
+    delete initialStoredPost[prevParentId];
+  }
 
   for (let i = 0; i < parent.children.length; i++) {
     const node = parent.children[i];
@@ -151,13 +158,17 @@ const changeChildrenId = (parent, parentId) => {
     node.id = parentId + "/" + path[path.length - 1];
 
     if (Array.isArray(node.children) && node.children.length > 0) {
-      changeChildrenId(node, node.id);
+      changeChildrenId(node, node.id, initialStoredPost);
     }
   }
 };
 
 //노드 삭제시, 그 다음 노드들의 id를 수정한다.(앞으로 당긴다)
-const changeIdWhenDelete = (rootNode, deletedNodePathArr) => {
+const changeIdWhenDelete = (
+  rootNode,
+  deletedNodePathArr,
+  initialStoredPost
+) => {
   const deletedNodeIndex = parseInt(
     deletedNodePathArr[deletedNodePathArr.length - 1]
   );
@@ -166,7 +177,8 @@ const changeIdWhenDelete = (rootNode, deletedNodePathArr) => {
   for (let i = deletedNodeIndex; i < upperNode.children.length; i++) {
     const id = upperPath + i;
     upperNode.children[i].id = id;
-    changeChildrenId(upperNode.children[i], id);
+    console.log("upperNode.children[i] : ", upperNode.children[i]);
+    changeChildrenId(upperNode.children[i], id, initialStoredPost);
   }
 };
 
@@ -249,16 +261,14 @@ export default function SettingsTabs({ children }) {
 
       case "DELETE":
         // havePost
-        // console.log("menuHavePost : ", menuHavePost(getNode(node, path)));
         const containPostIds = menuHavePost(getNode(node, path));
         containPostIds.map((e) => {
           const upperPath = getUpperPath(e.split("/").slice(1));
-          // console.log("upperPath : ", upperPath);
           delete initialStoredPost[upperPath.slice(0, upperPath.length - 1)];
-          // const upperNode = initialStoredPost.splice(, 1) [upperPath];
         });
         upperNode.children.splice(path[path.length - 1], 1);
-        changeIdWhenDelete(initialStoredNode, path);
+        changeIdWhenDelete(initialStoredNode, path, initialStoredPost);
+
         break;
       case "UPDATE":
         break;
@@ -289,7 +299,7 @@ export default function SettingsTabs({ children }) {
         // console.log("upperNode, POST", upperNode);
         // currentNode를 트리에서 삭제
         upperNode.splice(path[path.length - 1], 1);
-        changeIdWhenDelete(node, path);
+        changeIdWhenDelete(node, path, initialStoredPost);
         break;
 
       case "UPDATE":
@@ -320,7 +330,7 @@ export default function SettingsTabs({ children }) {
       case "DELETE":
         // currentNode를 트리에서 삭제
         upperNode.children.splice(path[path.length - 1], 1);
-        changeIdWhenDelete(node, path);
+        changeIdWhenDelete(node, path, initialStoredPost);
         break;
       case "UPDATE":
         break;
