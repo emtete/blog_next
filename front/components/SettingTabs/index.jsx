@@ -419,7 +419,8 @@ export default function SettingsTabs({ children }) {
     setTitle("UPDATE");
     // setSelectedId(currentNode.id);
     // setSelectedParent(upperNode.id);
-    setShowSelect({ display: "block" });
+    setShowParent(true);
+    setShowResultant(false);
     handleOpen();
   };
   const onAdd = (e) => {
@@ -427,7 +428,8 @@ export default function SettingsTabs({ children }) {
     setName("");
     setHref("");
     setParent("");
-    setShowSelect({ display: "none" });
+    setShowParent(false);
+    setShowResultant(true);
     handleOpen();
   };
   const onSave = (e) => {
@@ -473,13 +475,15 @@ export default function SettingsTabs({ children }) {
   const [modalStyle] = React.useState(getModalStyle);
   const [open, setOpen] = React.useState(false);
   const [title, setTitle] = React.useState("");
-  const [showSelect, setShowSelect] = React.useState({ display: "block" });
+  const [showParent, setShowParent] = React.useState(true);
+  const [showResultant, setShowResultant] = React.useState(true);
 
   const [selectedId, setSelectedId] = React.useState("");
   const [selectedParent, setSelectedParent] = React.useState("/");
   const [name, onChangeName, setName] = useInput("");
   const [href, onChangeHref, setHref] = useInput("");
   const [parent, onChangeParent, setParent] = useInput("");
+  const [resultant, onChangeResultant, setResultant] = useInput("menu");
 
   const handleChange = (event) => {
     setSelectedParent(event.target.value);
@@ -503,24 +507,45 @@ export default function SettingsTabs({ children }) {
 
   const applyModalContent = (e) => {
     e.preventDefault();
+    // const nodeKeys = Object.keys(currentNode);
+    // const isMenu = nodeKeys.find((key) => key === "children");
+
+    // if (isMenu) {
+    //   changeMenuState("ADD", upperPath);
+    // } else {
+    //   changePostState("ADD", upperPath);
+    // }
+
+    // changeCombineState("ADD", upperPath);
 
     switch (title) {
       case "ADD":
+        if (!isMenu) return;
         const newKey = getDateStr(new Date());
         const newId = currentNode.id + "/" + (currentNode.children.length - 1);
         const newName = name;
         const newHref = href;
         const newParentName = currentNode.name;
         const newParentId = currentNode.id;
+        const resultant = "";
+
+        // const date
         const newNode = {
           key: newKey,
           id: newId,
           name: newName,
           parentId: newParentId,
           parentName: newParentName,
-          href: newHref,
-          children: [],
         };
+
+        // if (isMenu) {
+        //   newNode["href"] = newHref;
+        //   newNode["children"] = [];
+        // } else {
+        //   newNode["date"] = newKey;
+        //   newNode["content"] = {};
+        // }
+
         currentNode.children.push(newNode);
         break;
       case "UPDATE":
@@ -560,15 +585,32 @@ export default function SettingsTabs({ children }) {
             onChange={onChangeHref}
           />
           <br />
-          <Select
-            labelId='parent-select-label'
-            id='parent'
-            value={selectedParent}
-            onChange={handleChange}
-            style={showSelect}
-          >
-            {renderMenuItem(getNodeToFlat(node, currentNode))}
-          </Select>
+          {showParent && (
+            <Select
+              labelId='parent-select-label'
+              id='parent'
+              value={selectedParent}
+              onChange={handleChange}
+              // style={showParent}
+            >
+              {renderMenuItem(getNodeToFlat(node, currentNode))}
+            </Select>
+          )}
+          {showResultant && (
+            <Select
+              labelId='resultant-select-label'
+              id='resultant'
+              value={resultant}
+              onChange={onChangeResultant}
+            >
+              <MenuItem value='menu' key='menu'>
+                Menu
+              </MenuItem>
+              <MenuItem value='post' key='post'>
+                Post
+              </MenuItem>
+            </Select>
+          )}
           <br />
           <Button variant='contained' color='primary' type='submit'>
             확인
