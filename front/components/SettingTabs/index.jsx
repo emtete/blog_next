@@ -399,10 +399,8 @@ export default function SettingsTabs({ children }) {
     if (selected == "/") return;
     setName(currentNode.name);
     setHref(currentNode.href);
-    setParent(currentNode.parent);
+    setParent(currentNode.parentId);
     setTitle("UPDATE");
-    // setSelectedId(currentNode.id);
-    // setSelectedParent(upperNode.id);
     setShowParent(true);
     setShowResultant(false);
     handleOpen();
@@ -495,20 +493,10 @@ export default function SettingsTabs({ children }) {
 
   const applyModalContent = (e) => {
     e.preventDefault();
-    // const nodeKeys = Object.keys(currentNode);
-    // const isMenu = nodeKeys.find((key) => key === "children");
-
-    // if (isMenu) {
-    //   changeMenuState("ADD", upperPath);
-    // } else {
-    //   changePostState("ADD", upperPath);
-    // }
-
-    // changeCombineState("ADD", upperPath);
+    const pathArr = getPathArr(selected);
 
     switch (title) {
       case "ADD":
-        const pathArr = getPathArr(selected);
         const newKey = getDateStr(new Date());
         const newName = name;
         const newHref = href;
@@ -519,7 +507,6 @@ export default function SettingsTabs({ children }) {
             ? "/" + currentNode.children.length
             : selected + "/" + currentNode.children.length;
 
-        // const date
         const newNode = {
           key: newKey,
           id: newId,
@@ -549,13 +536,39 @@ export default function SettingsTabs({ children }) {
         break;
 
       case "UPDATE":
+        if (resultant === "menu") {
+          const currentNode = getNode(initialStoredNode, pathArr);
+          const upperNode = getUpperNode(initialStoredNode, pathArr);
+          const targetMenu = getNode(
+            initialStoredNode,
+            getPathArr(selectedParent)
+          );
+          currentNode.name = name;
+          currentNode.href = href;
+          if (parent !== currentNode.parentId) {
+            // upperNode.children.splice(path[path.length - 1], 1);
+            // currentNode.id =
+            // targetMenu.id + "/" + (targetMenu.children.length - 1);
+            // targetMenu.children.push(currentNode);
+          }
+        } else if (resultant === "post") {
+          //
+        }
+
         currentNode.name = name;
         currentNode.href = href;
         const targetMenu = getNode(node, selectedParent.split("/").slice(1));
-        targetMenu.children.push(currentNode);
-        currentNode.id = targetMenu.id + "/" + (targetMenu.children.length - 1);
         // currentNode를 트리에서 삭제
-        upperNode.children.splice(path[path.length - 1], 1);
+        if (parent !== currentNode.parentId) {
+          // upperNode.children.splice(path[path.length - 1], 1);
+          // changeIdWhenDelete(node, path, initialStoredPost);
+          // 삭제 후 푸시, 변경
+          // targetMenu.children.push(currentNode);
+          // currentNode.id = targetMenu.id + "/" + (targetMenu.children.length - 1);
+        }
+        console.log("node : ", node);
+        console.log("initialStoredNode : ", initialStoredNode);
+
         break;
     }
     handleClose();
@@ -593,7 +606,7 @@ export default function SettingsTabs({ children }) {
               onChange={handleChange}
               // style={showParent}
             >
-              {renderMenuItem(getNodeToFlat(node, currentNode))}
+              {renderMenuItem(getNodeToFlat(initialStoredNode, currentNode))}
             </Select>
           )}
           {showResultant && (
