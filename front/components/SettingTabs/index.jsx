@@ -140,17 +140,78 @@ const interChangeArrId = (arr, index, upperPath) => {
   }
 };
 
+// parent의 id가 바뀔 경우, 그 parent의 id에 맞게 children의 id와 parentId를 바꿔준다.
 const changeChildrenId = (parent, parentId) => {
+  if (!parent.children) return;
   parent.children.map((e) => {
     const path = e.id.split("/");
     e.parentId = parentId;
     e.id = parentId + "/" + path[path.length - 1];
-    console.log("parentId : ", parentId);
+    // console.log("parentId : ", parentId);
     if (Array.isArray(e.children) && e.children.length > 0) {
       changeChildrenId(e, e.id);
     }
   });
 };
+
+//노드 삭제시, 그 다음 노드들의 id를 수정한다.(앞으로 당긴다)
+const changeIdWhenDelete = (rootNode, deletedNodePathArr) => {
+  const deletedNodeIndex = parseInt(
+    deletedNodePathArr[deletedNodePathArr.length - 1]
+  );
+  const upperNode = getUpperNode(rootNode, deletedNodePathArr);
+  const upperPath = getUpperPath(deletedNodePathArr);
+  for (let i = deletedNodeIndex; i < upperNode.children.length; i++) {
+    const id = upperPath + i;
+    upperNode.children[i].id = id;
+    changeChildrenId(upperNode.children[i], id);
+  }
+};
+
+//path 의 상위 path를 반환한다. ex) /0/1/
+const getUpperPath = (pathArr) => {
+  let upperPath = "/" + pathArr.slice(0, pathArr.length - 1).join("/");
+  upperPath += upperPath.trim().length > 1 ? "/" : "";
+
+  return upperPath;
+};
+
+// 포스트가 있는 메뉴를 배열에 담아 반환한다.
+const menuHavePost = (menu) => {
+  const result = [];
+  // console.log("menu : ", menu);
+  // console.log("typeof : ", typeof menu.content);
+  // if (typeof menu.content === "object") {
+  //   result.push(menu.id);
+  // } else
+  if (Array.isArray(menu.children) && menu.children.length > 0) {
+    // menu.children.map((e) => {
+    //   if (typeof e.content === "object") {
+    //     result.push(menu.id);
+    //   }
+    //   result.push(...menuHavePost(e));
+    // });
+    for (let i = 0; i < menu.children.length; i++) {
+      if (typeof menu.children[i].content === "object") {
+        result.push(menu.children[i].id);
+        break;
+      } else {
+        result.push(...menuHavePost(menu.children[i]));
+      }
+    }
+  }
+  return result;
+};
+
+const delChildren = (targetNode) => {
+  //
+};
+
+// targetPath에 있는 노드의 다음 노드를 반환한다.
+// const getNextNode = (rootNode, targetPath) => {
+//   parseInt(deletedNodePath[deletedNodePath.length - 1]);
+//   getUpperNode(rootNode, deletedNodeId);
+// };
 
 export default function SettingsTabs({ children }) {
   const classes = useStyles();
@@ -183,7 +244,19 @@ export default function SettingsTabs({ children }) {
         interChangeArrOrder(upperNode.children, ti + 1);
         interChangeArrId(upperNode.children, ti + 1, upperPath);
         break;
+
       case "DELETE":
+        // havePost
+        // console.log("menuHavePost : ", menuHavePost(getNode(node, path)));
+        const containPostIds = menuHavePost(getNode(node, path));
+        containPostIds.map((e) => {
+          const upperPath = getUpperPath(e.split("/").slice(1));
+          // console.log("upperPath : ", upperPath);
+          delete initialStoredPost[upperPath.slice(0, upperPath.length - 1)];
+          // const upperNode = initialStoredPost.splice(, 1) [upperPath];
+        });
+        upperNode.children.splice(path[path.length - 1], 1);
+        changeIdWhenDelete(initialStoredNode, path);
         break;
       case "UPDATE":
         break;
@@ -209,8 +282,14 @@ export default function SettingsTabs({ children }) {
         interChangeArrOrder(upperNode, ti + 1);
         interChangeArrId(upperNode, ti + 1, upperPath);
         break;
+
       case "DELETE":
+        // console.log("upperNode, POST", upperNode);
+        // currentNode를 트리에서 삭제
+        upperNode.splice(path[path.length - 1], 1);
+        changeIdWhenDelete(node, path);
         break;
+
       case "UPDATE":
         break;
       case "ADD":
@@ -235,7 +314,11 @@ export default function SettingsTabs({ children }) {
         interChangeArrOrder(upperNode.children, ti + 1);
         interChangeArrId(upperNode.children, ti + 1, upperPath);
         break;
+
       case "DELETE":
+        // currentNode를 트리에서 삭제
+        upperNode.children.splice(path[path.length - 1], 1);
+        changeIdWhenDelete(node, path);
         break;
       case "UPDATE":
         break;
@@ -294,9 +377,25 @@ export default function SettingsTabs({ children }) {
   };
 
   const onDelete = (e) => {
-    upperNode.children[path[path.length - 1]].name = "";
+    if (selected == "/") return;
+
+    const nodeKeys = Object.keys(currentNode);
+    const isMenu = nodeKeys.find((key) => key === "children");
+
+    if (isMenu) {
+      changeMenuState("DELETE", upperPath);
+    } else {
+      changePostState("DELETE", upperPath);
+    }
+
+    changeCombineState("DELETE", upperPath);
+    console.log("node : ", node);
+    console.log("initialStoredNode : ", initialStoredNode);
+    console.log("initialStoredPost : ", initialStoredPost);
+
+    // upperNode.children[path[path.length - 1]].name = "";
     // currentNode를 트리에서 삭제
-    upperNode.children.splice(path[path.length - 1], 1);
+    // upperNode.children.splice(path[path.length - 1], 1);
     setSelected("/");
   };
 

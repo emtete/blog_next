@@ -44,7 +44,17 @@ export const initialState = {
         parentId: "/",
         parentName: "root",
         href: "/settings",
-        children: [],
+        children: [
+          {
+            key: "202010112366",
+            id: "/2/0",
+            name: "Settings00",
+            parentId: "/2",
+            parentName: "Settings",
+            href: "/post",
+            children: [],
+          },
+        ],
       },
     ],
   },
