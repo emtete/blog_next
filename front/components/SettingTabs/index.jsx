@@ -143,15 +143,17 @@ const interChangeArrId = (arr, index, upperPath) => {
 // parent의 id가 바뀔 경우, 그 parent의 id에 맞게 children의 id와 parentId를 바꿔준다.
 const changeChildrenId = (parent, parentId) => {
   if (!parent.children) return;
-  parent.children.map((e) => {
-    const path = e.id.split("/");
-    e.parentId = parentId;
-    e.id = parentId + "/" + path[path.length - 1];
-    // console.log("parentId : ", parentId);
-    if (Array.isArray(e.children) && e.children.length > 0) {
-      changeChildrenId(e, e.id);
+
+  for (let i = 0; i < parent.children.length; i++) {
+    const node = parent.children[i];
+    const path = node.id.split("/");
+    node.parentId = parentId;
+    node.id = parentId + "/" + path[path.length - 1];
+
+    if (Array.isArray(node.children) && node.children.length > 0) {
+      changeChildrenId(node, node.id);
     }
-  });
+  }
 };
 
 //노드 삭제시, 그 다음 노드들의 id를 수정한다.(앞으로 당긴다)
