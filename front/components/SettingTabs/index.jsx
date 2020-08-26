@@ -55,6 +55,10 @@ const getDateStr = (date) => {
   return sYear + sMonth + sDate + sHours + sMinutes + sSeconds;
 };
 
+const getPathArr = (pathStr) => {
+  const pathArr = pathStr === "/" ? [] : pathStr.split("/").slice(1);
+  return pathArr;
+};
 const getUpperNode = (rootNode, path) => {
   let result = { ...rootNode };
   for (let i = 0; i < path.length - 1; i++) {
@@ -63,11 +67,10 @@ const getUpperNode = (rootNode, path) => {
   return result;
 };
 
-const getNode = (rootNode, path) => {
+const getNode = (rootNode, pathArr) => {
   let result = { ...rootNode };
-  for (let i = 0; i < path.length; i++) {
-    // console.log("result : ", result);
-    result = result.children[path[i]];
+  for (let i = 0; i < pathArr.length; i++) {
+    result = result.children[pathArr[i]];
   }
   return result;
 };
@@ -104,9 +107,6 @@ const combineMenuAndPost = (menu, postObject) => {
   const keys = Object.keys(postObject);
   for (let i = 0; i < keys.length; i++) {
     postObject[keys[i]].map((post) => {
-      console.log("result : ", result);
-      // console.log("path", post.parentId.split("/").slice(1));
-      console.log("path", post.parentId);
       const parentMenu = getNode(result, post.parentId.split("/").slice(1));
       parentMenu.children.push(post);
     });
@@ -127,11 +127,6 @@ const interChangeArrId = (arr, index, upperPath) => {
   arr1.id = upperPath + (index - 1);
   arr2.id = upperPath + index;
 
-  console.log("upperPath", upperPath);
-  // console.log("upperPath", upperPath);
-  // console.log("arr1 id : ", arr1.id);
-  // console.log("arr2 id : ", arr2.id);
-
   if (Array.isArray(arr1.children) && arr1.children.length > 0) {
     changeChildrenId(arr1, arr1.id);
   }
@@ -144,7 +139,6 @@ const interChangeArrId = (arr, index, upperPath) => {
 const changeChildrenId = (parent, parentId, initialStoredPost) => {
   if (!(Array.isArray(parent.children) && parent.children.length > 0)) return;
   if (typeof parent.children[0].content === "object") {
-    // console.log("initialStoredPost");
     const prevParentId = parent.children[0].parentId;
     const temp = initialStoredPost[prevParentId];
     initialStoredPost[parentId] = temp;
@@ -177,7 +171,6 @@ const changeIdWhenDelete = (
   for (let i = deletedNodeIndex; i < upperNode.children.length; i++) {
     const id = upperPath + i;
     upperNode.children[i].id = id;
-    console.log("upperNode.children[i] : ", upperNode.children[i]);
     changeChildrenId(upperNode.children[i], id, initialStoredPost);
   }
 };
@@ -193,18 +186,7 @@ const getUpperPath = (pathArr) => {
 // 포스트가 있는 메뉴를 배열에 담아 반환한다.
 const menuHavePost = (menu) => {
   const result = [];
-  // console.log("menu : ", menu);
-  // console.log("typeof : ", typeof menu.content);
-  // if (typeof menu.content === "object") {
-  //   result.push(menu.id);
-  // } else
   if (Array.isArray(menu.children) && menu.children.length > 0) {
-    // menu.children.map((e) => {
-    //   if (typeof e.content === "object") {
-    //     result.push(menu.id);
-    //   }
-    //   result.push(...menuHavePost(e));
-    // });
     for (let i = 0; i < menu.children.length; i++) {
       if (typeof menu.children[i].content === "object") {
         result.push(menu.children[i].id);
@@ -296,7 +278,6 @@ export default function SettingsTabs({ children }) {
         break;
 
       case "DELETE":
-        // console.log("upperNode, POST", upperNode);
         // currentNode를 트리에서 삭제
         upperNode.splice(path[path.length - 1], 1);
         changeIdWhenDelete(node, path, initialStoredPost);
@@ -401,9 +382,6 @@ export default function SettingsTabs({ children }) {
     }
 
     changeCombineState("DELETE", upperPath);
-    console.log("node : ", node);
-    console.log("initialStoredNode : ", initialStoredNode);
-    console.log("initialStoredPost : ", initialStoredPost);
 
     // upperNode.children[path[path.length - 1]].name = "";
     // currentNode를 트리에서 삭제
@@ -424,6 +402,10 @@ export default function SettingsTabs({ children }) {
     handleOpen();
   };
   const onAdd = (e) => {
+    const nodeKeys = Object.keys(currentNode);
+    const isMenu = nodeKeys.find((key) => key === "children");
+    if (!isMenu) return;
+
     setTitle("ADD");
     setName("");
     setHref("");
@@ -520,14 +502,14 @@ export default function SettingsTabs({ children }) {
 
     switch (title) {
       case "ADD":
-        if (!isMenu) return;
+        const pathArr = getPathArr(selected);
         const newKey = getDateStr(new Date());
-        const newId = currentNode.id + "/" + (currentNode.children.length - 1);
+        // const newId = currentNode.id + "/" + (currentNode.children.length - 1);
+        const newId = getUpperPath(pathArr) + currentNode.children.length;
         const newName = name;
         const newHref = href;
         const newParentName = currentNode.name;
         const newParentId = currentNode.id;
-        const resultant = "";
 
         // const date
         const newNode = {
@@ -538,13 +520,18 @@ export default function SettingsTabs({ children }) {
           parentName: newParentName,
         };
 
-        // if (isMenu) {
-        //   newNode["href"] = newHref;
-        //   newNode["children"] = [];
-        // } else {
-        //   newNode["date"] = newKey;
-        //   newNode["content"] = {};
-        // }
+        if (resultant === "menu") {
+          newNode["href"] = newHref;
+          newNode["children"] = [];
+          const currentNode = getNode(initialStoredNode, pathArr);
+          console.log("path : ", path);
+          currentNode.children.push(newNode);
+          console.log("initialStoredNode : ", initialStoredNode);
+        } else if (resultant === "post") {
+          newNode["date"] = newKey;
+          newNode["content"] = {};
+          initialStoredPost;
+        }
 
         currentNode.children.push(newNode);
         break;
