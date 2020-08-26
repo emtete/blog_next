@@ -69,9 +69,15 @@ const getUpperNode = (rootNode, path) => {
 
 const getNode = (rootNode, pathArr) => {
   let result = { ...rootNode };
-  for (let i = 0; i < pathArr.length; i++) {
-    result = result.children[pathArr[i]];
+  if (rootNode.id === undefined) {
+    const index = pathArr.length === 0 ? 0 : pathArr[pathArr.length - 1];
+    result = rootNode[index];
+  } else {
+    for (let i = 0; i < pathArr.length; i++) {
+      result = result.children[pathArr[i]];
+    }
   }
+
   return result;
 };
 
@@ -504,12 +510,14 @@ export default function SettingsTabs({ children }) {
       case "ADD":
         const pathArr = getPathArr(selected);
         const newKey = getDateStr(new Date());
-        // const newId = currentNode.id + "/" + (currentNode.children.length - 1);
-        const newId = getUpperPath(pathArr) + currentNode.children.length;
         const newName = name;
         const newHref = href;
         const newParentName = currentNode.name;
         const newParentId = currentNode.id;
+        const newId =
+          selected === "/"
+            ? "/" + currentNode.children.length
+            : selected + "/" + currentNode.children.length;
 
         // const date
         const newNode = {
@@ -524,17 +532,22 @@ export default function SettingsTabs({ children }) {
           newNode["href"] = newHref;
           newNode["children"] = [];
           const currentNode = getNode(initialStoredNode, pathArr);
-          console.log("path : ", path);
           currentNode.children.push(newNode);
-          console.log("initialStoredNode : ", initialStoredNode);
         } else if (resultant === "post") {
           newNode["date"] = newKey;
           newNode["content"] = {};
-          initialStoredPost;
+          const currentNode = getNode(initialStoredPost, pathArr);
+
+          if (Array.isArray(initialStoredPost[selected])) {
+            initialStoredPost[selected].push(newNode);
+          } else {
+            initialStoredPost[selected] = [newNode];
+          }
         }
 
         currentNode.children.push(newNode);
         break;
+
       case "UPDATE":
         currentNode.name = name;
         currentNode.href = href;
