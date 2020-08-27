@@ -691,7 +691,10 @@ export default function SettingsTabs({ children }) {
         break;
 
       case "UPDATE":
-        if (resultant === "menu") {
+        const nodeKeys = Object.keys(currentNode);
+        const isMenu = nodeKeys.find((key) => key === "children");
+
+        if (isMenu) {
           const currentNode = getNode(initialStoredNode, pathArr);
           const upperNode = getUpperNode(initialStoredNode, pathArr);
           const targetMenu = getNode(
@@ -707,7 +710,7 @@ export default function SettingsTabs({ children }) {
             targetMenu.children.push(currentNode);
             changeChildrenId(targetMenu, targetMenu.id, initialStoredPost);
           }
-        } else if (resultant === "post") {
+        } else {
           const pathArr = getPathArr(selected);
           const currentNode = getNode(initialStoredPost, pathArr);
           const postArr = getNode(initialStoredPost, pathArr);
@@ -790,21 +793,21 @@ export default function SettingsTabs({ children }) {
             </Select>
           )}
           <br />
-          {/* {showResultant && (
-            )} */}
-          <Select
-            labelId='resultant-select-label'
-            id='resultant'
-            value={resultant}
-            onChange={onChangeResultant}
-          >
-            <MenuItem value='menu' key='menu'>
-              Menu
-            </MenuItem>
-            <MenuItem value='post' key='post'>
-              Post
-            </MenuItem>
-          </Select>
+          {showResultant && (
+            <Select
+              labelId='resultant-select-label'
+              id='resultant'
+              value={resultant}
+              onChange={onChangeResultant}
+            >
+              <MenuItem value='menu' key='menu'>
+                Menu
+              </MenuItem>
+              <MenuItem value='post' key='post'>
+                Post
+              </MenuItem>
+            </Select>
+          )}
           <br />
           <Button variant='contained' color='primary' type='submit'>
             확인
