@@ -211,8 +211,6 @@ const getContainedPostsWrap = (upperPath, ti, node) => {
   let target2 = getNode(node, pathArr2);
   let postIdArr1 = getContainedPosts(target1);
   let postIdArr2 = getContainedPosts(target2);
-  console.log("postIdArr1 : ", postIdArr1);
-  console.log("postIdArr2 : ", postIdArr2);
   return [postIdArr1, postIdArr2];
 };
 
@@ -241,6 +239,7 @@ const getContainedPosts = (targetNode) => {
 // menu를 이동시켜서 post의 parentId가 변경된 경우
 // initialStoredPost의 키(parentId)를 변경하기 위해 만든 함수.
 const interchangePostKey = (prevKeyArr, nextKeyArr, initialStoredPost) => {
+  if (!(Array.isArray(prevKeyArr) && Array.isArray(nextKeyArr))) return;
   for (let i = 0; i < prevKeyArr.length; i++) {
     initialStoredPost[nextKeyArr[i]] = initialStoredPost[prevKeyArr[i]];
     delete initialStoredPost[prevKeyArr[i]];
@@ -452,8 +451,13 @@ export default function SettingsTabs({ children }) {
     if (!isLast) {
       const nodeKeys = Object.keys(currentNode);
       const isMenu = nodeKeys.find((key) => key === "children");
-      // let upperPath = "/" + path.slice(0, path.length - 1).join("/");
-      // upperPath += upperPath.trim().length > 1 ? "/" : "";
+
+      // initialStoredPost의 키를 변경해야 할 때 필요한 값.
+      const [prevKeyArr1, prevKeyArr2] = getContainedPostsWrap(
+        upperPath,
+        ti + 1,
+        node
+      );
 
       if (isMenu) {
         changeMenuState("DOWN", upperPath);
@@ -463,6 +467,21 @@ export default function SettingsTabs({ children }) {
 
       changeCombineState("DOWN", upperPath);
       setSelected(upperPath + (ti + 1));
+
+      // initialStoredPost의 키를 변경해야 할 때 필요한 값.
+      const [nextKeyArr1, nextKeyArr2] = getContainedPostsWrap(
+        upperPath,
+        ti + 1,
+        node
+      );
+
+      // initialStoredPost의 키를 변경하는 함수.
+      interchangePostKey(prevKeyArr1, nextKeyArr2, initialStoredPost);
+      interchangePostKey(prevKeyArr2, nextKeyArr1, initialStoredPost);
+
+      console.log("node : ", node);
+      console.log("initialStoredNode : ", initialStoredNode);
+      console.log("initialStoredPost : ", initialStoredPost);
     }
   };
 
