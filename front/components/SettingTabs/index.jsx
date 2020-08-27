@@ -214,6 +214,24 @@ const getContainedPostsWrap = (upperPath, ti, node) => {
   return [postIdArr1, postIdArr2];
 };
 
+// getContainedPosts에 매개변수로 넣을 값을 처리하는 함수.
+const getContainedPostsWrap2 = (upperPath, delIndex, node) => {
+  const result = [];
+  const upperNode = getNode(node, getPathArr(upperPath));
+
+  for (let i = delIndex; i < upperNode.children.length - 1; i++) {
+    let pathArr = getPathArr(upperPath + i);
+    let target = getNode(node, pathArr);
+    let postIdArr = getContainedPosts(target);
+    // console.log("pathArr : ", pathArr);
+    // console.log("target : ", target);
+    // console.log("postIdArr : ", postIdArr);
+    postIdArr && result.push(postIdArr);
+  }
+
+  return result;
+};
+
 // 매개변수로 전달된 메뉴의 트리구조에서
 // post를 검색하고, 검색된 post의 parentId의 배열을
 // 리턴한다.
@@ -318,13 +336,17 @@ export default function SettingsTabs({ children }) {
         break;
 
       case "DELETE":
-        // havePost
+        // initialStoredPost id 수정, 삭제
         const containPostIds = menuHavePost(getNode(node, path));
         containPostIds.map((e) => {
           const upperPath = getUpperPath(e.split("/").slice(1));
           delete initialStoredPost[upperPath.slice(0, upperPath.length - 1)];
         });
+
+        // initialStoredNode에서 삭제
         upperNode.children.splice(path[path.length - 1], 1);
+
+        // initialStoredNode가 포함한 id수정
         changeIdWhenDelete(initialStoredNode, path, initialStoredPost);
 
         break;
@@ -354,7 +376,7 @@ export default function SettingsTabs({ children }) {
         break;
 
       case "DELETE":
-        // currentNode를 트리에서 삭제
+        // initialStoredPost 에서 삭제
         upperNode.splice(path[path.length - 1], 1);
         changeIdWhenDelete(node, path, initialStoredPost);
         break;
@@ -479,18 +501,22 @@ export default function SettingsTabs({ children }) {
       interchangePostKey(prevKeyArr1, nextKeyArr2, initialStoredPost);
       interchangePostKey(prevKeyArr2, nextKeyArr1, initialStoredPost);
 
-      console.log("node : ", node);
-      console.log("initialStoredNode : ", initialStoredNode);
-      console.log("initialStoredPost : ", initialStoredPost);
+      // console.log("node : ", node);
+      // console.log("initialStoredNode : ", initialStoredNode);
+      // console.log("initialStoredPost : ", initialStoredPost);
     }
   };
 
   const onDelete = (e) => {
     if (selected == "/") return;
 
+    const ti = parseInt(path[path.length - 1]); // targetIndex
     const nodeKeys = Object.keys(currentNode);
     const isMenu = nodeKeys.find((key) => key === "children");
 
+    // initialStoredPost의 키를 변경해야 할 때 필요한 값.
+    const prevKeyArr = getContainedPostsWrap2(upperPath, ti, node);
+    console.log("prevKeyArr : ", prevKeyArr);
     if (isMenu) {
       changeMenuState("DELETE", upperPath);
     } else {
@@ -498,6 +524,23 @@ export default function SettingsTabs({ children }) {
     }
 
     changeCombineState("DELETE", upperPath);
+    setSelected("/");
+
+    // initialStoredPost의 키를 변경해야 할 때 필요한 값.
+    const nextKeyArr = getContainedPostsWrap2(upperPath, ti, node);
+    console.log("nextKeyArr : ", nextKeyArr);
+    // initialStoredPost의 키를 변경하는 함수.
+    // interchangePostKey(prevKeyArr1, nextKeyArr2, initialStoredPost);
+    // interchangePostKey(prevKeyArr2, nextKeyArr1, initialStoredPost);
+
+    for (let i = 0; i < prevKeyArr.length; i++) {
+      initialStoredPost[nextKeyArr[i]] = initialStoredPost[prevKeyArr[i]];
+      delete initialStoredPost[prevKeyArr[i]];
+    }
+
+    console.log("node : ", node);
+    console.log("initialStoredNode : ", initialStoredNode);
+    console.log("initialStoredPost : ", initialStoredPost);
 
     // console.log("node: ", node);
     // console.log("initialStoredNode: ", initialStoredNode);
