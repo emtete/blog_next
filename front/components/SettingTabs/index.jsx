@@ -111,9 +111,6 @@ const getNodeToFlat = (rootNode, selectedId) => {
     } else if (selectedId.length < node.id.length) {
       isFamily = node.id.slice(0, selectedId.length) === node.id;
     }
-    // else if (selectedId.length > node.id.length) {
-    //   isFamily = selectedId.slice(0, node.id.length) === node.id;
-    // }
 
     if (!isFamily) result.push(node);
     if (Array.isArray(node.children) && node.children.length !== 0) {
@@ -218,15 +215,15 @@ const getContainedPostsWrap = (upperPath, ti, node) => {
 const getContainedPostsWrap2 = (upperPath, delIndex, node) => {
   const result = [];
   const upperNode = getNode(node, getPathArr(upperPath));
-
-  for (let i = delIndex; i < upperNode.children.length - 1; i++) {
+  // console.log("upperNode : ", upperNode);
+  for (let i = delIndex; i < upperNode.children.length; i++) {
     let pathArr = getPathArr(upperPath + i);
     let target = getNode(node, pathArr);
     let postIdArr = getContainedPosts(target);
     // console.log("pathArr : ", pathArr);
     // console.log("target : ", target);
     // console.log("postIdArr : ", postIdArr);
-    postIdArr && result.push(postIdArr);
+    postIdArr.length > 0 && result.push(postIdArr);
   }
 
   return result;
@@ -402,6 +399,25 @@ export default function SettingsTabs({ children }) {
         break;
 
       case "UPDATE":
+        const pathArr = getPathArr(selected);
+        const postArr = getNode(initialStoredPost, pathArr);
+        const parentId = postArr[0].parentId;
+        const index = path[path.length - 1];
+
+        // 입력받은 값으로 데이터 변경
+        initialStoredPost[parentId][index].name = name;
+
+        // 이동시킬 메뉴를 선택(자신이 아닌)했을 때만 옮김처리 실행
+        if (selectedParent !== parentId) {
+          const temp = initialStoredPost[parentId][index];
+          initialStoredPost[parentId].splice(index, 1);
+          const keys = Object.keys(initialStoredPost);
+          if (keys.find((e) => e === selectedParent) === undefined) {
+            initialStoredPost[selectedParent] = [temp];
+          } else {
+            initialStoredPost[selectedParent].push(temp);
+          }
+        }
         break;
       case "ADD":
         break;
@@ -431,7 +447,24 @@ export default function SettingsTabs({ children }) {
         upperNode.children.splice(path[path.length - 1], 1);
         changeIdWhenDelete(node, path, initialStoredPost);
         break;
+
       case "UPDATE":
+        // const currentNode
+        // 입력받은 값으로 데이터 변경
+        currentNode.name = name;
+        currentNode.href = href;
+        const targetMenu = getNode(node, selectedParent.split("/").slice(1));
+
+        // 이동시킬 메뉴를 선택(자신이 아닌)했을 때만 옮김처리 실행
+        if (selectedParent !== currentNode.parentId) {
+          upperNode.children.splice(path[path.length - 1], 1);
+          changeIdWhenDelete(node, path, initialStoredPost);
+          // 삭제 후 푸시, 변경
+          // currentNode.id =
+          //   targetMenu.id + "/" + (targetMenu.children.length - 1);
+          targetMenu.children.push(currentNode);
+          changeChildrenId(targetMenu, targetMenu.id, initialStoredPost);
+        }
         break;
       case "ADD":
         break;
@@ -713,54 +746,33 @@ export default function SettingsTabs({ children }) {
       case "UPDATE":
         const nodeKeys = Object.keys(currentNode);
         const isMenu = nodeKeys.find((key) => key === "children");
+        const ti = parseInt(path[path.length - 1]); // targetIndex
 
-        //   changeMenuState("DELETE", upperPath);
-        //   changePostState("DELETE", upperPath);
-        // changeCombineState("DELETE", upperPath);
+        // initialStoredPost의 키를 변경해야 할 때 필요한 값.
+        const prevKeyArr = getContainedPostsWrap2(upperPath, ti, node);
+        // console.log("prevKeyArr : ", prevKeyArr);
 
         if (isMenu) {
           changeMenuState("UPDATE", upperPath);
         } else {
-          const pathArr = getPathArr(selected);
-          const currentNode = getNode(initialStoredPost, pathArr);
-          const postArr = getNode(initialStoredPost, pathArr);
-          const parentId = postArr[0].parentId;
-          const index = path[path.length - 1];
-
-          // 입력받은 값으로 데이터 변경
-          initialStoredPost[parentId][index].name = name;
-
-          // 이동시킬 메뉴를 선택(자신이 아닌)했을 때만 옮김처리 실행
-          if (selectedParent !== parentId) {
-            const temp = initialStoredPost[parentId][index];
-            console.log("temp : ", temp);
-            initialStoredPost[parentId].splice(index, 1);
-            console.log("initialStoredPost : ", initialStoredPost);
-            const keys = Object.keys(initialStoredPost);
-            if (keys.find((e) => e === selectedParent) === undefined) {
-              initialStoredPost[selectedParent] = [temp];
-              console.log("selectedParent : ", selectedParent);
-            } else {
-              initialStoredPost[selectedParent].push(temp);
-            }
-          }
+          changePostState("UPDATE", upperPath);
         }
 
-        // 입력받은 값으로 데이터 변경
-        currentNode.name = name;
-        currentNode.href = href;
-        const targetMenu = getNode(node, selectedParent.split("/").slice(1));
+        changeCombineState("UPDATE", upperPath);
+        setSelected("/");
 
-        // 이동시킬 메뉴를 선택(자신이 아닌)했을 때만 옮김처리 실행
-        if (selectedParent !== currentNode.parentId) {
-          upperNode.children.splice(path[path.length - 1], 1);
-          changeIdWhenDelete(node, path, initialStoredPost);
-          // 삭제 후 푸시, 변경
-          // currentNode.id =
-          //   targetMenu.id + "/" + (targetMenu.children.length - 1);
-          targetMenu.children.push(currentNode);
-          changeChildrenId(targetMenu, targetMenu.id, initialStoredPost);
+        // initialStoredPost의 키를 변경해야 할 때 필요한 값.
+        const nextKeyArr = getContainedPostsWrap2(upperPath, ti, node);
+        // console.log("nextKeyArr : ", nextKeyArr);
+        // initialStoredPost의 키를 변경하는 함수.
+        // interchangePostKey(prevKeyArr1, nextKeyArr2, initialStoredPost);
+        // interchangePostKey(prevKeyArr2, nextKeyArr1, initialStoredPost);
+
+        for (let i = 0; i < prevKeyArr.length; i++) {
+          initialStoredPost[nextKeyArr[i]] = initialStoredPost[prevKeyArr[i]];
+          delete initialStoredPost[prevKeyArr[i]];
         }
+
         console.log("node : ", node);
         console.log("initialStoredNode : ", initialStoredNode);
         console.log("initialStoredPost : ", initialStoredPost);
@@ -804,7 +816,7 @@ export default function SettingsTabs({ children }) {
               onChange={handleChange}
               // style={showParent}
             >
-              {renderMenuItem(getNodeToFlat(initialStoredNode, currentNode))}
+              {renderMenuItem(getNodeToFlat(initialStoredNode, currentNode.id))}
             </Select>
           )}
           <br />
