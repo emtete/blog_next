@@ -695,15 +695,19 @@ export default function SettingsTabs({ children }) {
         const isMenu = nodeKeys.find((key) => key === "children");
 
         if (isMenu) {
+          // initialStoredNode pathArr, selectedParent
           const currentNode = getNode(initialStoredNode, pathArr);
           const upperNode = getUpperNode(initialStoredNode, pathArr);
           const targetMenu = getNode(
             initialStoredNode,
             getPathArr(selectedParent)
           );
+
+          // 입력받은 값으로 데이터 변경
           currentNode.name = name;
           currentNode.href = href;
 
+          // 이동시킬 메뉴를 선택(자신이 아닌)했을 때만 옮김처리 실행
           if (selectedParent !== currentNode.parentId) {
             upperNode.children.splice(path[path.length - 1], 1);
             changeIdWhenDelete(initialStoredNode, path, initialStoredPost);
@@ -717,8 +721,10 @@ export default function SettingsTabs({ children }) {
           const parentId = postArr[0].parentId;
           const index = path[path.length - 1];
 
+          // 입력받은 값으로 데이터 변경
           initialStoredPost[parentId][index].name = name;
 
+          // 이동시킬 메뉴를 선택(자신이 아닌)했을 때만 옮김처리 실행
           if (selectedParent !== parentId) {
             const temp = initialStoredPost[parentId][index];
             console.log("temp : ", temp);
@@ -734,9 +740,12 @@ export default function SettingsTabs({ children }) {
           }
         }
 
+        // 입력받은 값으로 데이터 변경
         currentNode.name = name;
         currentNode.href = href;
         const targetMenu = getNode(node, selectedParent.split("/").slice(1));
+
+        // 이동시킬 메뉴를 선택(자신이 아닌)했을 때만 옮김처리 실행
         if (selectedParent !== currentNode.parentId) {
           upperNode.children.splice(path[path.length - 1], 1);
           changeIdWhenDelete(node, path, initialStoredPost);
