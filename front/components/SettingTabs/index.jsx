@@ -9,6 +9,8 @@ import {
   ButtonGroup,
   Select,
   MenuItem,
+  FormControlLabel,
+  Switch,
 } from "@material-ui/core";
 
 import ArrowUpwardOutlinedIcon from "@material-ui/icons/ArrowUpwardOutlined";
@@ -59,18 +61,32 @@ const getPathArr = (pathStr) => {
   const pathArr = pathStr === "/" ? [] : pathStr.split("/").slice(1);
   return pathArr;
 };
-const getUpperNode = (rootNode, path) => {
+const getUpperNode = (rootNode, pathArr) => {
   let result = { ...rootNode };
-  for (let i = 0; i < path.length - 1; i++) {
-    result = result.children[path[i]];
+
+  // rootNode가 post인 경우.
+  if (rootNode.id === undefined) {
+    const upperPath = getUpperPath(pathArr);
+    const index =
+      pathArr.length === 0 ? "/" : upperPath.slice(0, upperPath.length - 2);
+    result = rootNode[index];
+  } else {
+    for (let i = 0; i < pathArr.length - 1; i++) {
+      result = result.children[pathArr[i]];
+    }
   }
+
   return result;
 };
 
 const getNode = (rootNode, pathArr) => {
   let result = { ...rootNode };
+
+  // rootNode가 post인 경우.
   if (rootNode.id === undefined) {
-    const index = pathArr.length === 0 ? 0 : pathArr[pathArr.length - 1];
+    const upperPath = getUpperPath(pathArr);
+    const index =
+      pathArr.length === 0 ? "/" : upperPath.slice(0, upperPath.length - 1);
     result = rootNode[index];
   } else {
     for (let i = 0; i < pathArr.length; i++) {
@@ -81,7 +97,7 @@ const getNode = (rootNode, pathArr) => {
   return result;
 };
 
-const getNodeToFlat = (rootNode, currentNode) => {
+const getNodeToFlat = (rootNode, selectedId) => {
   let result = [];
   if (rootNode.id === "/") {
     result.push(rootNode);
@@ -90,17 +106,18 @@ const getNodeToFlat = (rootNode, currentNode) => {
     const node = rootNode.children[i];
 
     let isFamily;
-    if (currentNode.id.length === node.id.length) {
-      isFamily = currentNode.id === node.id;
-    } else if (currentNode.id.length > node.id.length) {
-      isFamily = currentNode.id.slice(0, node.id.length) === node.id;
-    } else if (currentNode.id.length < node.id.length) {
-      isFamily = node.id.slice(0, currentNode.id.length) === node.id;
+    if (selectedId.length === node.id.length) {
+      isFamily = selectedId === node.id;
+    } else if (selectedId.length < node.id.length) {
+      isFamily = node.id.slice(0, selectedId.length) === node.id;
     }
+    // else if (selectedId.length > node.id.length) {
+    //   isFamily = selectedId.slice(0, node.id.length) === node.id;
+    // }
 
     if (!isFamily) result.push(node);
     if (Array.isArray(node.children) && node.children.length !== 0) {
-      result.push(...getNodeToFlat(node, currentNode));
+      result.push(...getNodeToFlat(node, selectedId));
     }
   }
   return result;
@@ -142,23 +159,26 @@ const interChangeArrId = (arr, index, upperPath) => {
 };
 
 // parent의 id가 바뀔 경우, 그 parent의 id에 맞게 children의 id와 parentId를 바꿔준다.
-const changeChildrenId = (parent, parentId, initialStoredPost) => {
+// const changeChildrenId = (parent, parentId, initialStoredPost) => {
+const changeChildrenId = (parent, parentId) => {
   if (!(Array.isArray(parent.children) && parent.children.length > 0)) return;
-  if (typeof parent.children[0].content === "object") {
-    const prevParentId = parent.children[0].parentId;
-    const temp = initialStoredPost[prevParentId];
-    initialStoredPost[parentId] = temp;
-    delete initialStoredPost[prevParentId];
-  }
+  // if (typeof parent.children[0].content === "object") {
+  //   const prevParentId = parent.children[0].parentId;
+  //   const temp = initialStoredPost[prevParentId];
+  //   initialStoredPost[parentId] = temp;
+  //   delete initialStoredPost[prevParentId];
+  // }
 
   for (let i = 0; i < parent.children.length; i++) {
     const node = parent.children[i];
     const path = node.id.split("/");
     node.parentId = parentId;
-    node.id = parentId + "/" + path[path.length - 1];
+    // node.id = parentId + "/" + path[path.length - 1];
+    node.id = parentId + "/" + i;
 
     if (Array.isArray(node.children) && node.children.length > 0) {
-      changeChildrenId(node, node.id, initialStoredPost);
+      // changeChildrenId(node, node.id, initialStoredPost);
+      changeChildrenId(node, node.id);
     }
   }
 };
@@ -166,8 +186,9 @@ const changeChildrenId = (parent, parentId, initialStoredPost) => {
 //노드 삭제시, 그 다음 노드들의 id를 수정한다.(앞으로 당긴다)
 const changeIdWhenDelete = (
   rootNode,
-  deletedNodePathArr,
-  initialStoredPost
+  deletedNodePathArr
+  // ,
+  // initialStoredPost
 ) => {
   const deletedNodeIndex = parseInt(
     deletedNodePathArr[deletedNodePathArr.length - 1]
@@ -177,9 +198,59 @@ const changeIdWhenDelete = (
   for (let i = deletedNodeIndex; i < upperNode.children.length; i++) {
     const id = upperPath + i;
     upperNode.children[i].id = id;
-    changeChildrenId(upperNode.children[i], id, initialStoredPost);
+    // changeChildrenId(upperNode.children[i], id, initialStoredPost);
+    changeChildrenId(upperNode.children[i], id);
   }
 };
+
+// getContainedPosts에 매개변수로 넣을 값을 처리하는 함수.
+const getContainedPostsWrap = (upperPath, ti, node) => {
+  let pathArr1 = getPathArr(upperPath + (ti - 1));
+  let pathArr2 = getPathArr(upperPath + ti);
+  let target1 = getNode(node, pathArr1);
+  let target2 = getNode(node, pathArr2);
+  let postIdArr1 = getContainedPosts(target1);
+  let postIdArr2 = getContainedPosts(target2);
+  console.log("postIdArr1 : ", postIdArr1);
+  console.log("postIdArr2 : ", postIdArr2);
+  return [postIdArr1, postIdArr2];
+};
+
+// 매개변수로 전달된 메뉴의 트리구조에서
+// post를 검색하고, 검색된 post의 parentId의 배열을
+// 리턴한다.
+const getContainedPosts = (targetNode) => {
+  const result = [];
+  const children = targetNode.children;
+  if (!(Array.isArray(children) && children.length > 0)) return;
+  for (let i = 0; i < children.length; i++) {
+    if (
+      Array.isArray(children[i].children) &&
+      children[i].children.length > 0
+    ) {
+      result.push(...getContainedPosts(children[i]));
+    } else if (typeof children[i].content === "object") {
+      result.push(children[i].parentId);
+      break;
+    }
+  }
+
+  return result;
+};
+
+// menu를 이동시켜서 post의 parentId가 변경된 경우
+// initialStoredPost의 키(parentId)를 변경하기 위해 만든 함수.
+const interchangePostKey = (prevKeyArr, nextKeyArr, initialStoredPost) => {
+  for (let i = 0; i < prevKeyArr.length; i++) {
+    initialStoredPost[nextKeyArr[i]] = initialStoredPost[prevKeyArr[i]];
+    delete initialStoredPost[prevKeyArr[i]];
+  }
+};
+
+// const changeIdOnPost = (initialStoredPost, parentId) => {
+//   const postArr = initialStoredPost[parentId];
+//   post
+// };
 
 //path 의 상위 path를 반환한다. ex) /0/1/
 const getUpperPath = (pathArr) => {
@@ -337,8 +408,13 @@ export default function SettingsTabs({ children }) {
     if (!isFirst) {
       const nodeKeys = Object.keys(currentNode);
       const isMenu = nodeKeys.find((key) => key === "children");
-      // let upperPath = "/" + path.slice(0, path.length - 1).join("/");
-      // upperPath += upperPath.trim().length > 1 ? "/" : "";
+
+      // initialStoredPost의 키를 변경해야 할 때 필요한 값.
+      const [prevKeyArr1, prevKeyArr2] = getContainedPostsWrap(
+        upperPath,
+        ti,
+        node
+      );
 
       if (isMenu) {
         changeMenuState("UP", upperPath);
@@ -348,6 +424,21 @@ export default function SettingsTabs({ children }) {
 
       changeCombineState("UP", upperPath);
       setSelected(upperPath + (ti - 1));
+
+      // initialStoredPost의 키를 변경해야 할 때 필요한 값.
+      const [nextKeyArr1, nextKeyArr2] = getContainedPostsWrap(
+        upperPath,
+        ti,
+        node
+      );
+
+      // initialStoredPost의 키를 변경하는 함수.
+      interchangePostKey(prevKeyArr1, nextKeyArr2, initialStoredPost);
+      interchangePostKey(prevKeyArr2, nextKeyArr1, initialStoredPost);
+
+      // console.log("node : ", node);
+      // console.log("initialStoredNode : ", initialStoredNode);
+      // console.log("initialStoredPost : ", initialStoredPost);
     }
   };
 
@@ -389,6 +480,9 @@ export default function SettingsTabs({ children }) {
 
     changeCombineState("DELETE", upperPath);
 
+    // console.log("node: ", node);
+    // console.log("initialStoredNode: ", initialStoredNode);
+    // console.log("initialStoredPost: ", initialStoredPost);
     // upperNode.children[path[path.length - 1]].name = "";
     // currentNode를 트리에서 삭제
     // upperNode.children.splice(path[path.length - 1], 1);
@@ -399,7 +493,7 @@ export default function SettingsTabs({ children }) {
     if (selected == "/") return;
     setName(currentNode.name);
     setHref(currentNode.href);
-    setParent(currentNode.parentId);
+    setSelectedParent(currentNode.parentId);
     setTitle("UPDATE");
     setShowParent(true);
     setShowResultant(false);
@@ -413,7 +507,7 @@ export default function SettingsTabs({ children }) {
     setTitle("ADD");
     setName("");
     setHref("");
-    setParent("");
+    setSelectedParent("");
     setShowParent(false);
     setShowResultant(true);
     handleOpen();
@@ -468,8 +562,7 @@ export default function SettingsTabs({ children }) {
   const [selectedParent, setSelectedParent] = React.useState("/");
   const [name, onChangeName, setName] = useInput("");
   const [href, onChangeHref, setHref] = useInput("");
-  const [parent, onChangeParent, setParent] = useInput("");
-  const [resultant, onChangeResultant, setResultant] = useInput("menu");
+  const [resultant, onChangeResultant] = useInput("menu");
 
   const handleChange = (event) => {
     setSelectedParent(event.target.value);
@@ -545,29 +638,52 @@ export default function SettingsTabs({ children }) {
           );
           currentNode.name = name;
           currentNode.href = href;
-          if (parent !== currentNode.parentId) {
-            // upperNode.children.splice(path[path.length - 1], 1);
-            // currentNode.id =
-            // targetMenu.id + "/" + (targetMenu.children.length - 1);
-            // targetMenu.children.push(currentNode);
+
+          if (selectedParent !== currentNode.parentId) {
+            upperNode.children.splice(path[path.length - 1], 1);
+            changeIdWhenDelete(initialStoredNode, path, initialStoredPost);
+            targetMenu.children.push(currentNode);
+            changeChildrenId(targetMenu, targetMenu.id, initialStoredPost);
           }
         } else if (resultant === "post") {
-          //
+          const pathArr = getPathArr(selected);
+          const currentNode = getNode(initialStoredPost, pathArr);
+          const postArr = getNode(initialStoredPost, pathArr);
+          const parentId = postArr[0].parentId;
+          const index = path[path.length - 1];
+
+          initialStoredPost[parentId][index].name = name;
+
+          if (selectedParent !== parentId) {
+            const temp = initialStoredPost[parentId][index];
+            console.log("temp : ", temp);
+            initialStoredPost[parentId].splice(index, 1);
+            console.log("initialStoredPost : ", initialStoredPost);
+            const keys = Object.keys(initialStoredPost);
+            if (keys.find((e) => e === selectedParent) === undefined) {
+              initialStoredPost[selectedParent] = [temp];
+              console.log("selectedParent : ", selectedParent);
+            } else {
+              initialStoredPost[selectedParent].push(temp);
+            }
+          }
         }
 
         currentNode.name = name;
         currentNode.href = href;
         const targetMenu = getNode(node, selectedParent.split("/").slice(1));
-        // currentNode를 트리에서 삭제
-        if (parent !== currentNode.parentId) {
-          // upperNode.children.splice(path[path.length - 1], 1);
-          // changeIdWhenDelete(node, path, initialStoredPost);
+        if (selectedParent !== currentNode.parentId) {
+          upperNode.children.splice(path[path.length - 1], 1);
+          changeIdWhenDelete(node, path, initialStoredPost);
           // 삭제 후 푸시, 변경
-          // targetMenu.children.push(currentNode);
-          // currentNode.id = targetMenu.id + "/" + (targetMenu.children.length - 1);
+          // currentNode.id =
+          //   targetMenu.id + "/" + (targetMenu.children.length - 1);
+          targetMenu.children.push(currentNode);
+          changeChildrenId(targetMenu, targetMenu.id, initialStoredPost);
         }
         console.log("node : ", node);
         console.log("initialStoredNode : ", initialStoredNode);
+        console.log("initialStoredPost : ", initialStoredPost);
 
         break;
     }
@@ -582,9 +698,11 @@ export default function SettingsTabs({ children }) {
         className={classes.root}
         noValidate
         autoComplete='off'
+        style={{ width: "100%", display: "flex", justifyContent: "center" }}
       >
         {/* 수정 할 수 있는 내용 : name, href, parent */}
-        <FormControl>
+        {/* <FormControl> */}
+        <div style={{ display: "flex", flexDirection: "column", width: "80%" }}>
           <TextField
             id='name'
             label='name'
@@ -609,26 +727,28 @@ export default function SettingsTabs({ children }) {
               {renderMenuItem(getNodeToFlat(initialStoredNode, currentNode))}
             </Select>
           )}
-          {showResultant && (
-            <Select
-              labelId='resultant-select-label'
-              id='resultant'
-              value={resultant}
-              onChange={onChangeResultant}
-            >
-              <MenuItem value='menu' key='menu'>
-                Menu
-              </MenuItem>
-              <MenuItem value='post' key='post'>
-                Post
-              </MenuItem>
-            </Select>
-          )}
+          <br />
+          {/* {showResultant && (
+            )} */}
+          <Select
+            labelId='resultant-select-label'
+            id='resultant'
+            value={resultant}
+            onChange={onChangeResultant}
+          >
+            <MenuItem value='menu' key='menu'>
+              Menu
+            </MenuItem>
+            <MenuItem value='post' key='post'>
+              Post
+            </MenuItem>
+          </Select>
           <br />
           <Button variant='contained' color='primary' type='submit'>
             확인
           </Button>
-        </FormControl>
+        </div>
+        {/* </FormControl> */}
       </form>
     </div>
   );

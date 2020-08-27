@@ -12,6 +12,9 @@ export function getModalStyle() {
     top: `${top}%`,
     left: `${left}%`,
     transform: `translate(-${top}%, -${left}%)`,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
   };
 }
 
