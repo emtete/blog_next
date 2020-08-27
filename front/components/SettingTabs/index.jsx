@@ -350,7 +350,27 @@ export default function SettingsTabs({ children }) {
         changeIdWhenDelete(initialStoredNode, path, initialStoredPost);
 
         break;
+
       case "UPDATE":
+        const pathArr = getPathArr(selected);
+        const currentNode = getNode(initialStoredNode, pathArr);
+        const upperNode = getUpperNode(initialStoredNode, pathArr);
+        const targetMenu = getNode(
+          initialStoredNode,
+          getPathArr(selectedParent)
+        );
+
+        // 입력받은 값으로 데이터 변경
+        currentNode.name = name;
+        currentNode.href = href;
+
+        // 이동시킬 메뉴를 선택(자신이 아닌)했을 때만 옮김처리 실행
+        if (selectedParent !== currentNode.parentId) {
+          upperNode.children.splice(path[path.length - 1], 1);
+          changeIdWhenDelete(initialStoredNode, path, initialStoredPost);
+          targetMenu.children.push(currentNode);
+          changeChildrenId(targetMenu, targetMenu.id, initialStoredPost);
+        }
         break;
       case "ADD":
         break;
@@ -694,26 +714,12 @@ export default function SettingsTabs({ children }) {
         const nodeKeys = Object.keys(currentNode);
         const isMenu = nodeKeys.find((key) => key === "children");
 
+        //   changeMenuState("DELETE", upperPath);
+        //   changePostState("DELETE", upperPath);
+        // changeCombineState("DELETE", upperPath);
+
         if (isMenu) {
-          // initialStoredNode pathArr, selectedParent
-          const currentNode = getNode(initialStoredNode, pathArr);
-          const upperNode = getUpperNode(initialStoredNode, pathArr);
-          const targetMenu = getNode(
-            initialStoredNode,
-            getPathArr(selectedParent)
-          );
-
-          // 입력받은 값으로 데이터 변경
-          currentNode.name = name;
-          currentNode.href = href;
-
-          // 이동시킬 메뉴를 선택(자신이 아닌)했을 때만 옮김처리 실행
-          if (selectedParent !== currentNode.parentId) {
-            upperNode.children.splice(path[path.length - 1], 1);
-            changeIdWhenDelete(initialStoredNode, path, initialStoredPost);
-            targetMenu.children.push(currentNode);
-            changeChildrenId(targetMenu, targetMenu.id, initialStoredPost);
-          }
+          changeMenuState("UPDATE", upperPath);
         } else {
           const pathArr = getPathArr(selected);
           const currentNode = getNode(initialStoredPost, pathArr);
