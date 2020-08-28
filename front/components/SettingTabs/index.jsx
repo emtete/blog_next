@@ -63,7 +63,7 @@ const getPathArr = (pathStr) => {
 };
 const getUpperNode = (rootNode, pathArr) => {
   let result = { ...rootNode };
-  console.log("result : ", result);
+
   // rootNode가 post인 경우.
   if (rootNode.id === undefined) {
     const upperPath = getUpperPath(pathArr);
@@ -216,14 +216,14 @@ const getContainedPostsWrap2 = (upperPath, delIndex, node) => {
   const result = [];
   const upperNode = getNode(node, getPathArr(upperPath));
   // console.log("upperNode : ", upperNode);
-  for (let i = delIndex; i < upperNode.children.length; i++) {
+  for (let i = delIndex + 1; i < upperNode.children.length; i++) {
     let pathArr = getPathArr(upperPath + i);
     let target = getNode(node, pathArr);
     let postIdArr = getContainedPosts(target);
     // console.log("pathArr : ", pathArr);
     // console.log("target : ", target);
     // console.log("postIdArr : ", postIdArr);
-    postIdArr.length > 0 && result.push(postIdArr);
+    Array.isArray(postIdArr) && postIdArr.length > 0 && result.push(postIdArr);
   }
 
   return result;
@@ -311,7 +311,7 @@ export default function SettingsTabs({ children }) {
   );
 
   const path = selected.split("/").slice(1);
-  const upperNode = getUpperNode(node, path);
+  // const upperNode = getUpperNode(node, path);
   const currentNode = getNode(node, path) || node;
   let upperPath = "/" + path.slice(0, path.length - 1).join("/");
   upperPath += upperPath.trim().length > 1 ? "/" : "";
@@ -319,22 +319,17 @@ export default function SettingsTabs({ children }) {
   const changeMenuState = (role, upperPath) => {
     const path = getPathArr(selected);
     const ti = parseInt(path[path.length - 1]);
-    // const upperNode = getUpperNode(initialStoredNode, path);
-    console.log("initialStoredNode : ", initialStoredNode);
-    console.log("path : ", path);
-    console.log("upperNode1 : ", upperNode);
+    const upperNode0 = getUpperNode(initialStoredNode, path);
 
     switch (role) {
       case "UP":
-        const upperNode1 = getUpperNode(initialStoredNode, path);
-        interChangeArrOrder(upperNode1.children, ti);
-        interChangeArrId(upperNode1.children, ti, upperPath);
+        interChangeArrOrder(upperNode0.children, ti);
+        interChangeArrId(upperNode0.children, ti, upperPath);
         break;
 
       case "DOWN":
-        const upperNode2 = getUpperNode(initialStoredNode, path);
-        interChangeArrOrder(upperNode2.children, ti + 1);
-        interChangeArrId(upperNode2.children, ti + 1, upperPath);
+        interChangeArrOrder(upperNode0.children, ti + 1);
+        interChangeArrId(upperNode0.children, ti + 1, upperPath);
         break;
 
       case "DELETE":
@@ -346,7 +341,7 @@ export default function SettingsTabs({ children }) {
         });
 
         // initialStoredNode에서 삭제
-        upperNode.children.splice(path[path.length - 1], 1);
+        upperNode0.children.splice(path[path.length - 1], 1);
 
         // initialStoredNode가 포함한 id수정
         changeIdWhenDelete(initialStoredNode, path, initialStoredPost);
@@ -523,7 +518,7 @@ export default function SettingsTabs({ children }) {
 
   const onDown = (e) => {
     if (selected == "/") return;
-
+    const upperNode = getUpperNode(node, getPathArr(selected));
     const ti = parseInt(path[path.length - 1]); // targetIndex
     const lastChildIndex = upperNode.children.length - 1;
     const isLast = lastChildIndex == ti;
@@ -559,9 +554,9 @@ export default function SettingsTabs({ children }) {
       interchangePostKey(prevKeyArr1, nextKeyArr2, initialStoredPost);
       interchangePostKey(prevKeyArr2, nextKeyArr1, initialStoredPost);
 
-      // console.log("node : ", node);
-      // console.log("initialStoredNode : ", initialStoredNode);
-      // console.log("initialStoredPost : ", initialStoredPost);
+      console.log("node : ", node);
+      console.log("initialStoredNode : ", initialStoredNode);
+      console.log("initialStoredPost : ", initialStoredPost);
     }
   };
 
@@ -575,6 +570,7 @@ export default function SettingsTabs({ children }) {
     // initialStoredPost의 키를 변경해야 할 때 필요한 값.
     const prevKeyArr = getContainedPostsWrap2(upperPath, ti, node);
     console.log("prevKeyArr : ", prevKeyArr);
+
     if (isMenu) {
       changeMenuState("DELETE", upperPath);
     } else {
