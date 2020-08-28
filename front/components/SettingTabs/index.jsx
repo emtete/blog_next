@@ -294,13 +294,10 @@ export default function SettingsTabs({ children }) {
     combineMenuAndPost(initialStoredNode, initialStoredPost)
   );
 
-  const path = selected.split("/").slice(1);
-  const currentNode = getNode(node, path) || node;
-
   const changeMenuState = (role) => {
-    const path = getPathArr(selected);
-    const ti = parseInt(path[path.length - 1]);
-    const upperNode0 = getUpperNode(initialStoredNode, path);
+    const pathArr = getPathArr(selected);
+    const ti = parseInt(pathArr[pathArr.length - 1]);
+    const upperNode0 = getUpperNode(initialStoredNode, pathArr);
     const upperPath = getUpperPath(getPathArr(selected), "/");
 
     switch (role) {
@@ -316,22 +313,22 @@ export default function SettingsTabs({ children }) {
 
       case "DELETE":
         // initialStoredPost id 수정, 삭제
-        const containPostIds = menuHavePost(getNode(node, path));
+        const containPostIds = menuHavePost(getNode(node, pathArr));
         containPostIds.map((e) => {
           const upperPath = getUpperPath(e.split("/").slice(1));
           delete initialStoredPost[upperPath.slice(0, upperPath.length - 1)];
         });
 
         // initialStoredNode에서 삭제
-        upperNode0.children.splice(path[path.length - 1], 1);
+        upperNode0.children.splice(pathArr[pathArr.length - 1], 1);
 
         // initialStoredNode가 포함한 id수정
-        changeIdWhenDelete(initialStoredNode, path);
+        changeIdWhenDelete(initialStoredNode, pathArr);
 
         break;
 
       case "UPDATE":
-        const pathArr = getPathArr(selected);
+        // const pathArr = getPathArr(selected);
         const currentNode = getNode(initialStoredNode, pathArr);
         const upperNode = getUpperNode(initialStoredNode, pathArr);
         const targetMenu = getNode(
@@ -359,8 +356,8 @@ export default function SettingsTabs({ children }) {
   };
 
   const changePostState = (role) => {
-    const path = selected.split("/").slice(1);
-    const ti = parseInt(path[path.length - 1]);
+    const pathArr = selected.split("/").slice(1);
+    const ti = parseInt(pathArr[pathArr.length - 1]);
     const upperNode = initialStoredPost[selected.slice(0, selected.length - 2)];
     const upperPath = getUpperPath(getPathArr(selected), "/");
 
@@ -377,15 +374,15 @@ export default function SettingsTabs({ children }) {
 
       case "DELETE":
         // initialStoredPost 에서 삭제
-        upperNode.splice(path[path.length - 1], 1);
-        changeIdWhenDelete(node, path);
+        upperNode.splice(pathArr[pathArr.length - 1], 1);
+        changeIdWhenDelete(node, pathArr);
         break;
 
       case "UPDATE":
         const pathArr = getPathArr(selected);
         const postArr = getNode(initialStoredPost, pathArr);
         const parentId = postArr[0].parentId;
-        const index = path[path.length - 1];
+        const index = pathArr[pathArr.length - 1];
 
         // 입력받은 값으로 데이터 변경
         initialStoredPost[parentId][index].name = name;
@@ -410,10 +407,11 @@ export default function SettingsTabs({ children }) {
   };
 
   const changeCombineState = (role) => {
-    const path = selected.split("/").slice(1);
-    const ti = parseInt(path[path.length - 1]);
+    const pathArr = selected.split("/").slice(1);
+    const ti = parseInt(pathArr[pathArr.length - 1]);
     const upperNode = getUpperNode(node, path);
     const upperPath = getUpperPath(getPathArr(selected), "/");
+    const currentNode = getNode(node, getPathArr(selected));
 
     switch (role) {
       case "UP":
@@ -428,8 +426,8 @@ export default function SettingsTabs({ children }) {
 
       case "DELETE":
         // currentNode를 트리에서 삭제
-        upperNode.children.splice(path[path.length - 1], 1);
-        changeIdWhenDelete(node, path);
+        upperNode.children.splice(pathArr[pathArr.length - 1], 1);
+        changeIdWhenDelete(node, pathArr);
         break;
 
       case "UPDATE":
@@ -440,8 +438,8 @@ export default function SettingsTabs({ children }) {
 
         // 이동시킬 메뉴를 선택(자신이 아닌)했을 때만 옮김처리 실행
         if (selectedParent !== currentNode.parentId) {
-          upperNode.children.splice(path[path.length - 1], 1);
-          changeIdWhenDelete(node, path);
+          upperNode.children.splice(pathArr[pathArr.length - 1], 1);
+          changeIdWhenDelete(node, pathArr);
           // 삭제 후 푸시, 변경
           targetMenu.children.push(currentNode);
           changeChildrenId(targetMenu, targetMenu.id);
@@ -457,9 +455,11 @@ export default function SettingsTabs({ children }) {
   const onUp = (e) => {
     if (selected == "/") return;
 
-    const ti = parseInt(path[path.length - 1]);
-    const isFirst = path[path.length - 1] == 0;
+    const pathArr = getPathArr(selected);
+    const ti = parseInt(pathArr[pathArr.length - 1]);
+    const isFirst = pathArr[pathArr.length - 1] == 0;
     const upperPath = getUpperPath(getPathArr(selected), "/");
+    const currentNode = getNode(node, getPathArr(selected));
 
     if (!isFirst) {
       const nodeKeys = Object.keys(currentNode);
@@ -500,11 +500,13 @@ export default function SettingsTabs({ children }) {
 
   const onDown = (e) => {
     if (selected == "/") return;
+    const pathArr = getPathArr(selected);
     const upperPath = getUpperPath(getPathArr(selected), "/");
     const upperNode = getUpperNode(node, getPathArr(selected));
-    const ti = parseInt(path[path.length - 1]); // targetIndex
+    const ti = parseInt(pathArr[pathArr.length - 1]); // targetIndex
     const lastChildIndex = upperNode.children.length - 1;
     const isLast = lastChildIndex == ti;
+    const currentNode = getNode(node, getPathArr(selected));
 
     if (!isLast) {
       const nodeKeys = Object.keys(currentNode);
@@ -546,7 +548,9 @@ export default function SettingsTabs({ children }) {
   const onDelete = (e) => {
     if (selected == "/") return;
 
-    const ti = parseInt(path[path.length - 1]); // targetIndex
+    const pathArr = getPathArr(selected);
+    const currentNode = getNode(node, getPathArr(selected));
+    const ti = parseInt(pathArr[pathArr.length - 1]); // targetIndex
     const nodeKeys = Object.keys(currentNode);
     const isMenu = nodeKeys.find((key) => key === "children");
     const upperPath = getUpperPath(getPathArr(selected), "/");
@@ -601,6 +605,7 @@ export default function SettingsTabs({ children }) {
 
   const onUpdate = (e) => {
     if (selected == "/") return;
+    const currentNode = getNode(node, getPathArr(selected));
     setName(currentNode.name);
     setHref(currentNode.href);
     setSelectedParent(currentNode.parentId);
@@ -610,6 +615,7 @@ export default function SettingsTabs({ children }) {
     handleOpen();
   };
   const onAdd = (e) => {
+    const currentNode = getNode(node, getPathArr(selected));
     const nodeKeys = Object.keys(currentNode);
     const isMenu = nodeKeys.find((key) => key === "children");
     if (!isMenu) return;
@@ -697,6 +703,7 @@ export default function SettingsTabs({ children }) {
   const applyModalContent = (e) => {
     e.preventDefault();
     const pathArr = getPathArr(selected);
+    const currentNode = getNode(node, getPathArr(selected));
 
     switch (title) {
       case "ADD":
@@ -747,12 +754,10 @@ export default function SettingsTabs({ children }) {
       case "UPDATE":
         const nodeKeys = Object.keys(currentNode);
         const isMenu = nodeKeys.find((key) => key === "children");
-        const ti = parseInt(path[path.length - 1]); // targetIndex
+        const ti = parseInt(pathArr[pathArr.length - 1]); // targetIndex
         // const pathArr = getPathArr(selected);
         const upperPath = getUpperPath(getPathArr(selected), "/");
 
-        console.log("1selected : ", selected);
-        // console.log("1upperPath : ", upperPath);
         // initialStoredPost의 키를 변경해야 할 때 필요한 값.
         const prevKeyArr = getContainedPostsWrap2(
           getPathArr(selected),
@@ -829,7 +834,12 @@ export default function SettingsTabs({ children }) {
               onChange={handleChange}
               // style={showParent}
             >
-              {renderMenuItem(getNodeToFlat(initialStoredNode, currentNode.id))}
+              {renderMenuItem(
+                getNodeToFlat(
+                  initialStoredNode,
+                  getNode(node, getPathArr(selected)).id
+                )
+              )}
             </Select>
           )}
           <br />
