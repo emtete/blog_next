@@ -212,13 +212,25 @@ const getContainedPostsWrap = (upperPath, ti, node) => {
 };
 
 // getContainedPosts에 매개변수로 넣을 값을 처리하는 함수.
-const getContainedPostsWrap2 = (upperPath, delIndex, node) => {
+const getContainedPostsWrap2 = (pathArr, delIndex, node, when) => {
   const result = [];
-  const upperNode = getNode(node, getPathArr(upperPath));
+  const upperNode = getNode(node, getPathArr(getUpperPath(pathArr)));
   // console.log("upperNode : ", upperNode);
-  for (let i = delIndex + 1; i < upperNode.children.length; i++) {
-    let pathArr = getPathArr(upperPath + i);
-    let target = getNode(node, pathArr);
+  // console.log("getPathArr(upperPath) : ", getPathArr(upperPath));
+  let startIndex;
+  switch (when) {
+    case "beforeDelete":
+      startIndex = delIndex + 1;
+      break;
+    case "beforeUpdate":
+    case "afterUpdate":
+    case "afterDelete":
+      startIndex = delIndex;
+      break;
+  }
+  for (let i = startIndex; i < upperNode.children.length; i++) {
+    let pathArrI = getPathArr(getUpperPath(pathArr, "/") + i);
+    let target = getNode(node, pathArrI);
     let postIdArr = getContainedPosts(target);
     // console.log("pathArr : ", pathArr);
     // console.log("target : ", target);
@@ -267,9 +279,10 @@ const interchangePostKey = (prevKeyArr, nextKeyArr, initialStoredPost) => {
 // };
 
 //path 의 상위 path를 반환한다. ex) /0/1/
-const getUpperPath = (pathArr) => {
+const getUpperPath = (pathArr, slash) => {
+  console.log("pathArr : ", pathArr);
   let upperPath = "/" + pathArr.slice(0, pathArr.length - 1).join("/");
-  upperPath += upperPath.trim().length > 1 ? "/" : "";
+  if (slash === "/") upperPath += upperPath.trim().length > 1 ? "/" : "";
 
   return upperPath;
 };
@@ -311,7 +324,6 @@ export default function SettingsTabs({ children }) {
   );
 
   const path = selected.split("/").slice(1);
-  // const upperNode = getUpperNode(node, path);
   const currentNode = getNode(node, path) || node;
   let upperPath = "/" + path.slice(0, path.length - 1).join("/");
   upperPath += upperPath.trim().length > 1 ? "/" : "";
@@ -478,6 +490,7 @@ export default function SettingsTabs({ children }) {
 
     const ti = parseInt(path[path.length - 1]);
     const isFirst = path[path.length - 1] == 0;
+    const upperPath = getUpperPath(getPathArr(selected));
 
     if (!isFirst) {
       const nodeKeys = Object.keys(currentNode);
@@ -518,6 +531,7 @@ export default function SettingsTabs({ children }) {
 
   const onDown = (e) => {
     if (selected == "/") return;
+    const upperPath = getUpperPath(getPathArr(selected));
     const upperNode = getUpperNode(node, getPathArr(selected));
     const ti = parseInt(path[path.length - 1]); // targetIndex
     const lastChildIndex = upperNode.children.length - 1;
@@ -566,9 +580,15 @@ export default function SettingsTabs({ children }) {
     const ti = parseInt(path[path.length - 1]); // targetIndex
     const nodeKeys = Object.keys(currentNode);
     const isMenu = nodeKeys.find((key) => key === "children");
+    const upperPath = getUpperPath(getPathArr(selected));
 
     // initialStoredPost의 키를 변경해야 할 때 필요한 값.
-    const prevKeyArr = getContainedPostsWrap2(upperPath, ti, node);
+    const prevKeyArr = getContainedPostsWrap2(
+      getPathArr(selected),
+      ti,
+      node,
+      "beforeDelete"
+    );
     console.log("prevKeyArr : ", prevKeyArr);
 
     if (isMenu) {
@@ -581,7 +601,12 @@ export default function SettingsTabs({ children }) {
     setSelected("/");
 
     // initialStoredPost의 키를 변경해야 할 때 필요한 값.
-    const nextKeyArr = getContainedPostsWrap2(upperPath, ti, node);
+    const nextKeyArr = getContainedPostsWrap2(
+      getPathArr(selected),
+      ti,
+      node,
+      "afterDelete"
+    );
     console.log("nextKeyArr : ", nextKeyArr);
     // initialStoredPost의 키를 변경하는 함수.
     // interchangePostKey(prevKeyArr1, nextKeyArr2, initialStoredPost);
@@ -754,9 +779,18 @@ export default function SettingsTabs({ children }) {
         const nodeKeys = Object.keys(currentNode);
         const isMenu = nodeKeys.find((key) => key === "children");
         const ti = parseInt(path[path.length - 1]); // targetIndex
+        // const pathArr = getPathArr(selected);
+        const upperPath = getUpperPath(getPathArr(selected), "/");
 
+        console.log("1selected : ", selected);
+        // console.log("1upperPath : ", upperPath);
         // initialStoredPost의 키를 변경해야 할 때 필요한 값.
-        const prevKeyArr = getContainedPostsWrap2(upperPath, ti, node);
+        const prevKeyArr = getContainedPostsWrap2(
+          getPathArr(selected),
+          ti,
+          node,
+          "beforeUpdate"
+        );
 
         if (isMenu) {
           changeMenuState("UPDATE", upperPath);
@@ -765,10 +799,15 @@ export default function SettingsTabs({ children }) {
         }
 
         changeCombineState("UPDATE", upperPath);
-        setSelected("/");
 
+        console.log("2selected : ", selected);
         // initialStoredPost의 키를 변경해야 할 때 필요한 값.
-        const nextKeyArr = getContainedPostsWrap2(upperPath, ti, node);
+        const nextKeyArr = getContainedPostsWrap2(
+          getPathArr(selected),
+          ti,
+          node,
+          "afterUpdate"
+        );
 
         // initialStoredPost의 키를 변경하는 코드.
         for (let i = 0; i < prevKeyArr.length; i++) {
@@ -779,6 +818,8 @@ export default function SettingsTabs({ children }) {
         console.log("node : ", node);
         console.log("initialStoredNode : ", initialStoredNode);
         console.log("initialStoredPost : ", initialStoredPost);
+
+        setSelected("/");
 
         break;
     }
