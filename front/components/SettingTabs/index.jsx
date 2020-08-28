@@ -63,7 +63,7 @@ const getPathArr = (pathStr) => {
 };
 const getUpperNode = (rootNode, pathArr) => {
   let result = { ...rootNode };
-
+  console.log("result : ", result);
   // rootNode가 post인 경우.
   if (rootNode.id === undefined) {
     const upperPath = getUpperPath(pathArr);
@@ -317,19 +317,24 @@ export default function SettingsTabs({ children }) {
   upperPath += upperPath.trim().length > 1 ? "/" : "";
 
   const changeMenuState = (role, upperPath) => {
-    const path = selected.split("/").slice(1);
+    const path = getPathArr(selected);
     const ti = parseInt(path[path.length - 1]);
-    const upperNode = getUpperNode(initialStoredNode, path);
+    // const upperNode = getUpperNode(initialStoredNode, path);
+    console.log("initialStoredNode : ", initialStoredNode);
+    console.log("path : ", path);
+    console.log("upperNode1 : ", upperNode);
 
     switch (role) {
       case "UP":
-        interChangeArrOrder(upperNode.children, ti);
-        interChangeArrId(upperNode.children, ti, upperPath);
+        const upperNode1 = getUpperNode(initialStoredNode, path);
+        interChangeArrOrder(upperNode1.children, ti);
+        interChangeArrId(upperNode1.children, ti, upperPath);
         break;
 
       case "DOWN":
-        interChangeArrOrder(upperNode.children, ti + 1);
-        interChangeArrId(upperNode.children, ti + 1, upperPath);
+        const upperNode2 = getUpperNode(initialStoredNode, path);
+        interChangeArrOrder(upperNode2.children, ti + 1);
+        interChangeArrId(upperNode2.children, ti + 1, upperPath);
         break;
 
       case "DELETE":
@@ -768,10 +773,8 @@ export default function SettingsTabs({ children }) {
 
         // initialStoredPost의 키를 변경해야 할 때 필요한 값.
         const nextKeyArr = getContainedPostsWrap2(upperPath, ti, node);
-        // initialStoredPost의 키를 변경하는 함수.
-        // interchangePostKey(prevKeyArr1, nextKeyArr2, initialStoredPost);
-        // interchangePostKey(prevKeyArr2, nextKeyArr1, initialStoredPost);
 
+        // initialStoredPost의 키를 변경하는 코드.
         for (let i = 0; i < prevKeyArr.length; i++) {
           initialStoredPost[nextKeyArr[i]] = initialStoredPost[prevKeyArr[i]];
           delete initialStoredPost[prevKeyArr[i]];
