@@ -296,13 +296,12 @@ export default function SettingsTabs({ children }) {
 
   const path = selected.split("/").slice(1);
   const currentNode = getNode(node, path) || node;
-  let upperPath = "/" + path.slice(0, path.length - 1).join("/");
-  upperPath += upperPath.trim().length > 1 ? "/" : "";
 
-  const changeMenuState = (role, upperPath) => {
+  const changeMenuState = (role) => {
     const path = getPathArr(selected);
     const ti = parseInt(path[path.length - 1]);
     const upperNode0 = getUpperNode(initialStoredNode, path);
+    const upperPath = getUpperPath(getPathArr(selected), "/");
 
     switch (role) {
       case "UP":
@@ -359,10 +358,11 @@ export default function SettingsTabs({ children }) {
     }
   };
 
-  const changePostState = (role, upperPath) => {
+  const changePostState = (role) => {
     const path = selected.split("/").slice(1);
     const ti = parseInt(path[path.length - 1]);
     const upperNode = initialStoredPost[selected.slice(0, selected.length - 2)];
+    const upperPath = getUpperPath(getPathArr(selected), "/");
 
     switch (role) {
       case "UP":
@@ -409,10 +409,11 @@ export default function SettingsTabs({ children }) {
     }
   };
 
-  const changeCombineState = (role, upperPath) => {
+  const changeCombineState = (role) => {
     const path = selected.split("/").slice(1);
     const ti = parseInt(path[path.length - 1]);
     const upperNode = getUpperNode(node, path);
+    const upperPath = getUpperPath(getPathArr(selected), "/");
 
     switch (role) {
       case "UP":
@@ -458,7 +459,7 @@ export default function SettingsTabs({ children }) {
 
     const ti = parseInt(path[path.length - 1]);
     const isFirst = path[path.length - 1] == 0;
-    const upperPath = getUpperPath(getPathArr(selected));
+    const upperPath = getUpperPath(getPathArr(selected), "/");
 
     if (!isFirst) {
       const nodeKeys = Object.keys(currentNode);
@@ -472,12 +473,12 @@ export default function SettingsTabs({ children }) {
       );
 
       if (isMenu) {
-        changeMenuState("UP", upperPath);
+        changeMenuState("UP");
       } else {
-        changePostState("UP", upperPath);
+        changePostState("UP");
       }
 
-      changeCombineState("UP", upperPath);
+      changeCombineState("UP");
       setSelected(upperPath + (ti - 1));
 
       // initialStoredPost의 키를 변경해야 할 때 필요한 값.
@@ -499,7 +500,7 @@ export default function SettingsTabs({ children }) {
 
   const onDown = (e) => {
     if (selected == "/") return;
-    const upperPath = getUpperPath(getPathArr(selected));
+    const upperPath = getUpperPath(getPathArr(selected), "/");
     const upperNode = getUpperNode(node, getPathArr(selected));
     const ti = parseInt(path[path.length - 1]); // targetIndex
     const lastChildIndex = upperNode.children.length - 1;
@@ -517,12 +518,12 @@ export default function SettingsTabs({ children }) {
       );
 
       if (isMenu) {
-        changeMenuState("DOWN", upperPath);
+        changeMenuState("DOWN");
       } else {
-        changePostState("DOWN", upperPath);
+        changePostState("DOWN");
       }
 
-      changeCombineState("DOWN", upperPath);
+      changeCombineState("DOWN");
       setSelected(upperPath + (ti + 1));
 
       // initialStoredPost의 키를 변경해야 할 때 필요한 값.
@@ -548,7 +549,7 @@ export default function SettingsTabs({ children }) {
     const ti = parseInt(path[path.length - 1]); // targetIndex
     const nodeKeys = Object.keys(currentNode);
     const isMenu = nodeKeys.find((key) => key === "children");
-    const upperPath = getUpperPath(getPathArr(selected));
+    const upperPath = getUpperPath(getPathArr(selected), "/");
 
     // initialStoredPost의 키를 변경해야 할 때 필요한 값.
     const prevKeyArr = getContainedPostsWrap2(
@@ -560,12 +561,12 @@ export default function SettingsTabs({ children }) {
     console.log("prevKeyArr : ", prevKeyArr);
 
     if (isMenu) {
-      changeMenuState("DELETE", upperPath);
+      changeMenuState("DELETE");
     } else {
-      changePostState("DELETE", upperPath);
+      changePostState("DELETE");
     }
 
-    changeCombineState("DELETE", upperPath);
+    changeCombineState("DELETE");
     setSelected("/");
 
     // initialStoredPost의 키를 변경해야 할 때 필요한 값.
@@ -761,12 +762,12 @@ export default function SettingsTabs({ children }) {
         );
 
         if (isMenu) {
-          changeMenuState("UPDATE", upperPath);
+          changeMenuState("UPDATE");
         } else {
-          changePostState("UPDATE", upperPath);
+          changePostState("UPDATE");
         }
 
-        changeCombineState("UPDATE", upperPath);
+        changeCombineState("UPDATE");
 
         console.log("2selected : ", selected);
         // initialStoredPost의 키를 변경해야 할 때 필요한 값.
