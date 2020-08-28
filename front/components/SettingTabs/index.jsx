@@ -156,37 +156,23 @@ const interChangeArrId = (arr, index, upperPath) => {
 };
 
 // parent의 id가 바뀔 경우, 그 parent의 id에 맞게 children의 id와 parentId를 바꿔준다.
-// const changeChildrenId = (parent, parentId, initialStoredPost) => {
 const changeChildrenId = (parent, parentId) => {
   if (!(Array.isArray(parent.children) && parent.children.length > 0)) return;
-  // if (typeof parent.children[0].content === "object") {
-  //   const prevParentId = parent.children[0].parentId;
-  //   const temp = initialStoredPost[prevParentId];
-  //   initialStoredPost[parentId] = temp;
-  //   delete initialStoredPost[prevParentId];
-  // }
 
   for (let i = 0; i < parent.children.length; i++) {
     const node = parent.children[i];
     const path = node.id.split("/");
     node.parentId = parentId;
-    // node.id = parentId + "/" + path[path.length - 1];
     node.id = parentId + "/" + i;
 
     if (Array.isArray(node.children) && node.children.length > 0) {
-      // changeChildrenId(node, node.id, initialStoredPost);
       changeChildrenId(node, node.id);
     }
   }
 };
 
 //노드 삭제시, 그 다음 노드들의 id를 수정한다.(앞으로 당긴다)
-const changeIdWhenDelete = (
-  rootNode,
-  deletedNodePathArr
-  // ,
-  // initialStoredPost
-) => {
+const changeIdWhenDelete = (rootNode, deletedNodePathArr) => {
   const deletedNodeIndex = parseInt(
     deletedNodePathArr[deletedNodePathArr.length - 1]
   );
@@ -195,7 +181,6 @@ const changeIdWhenDelete = (
   for (let i = deletedNodeIndex; i < upperNode.children.length; i++) {
     const id = upperPath + i;
     upperNode.children[i].id = id;
-    // changeChildrenId(upperNode.children[i], id, initialStoredPost);
     changeChildrenId(upperNode.children[i], id);
   }
 };
@@ -228,6 +213,7 @@ const getContainedPostsWrap2 = (pathArr, delIndex, node, when) => {
       startIndex = delIndex;
       break;
   }
+
   for (let i = startIndex; i < upperNode.children.length; i++) {
     let pathArrI = getPathArr(getUpperPath(pathArr, "/") + i);
     let target = getNode(node, pathArrI);
@@ -273,11 +259,6 @@ const interchangePostKey = (prevKeyArr, nextKeyArr, initialStoredPost) => {
   }
 };
 
-// const changeIdOnPost = (initialStoredPost, parentId) => {
-//   const postArr = initialStoredPost[parentId];
-//   post
-// };
-
 //path 의 상위 path를 반환한다. ex) /0/1/
 const getUpperPath = (pathArr, slash) => {
   console.log("pathArr : ", pathArr);
@@ -302,16 +283,6 @@ const menuHavePost = (menu) => {
   }
   return result;
 };
-
-const delChildren = (targetNode) => {
-  //
-};
-
-// targetPath에 있는 노드의 다음 노드를 반환한다.
-// const getNextNode = (rootNode, targetPath) => {
-//   parseInt(deletedNodePath[deletedNodePath.length - 1]);
-//   getUpperNode(rootNode, deletedNodeId);
-// };
 
 export default function SettingsTabs({ children }) {
   const classes = useStyles();
@@ -356,7 +327,7 @@ export default function SettingsTabs({ children }) {
         upperNode0.children.splice(path[path.length - 1], 1);
 
         // initialStoredNode가 포함한 id수정
-        changeIdWhenDelete(initialStoredNode, path, initialStoredPost);
+        changeIdWhenDelete(initialStoredNode, path);
 
         break;
 
@@ -376,9 +347,9 @@ export default function SettingsTabs({ children }) {
         // 이동시킬 메뉴를 선택(자신이 아닌)했을 때만 옮김처리 실행
         if (selectedParent !== currentNode.parentId) {
           upperNode.children.splice(path[path.length - 1], 1);
-          changeIdWhenDelete(initialStoredNode, path, initialStoredPost);
+          changeIdWhenDelete(initialStoredNode, path);
           targetMenu.children.push(currentNode);
-          changeChildrenId(targetMenu, targetMenu.id, initialStoredPost);
+          changeChildrenId(targetMenu, targetMenu.id);
         }
         break;
       case "ADD":
@@ -407,7 +378,7 @@ export default function SettingsTabs({ children }) {
       case "DELETE":
         // initialStoredPost 에서 삭제
         upperNode.splice(path[path.length - 1], 1);
-        changeIdWhenDelete(node, path, initialStoredPost);
+        changeIdWhenDelete(node, path);
         break;
 
       case "UPDATE":
@@ -457,11 +428,10 @@ export default function SettingsTabs({ children }) {
       case "DELETE":
         // currentNode를 트리에서 삭제
         upperNode.children.splice(path[path.length - 1], 1);
-        changeIdWhenDelete(node, path, initialStoredPost);
+        changeIdWhenDelete(node, path);
         break;
 
       case "UPDATE":
-        // const currentNode
         // 입력받은 값으로 데이터 변경
         currentNode.name = name;
         currentNode.href = href;
@@ -470,12 +440,10 @@ export default function SettingsTabs({ children }) {
         // 이동시킬 메뉴를 선택(자신이 아닌)했을 때만 옮김처리 실행
         if (selectedParent !== currentNode.parentId) {
           upperNode.children.splice(path[path.length - 1], 1);
-          changeIdWhenDelete(node, path, initialStoredPost);
+          changeIdWhenDelete(node, path);
           // 삭제 후 푸시, 변경
-          // currentNode.id =
-          //   targetMenu.id + "/" + (targetMenu.children.length - 1);
           targetMenu.children.push(currentNode);
-          changeChildrenId(targetMenu, targetMenu.id, initialStoredPost);
+          changeChildrenId(targetMenu, targetMenu.id);
         }
         break;
       case "ADD":
