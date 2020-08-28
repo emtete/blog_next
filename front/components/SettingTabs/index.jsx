@@ -727,8 +727,9 @@ export default function SettingsTabs({ children }) {
           newNode["href"] = newHref;
           newNode["children"] = [];
           const currentNode = getNode(initialStoredNode, pathArr);
-          currentNode.children.push(newNode);
+          currentNode.children.push({ ...newNode, children: [] });
         } else if (resultant === "post") {
+          console.log("post");
           newNode["date"] = newKey;
           newNode["content"] = {};
           const currentNode = getNode(initialStoredPost, pathArr);
@@ -740,7 +741,12 @@ export default function SettingsTabs({ children }) {
           }
         }
 
-        currentNode.children.push(newNode);
+        currentNode.children.push({ ...newNode, children: [] });
+
+        console.log("node : ", node);
+        console.log("initialStoredNode : ", initialStoredNode);
+        console.log("initialStoredPost : ", initialStoredPost);
+
         break;
 
       case "UPDATE":
@@ -750,7 +756,6 @@ export default function SettingsTabs({ children }) {
 
         // initialStoredPost의 키를 변경해야 할 때 필요한 값.
         const prevKeyArr = getContainedPostsWrap2(upperPath, ti, node);
-        // console.log("prevKeyArr : ", prevKeyArr);
 
         if (isMenu) {
           changeMenuState("UPDATE", upperPath);
@@ -763,7 +768,6 @@ export default function SettingsTabs({ children }) {
 
         // initialStoredPost의 키를 변경해야 할 때 필요한 값.
         const nextKeyArr = getContainedPostsWrap2(upperPath, ti, node);
-        // console.log("nextKeyArr : ", nextKeyArr);
         // initialStoredPost의 키를 변경하는 함수.
         // interchangePostKey(prevKeyArr1, nextKeyArr2, initialStoredPost);
         // interchangePostKey(prevKeyArr2, nextKeyArr1, initialStoredPost);
