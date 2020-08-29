@@ -46,7 +46,8 @@ const AppLayout = ({ children, window }) => {
 
   const dispatch = useDispatch();
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
-  const menuList = useSelector((state) => state.menu.node.children);
+  const menu = useSelector((state) => state.menu.node.children);
+  const [menuList, setMenuList] = React.useState(menu);
   const isUpdate = useSelector((state) => state.menu.isUpdate);
 
   const router = useRouter();
@@ -54,6 +55,11 @@ const AppLayout = ({ children, window }) => {
 
   const menuHandleClick = () => {
     setMenuOpen(!menuOpen);
+  };
+
+  const onChangeMenu = (e) => {
+    e.isExpand = !e.isExpand;
+    setMenuList([...menuList]);
   };
 
   // modal start---
@@ -119,7 +125,7 @@ const AppLayout = ({ children, window }) => {
               key={e.id}
               style={{ color: "#dbdfe2" }}
               onClick={() => {
-                e.href ? router.push(e.href) : null;
+                e.href ? router.push(e.href) : onChangeMenu(e);
               }}
             >
               <ListItemIcon>
@@ -138,20 +144,25 @@ const AppLayout = ({ children, window }) => {
                 )
               ) : null}
             </ListItem>
-            <Collapse in={e.isExpand} timeout='auto' unmountOnExit>
-              <List component='div' disablePadding>
-                <ListItem
-                  button
-                  className={classes.nested}
-                  style={{ color: "#dbdfe2" }}
-                >
-                  <ListItemIcon>
-                    <MailIcon style={{ color: "#dbdfe2" }} />
-                  </ListItemIcon>
-                  <ListItemText primary='Starred' />
-                </ListItem>
-              </List>
-            </Collapse>
+            {Array.isArray(e.children) && e.children.length > 0 && (
+              <Collapse in={e.isExpand} timeout='auto' unmountOnExit>
+                <List component='div' disablePadding>
+                  {e.children.map((ee, iindex) => (
+                    <ListItem
+                      key={ee.id}
+                      button
+                      className={classes.nested}
+                      style={{ color: "#dbdfe2" }}
+                    >
+                      <ListItemIcon>
+                        <MailIcon style={{ color: "#dbdfe2" }} />
+                      </ListItemIcon>
+                      <ListItemText primary={ee.name} />
+                    </ListItem>
+                  ))}
+                </List>
+              </Collapse>
+            )}
           </div>
         ))}
 
