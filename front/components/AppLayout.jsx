@@ -18,6 +18,7 @@ import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import Collapse from "@material-ui/core/Collapse";
 
+import SettingsIcon from "@material-ui/icons/Settings";
 import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import styled from "styled-components";
@@ -51,11 +52,6 @@ const AppLayout = ({ children, window }) => {
   const isUpdate = useSelector((state) => state.menu.isUpdate);
 
   const router = useRouter();
-  const [menuOpen, setMenuOpen] = React.useState(true);
-
-  const menuHandleClick = () => {
-    setMenuOpen(!menuOpen);
-  };
 
   const onChangeMenu = (e) => {
     e.isExpand = !e.isExpand;
@@ -166,11 +162,20 @@ const AppLayout = ({ children, window }) => {
           </div>
         ))}
 
-        <ListItem button style={{ color: "#dbdfe2" }} key='login'>
-          <button type='button' onClick={handleHandle}>
-            {/* 로그인 */}
+        <ListItem
+          style={{ color: "#dbdfe2", justifyContent: "center" }}
+          key='login'
+        >
+          <Button style={{ color: "#ffffff" }} onClick={handleHandle}>
             {isLoggedIn ? "로그아웃" : "로그인"}
-          </button>
+          </Button>
+          <IconButton
+            style={{ color: "#ffffff" }}
+            aria-label='upload picture'
+            component='span'
+          >
+            <SettingsIcon />
+          </IconButton>
           <div>
             <Modal
               open={open}
