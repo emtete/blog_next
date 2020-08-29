@@ -40,7 +40,7 @@ export const initialState = {
       {
         key: "202010112314",
         id: "/2",
-        name: "Settings",
+        name: "메뉴관리",
         parentId: "/",
         parentName: "root",
         href: "/settings",
