@@ -53,7 +53,7 @@ const AppLayout = ({ children, window }) => {
 
   const router = useRouter();
 
-  const onChangeMenu = (e) => {
+  const onToggleMenu = (e) => {
     e.isExpand = !e.isExpand;
     setMenuList([...menuList]);
   };
@@ -121,7 +121,7 @@ const AppLayout = ({ children, window }) => {
               key={e.id}
               style={{ color: "#dbdfe2" }}
               onClick={() => {
-                e.href ? router.push(e.href) : onChangeMenu(e);
+                e.href ? router.push(e.href) : onToggleMenu(e);
               }}
             >
               <ListItemIcon>
@@ -149,6 +149,9 @@ const AppLayout = ({ children, window }) => {
                       button
                       className={classes.nested}
                       style={{ color: "#dbdfe2" }}
+                      onClick={() => {
+                        ee.href ? router.push(ee.href) : console.log(2);
+                      }}
                     >
                       <ListItemIcon>
                         <MailIcon style={{ color: "#dbdfe2" }} />
@@ -161,7 +164,7 @@ const AppLayout = ({ children, window }) => {
             )}
           </div>
         ))}
-
+        <Divider style={{ backgroundColor: "#ffffff" }} />
         <ListItem
           style={{ color: "#dbdfe2", justifyContent: "center" }}
           key='login'
