@@ -18,6 +18,7 @@ import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import Collapse from "@material-ui/core/Collapse";
 
+import PersonIcon from "@material-ui/icons/Person";
 import SettingsIcon from "@material-ui/icons/Settings";
 import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
@@ -40,7 +41,11 @@ const AppLayout = ({ children, window }) => {
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [update, setUpdate] = React.useState(true);
+  const [isAdmin, setIsAdmin] = React.useState(false);
 
+  const onHandleAdmim = (e) => {
+    setIsAdmin((prev) => !prev);
+  };
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
@@ -176,8 +181,58 @@ const AppLayout = ({ children, window }) => {
             style={{ color: "#ffffff" }}
             aria-label='upload picture'
             component='span'
+            onClick={onHandleAdmim}
           >
-            <SettingsIcon />
+            {isAdmin ? <PersonIcon /> : <SettingsIcon />}
+          </IconButton>
+          <div>
+            <Modal
+              open={open}
+              onClose={handleClose}
+              aria-labelledby='simple-modal-title'
+              aria-describedby='simple-modal-description'
+            >
+              {body}
+            </Modal>
+          </div>
+        </ListItem>
+      </List>
+    </div>
+  );
+
+  const drawer2 = (
+    <div>
+      <div className={(classes.toolbar, classes.toolbarCustomising)}>
+        DEV LIFE
+      </div>
+      <List>
+        <ListItem
+          button
+          style={{ color: "#dbdfe2" }}
+          // onClick={() => {
+          //   e.href ? router.push(e.href) : onToggleMenu(e);
+          // }}
+        >
+          <ListItemIcon>
+            <InboxIcon style={{ color: "#dbdfe2" }} />
+          </ListItemIcon>
+          <ListItemText primary='메뉴관리' style={{ color: "#dbdfe2" }} />
+        </ListItem>
+        <Divider style={{ backgroundColor: "#ffffff" }} />
+        <ListItem
+          style={{ color: "#dbdfe2", justifyContent: "center" }}
+          key='login'
+        >
+          <Button style={{ color: "#ffffff" }} onClick={handleHandle}>
+            {isLoggedIn ? "로그아웃" : "로그인"}
+          </Button>
+          <IconButton
+            style={{ color: "#ffffff" }}
+            aria-label='upload picture'
+            component='span'
+            onClick={onHandleAdmim}
+          >
+            {isAdmin ? <PersonIcon /> : <SettingsIcon />}
           </IconButton>
           <div>
             <Modal
@@ -220,7 +275,7 @@ const AppLayout = ({ children, window }) => {
               keepMounted: true, // Better open performance on mobile.
             }}
           >
-            {drawer}
+            {isAdmin ? drawer2 : drawer}
           </Drawer>
         </Hidden>
         <Hidden xsDown implementation='css'>
@@ -231,7 +286,7 @@ const AppLayout = ({ children, window }) => {
             variant='permanent'
             open
           >
-            {drawer}
+            {isAdmin ? drawer2 : drawer}
           </Drawer>
         </Hidden>
       </nav>
