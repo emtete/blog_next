@@ -24,7 +24,7 @@ export const initialState = {
         name: "POST",
         parentId: "/",
         parentName: "root",
-        href: "/post",
+        href: null,
         children: [
           {
             key: "202010112315",
@@ -43,7 +43,7 @@ export const initialState = {
         name: "메뉴관리",
         parentId: "/",
         parentName: "root",
-        href: "/settings",
+        href: null,
         children: [
           {
             key: "202010112366",

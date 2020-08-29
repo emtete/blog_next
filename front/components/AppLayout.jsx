@@ -23,6 +23,7 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import styled from "styled-components";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useState, useMemo, useCallback } from "react";
 import Modal from "@material-ui/core/Modal";
 import { FormControl, TextField, Button } from "@material-ui/core";
@@ -48,6 +49,7 @@ const AppLayout = ({ children, window }) => {
   const menuList = useSelector((state) => state.menu.node.children);
   const isUpdate = useSelector((state) => state.menu.isUpdate);
 
+  const router = useRouter();
   const [menuOpen, setMenuOpen] = React.useState(true);
 
   const menuHandleClick = () => {
@@ -111,60 +113,42 @@ const AppLayout = ({ children, window }) => {
       </div>
       <List>
         {menuList.map((e, index) => (
-          <>
-            {Array.isArray(e.children) && e.children.length > 0 ? (
-              <>
-                <ListItem
-                  button
-                  key={e.id}
-                  style={{ color: "#dbdfe2" }}
-                  onClick={menuHandleClick}
-                >
+          <div key={e.id}>
+            <ListItem
+              button
+              key={e.id}
+              style={{ color: "#dbdfe2" }}
+              onClick={() => {
+                e.href && router.push(e.href);
+              }}
+            >
+              <ListItemIcon>
+                {index % 2 === 0 ? (
+                  <InboxIcon style={{ color: "#dbdfe2" }} />
+                ) : (
+                  <MailIcon style={{ color: "#dbdfe2" }} />
+                )}
+              </ListItemIcon>
+              <ListItemText primary={e.name} style={{ color: "#dbdfe2" }} />
+              {Array.isArray(e.children) && e.children.length > 0 ? (
+                menuOpen ? (
+                  <ExpandLess />
+                ) : (
+                  <ExpandMore />
+                )
+              ) : null}
+            </ListItem>
+            <Collapse in={open} timeout='auto' unmountOnExit>
+              <List component='div' disablePadding>
+                <ListItem button className={classes.nested}>
                   <ListItemIcon>
-                    {index % 2 === 0 ? (
-                      <InboxIcon style={{ color: "#dbdfe2" }} />
-                    ) : (
-                      <MailIcon style={{ color: "#dbdfe2" }} />
-                    )}
+                    <MailIcon />
                   </ListItemIcon>
-                  <ListItemText primary={e.name} style={{ color: "#dbdfe2" }} />
-                  {menuOpen ? <ExpandLess /> : <ExpandMore />}
+                  <ListItemText primary='Starred' />
                 </ListItem>
-                <Collapse in={menuOpen} timeout='auto' unmountOnExit>
-                  <List component='div' disablePadding>
-                    <ListItem
-                      button
-                      className={classes.nested}
-                      style={{ color: "#dbdfe2" }}
-                    >
-                      <ListItemIcon style={{ color: "#dbdfe2" }}>
-                        <MailIcon />
-                      </ListItemIcon>
-                      <ListItemText primary='Starred' />
-                    </ListItem>
-                  </List>
-                </Collapse>
-              </>
-            ) : (
-              <Link href={e.href} key={e.href}>
-                <a style={{ textDecoration: "none" }}>
-                  <ListItem button key={e.id} style={{ color: "#dbdfe2" }}>
-                    <ListItemIcon>
-                      {index % 2 === 0 ? (
-                        <InboxIcon style={{ color: "#dbdfe2" }} />
-                      ) : (
-                        <MailIcon style={{ color: "#dbdfe2" }} />
-                      )}
-                    </ListItemIcon>
-                    <ListItemText
-                      primary={e.name}
-                      style={{ color: "#dbdfe2" }}
-                    />
-                  </ListItem>
-                </a>
-              </Link>
-            )}
-          </>
+              </List>
+            </Collapse>
+          </div>
         ))}
 
         <ListItem button style={{ color: "#dbdfe2" }} key='login'>
