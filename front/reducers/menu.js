@@ -25,6 +25,7 @@ export const initialState = {
         parentId: "/",
         parentName: "root",
         href: null,
+        isExpand: true,
         children: [
           {
             key: "202010112315",
@@ -43,6 +44,7 @@ export const initialState = {
         name: "메뉴관리",
         parentId: "/",
         parentName: "root",
+        isExpand: true,
         href: null,
         children: [
           {

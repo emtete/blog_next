@@ -119,7 +119,7 @@ const AppLayout = ({ children, window }) => {
               key={e.id}
               style={{ color: "#dbdfe2" }}
               onClick={() => {
-                e.href && router.push(e.href);
+                e.href ? router.push(e.href) : null;
               }}
             >
               <ListItemIcon>
@@ -131,18 +131,22 @@ const AppLayout = ({ children, window }) => {
               </ListItemIcon>
               <ListItemText primary={e.name} style={{ color: "#dbdfe2" }} />
               {Array.isArray(e.children) && e.children.length > 0 ? (
-                menuOpen ? (
+                e.isExpand ? (
                   <ExpandLess />
                 ) : (
                   <ExpandMore />
                 )
               ) : null}
             </ListItem>
-            <Collapse in={open} timeout='auto' unmountOnExit>
+            <Collapse in={e.isExpand} timeout='auto' unmountOnExit>
               <List component='div' disablePadding>
-                <ListItem button className={classes.nested}>
+                <ListItem
+                  button
+                  className={classes.nested}
+                  style={{ color: "#dbdfe2" }}
+                >
                   <ListItemIcon>
-                    <MailIcon />
+                    <MailIcon style={{ color: "#dbdfe2" }} />
                   </ListItemIcon>
                   <ListItemText primary='Starred' />
                 </ListItem>
