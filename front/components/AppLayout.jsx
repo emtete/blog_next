@@ -46,6 +46,7 @@ const AppLayout = ({ children, window }) => {
   const onHandleAdmim = (e) => {
     setIsAdmin((prev) => !prev);
   };
+
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
@@ -209,9 +210,10 @@ const AppLayout = ({ children, window }) => {
         <ListItem
           button
           style={{ color: "#dbdfe2" }}
-          // onClick={() => {
-          //   e.href ? router.push(e.href) : onToggleMenu(e);
-          // }}
+          onClick={() => {
+            //e.href &&
+            router.push("/settings");
+          }}
         >
           <ListItemIcon>
             <InboxIcon style={{ color: "#dbdfe2" }} />
