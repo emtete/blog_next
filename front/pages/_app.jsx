@@ -5,6 +5,7 @@ import { ThemeProvider } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import theme from "../src/theme";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import withReduxSaga from "next-redux-saga";
 
 import wrapper from "../store/configureStore";
 
@@ -42,4 +43,4 @@ MyApp.propTypes = {
   pageProps: PropTypes.object.isRequired,
 };
 
-export default wrapper.withRedux(MyApp);
+export default wrapper.withRedux(withReduxSaga(MyApp));
