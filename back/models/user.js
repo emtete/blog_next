@@ -1,4 +1,4 @@
-module.exports = (equelize, DataTypes) => {
+module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
     "User",
     {
@@ -7,7 +7,10 @@ module.exports = (equelize, DataTypes) => {
         allowNull: false,
         unique: true,
       },
-      nickname: {},
+      nickname: {
+        type: DataTypes.STRING(30),
+        allowNull: false,
+      },
       password: {
         type: DataTypes.STRING(100),
         allowNull: false,
@@ -18,8 +21,6 @@ module.exports = (equelize, DataTypes) => {
       collate: "utf8_general_ci", // 한글 저장
     }
   );
-  User.associate = (db) => {
-    db.User.hasMany(db.Post);
-  };
+  User.associate = (db) => {};
   return User;
 };

@@ -33,7 +33,7 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { modalStyles, getModalStyle } from "./layout/LoginStyles";
 import { ToggleButton, menuStyles } from "./layout/styles";
-import { loginAction, logoutAction } from "../reducers/user";
+import { loginRequestAction, logoutRequestAction } from "../reducers/user";
 import useInput from "../hooks/useInput";
 
 const AppLayout = ({ children, window }) => {
@@ -52,12 +52,18 @@ const AppLayout = ({ children, window }) => {
   };
 
   const dispatch = useDispatch();
-  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  const logInDone = useSelector((state) => state.user.logInDone);
+  const logInError = useSelector((state) => state.user.logInError);
   const menu = useSelector((state) => state.menu.node.children);
   const [menuList, setMenuList] = React.useState(menu);
   const isUpdate = useSelector((state) => state.menu.isUpdate);
 
   const router = useRouter();
+
+  if (logInError) {
+    alert(logInError);
+    console.log("logInError : ", logInError);
+  }
 
   const onToggleMenu = (e) => {
     e.isExpand = !e.isExpand;
@@ -80,15 +86,16 @@ const AppLayout = ({ children, window }) => {
   };
 
   const handleHandle = () => {
-    if (isLoggedIn) {
-      dispatch(logoutAction());
+    if (logInDone) {
+      dispatch(logoutRequestAction());
     } else {
       handleOpen();
     }
   };
 
-  const onSubmitForm = () => {
-    dispatch(loginAction());
+  const onSubmitForm = (e) => {
+    e.preventDefault();
+    dispatch(loginRequestAction({ email: id, password }));
     handleClose();
   };
 
@@ -176,7 +183,7 @@ const AppLayout = ({ children, window }) => {
           key='login'
         >
           <Button style={{ color: "#ffffff" }} onClick={handleHandle}>
-            {isLoggedIn ? "로그아웃" : "로그인"}
+            {logInDone ? "로그아웃" : "로그인"}
           </Button>
           <IconButton
             style={{ color: "#ffffff" }}
@@ -226,7 +233,7 @@ const AppLayout = ({ children, window }) => {
           key='login'
         >
           <Button style={{ color: "#ffffff" }} onClick={handleHandle}>
-            {isLoggedIn ? "로그아웃" : "로그인"}
+            {logInDone ? "로그아웃" : "로그인"}
           </Button>
           <IconButton
             style={{ color: "#ffffff" }}

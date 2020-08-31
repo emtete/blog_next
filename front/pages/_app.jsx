@@ -40,7 +40,7 @@ const MyApp = (props) => {
 
 MyApp.propTypes = {
   Component: PropTypes.elementType.isRequired,
-  pageProps: PropTypes.object.isRequired,
+  pageProps: PropTypes.object,
 };
 
 export default wrapper.withRedux(withReduxSaga(MyApp));

@@ -7,21 +7,22 @@ import {
   takeEvery,
   takeLatest,
 } from "redux-saga/effects";
+import axios from "axios";
 
 function logInAPI(data) {
-  return axios.post("/api/login", data);
+  return axios.post("/user/login", data);
 }
 
 // 비동기 액션 크리에이터
 function* logIn(action) {
   try {
-    // const result = yield call(logInAPI, action.data);
-    yield delay(1000);
+    const result = yield call(logInAPI, action.data);
     yield put({
       type: "LOG_IN_SUCCESS",
       data: result.data, // 성공 결과
     });
   } catch (err) {
+    console.error("error : ", err);
     yield put({
       // put은 dispatch와 같은 기능을 한다.
       type: "LOG_IN_FAILURE",
@@ -31,14 +32,13 @@ function* logIn(action) {
 }
 
 function logOutAPI() {
-  return axios.post("/api/logout");
+  return axios.post("/user/logout");
 }
 
 // 비동기 액션 크리에이터
 function* logOut() {
   try {
-    // const result = yield call(logOutAPI);
-    yield delay(1000);
+    const result = yield call(logOutAPI);
     yield put({
       type: "LOG_OUT_SUCCESS",
       data: result.data, // 성공 결과
