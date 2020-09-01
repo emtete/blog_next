@@ -52,7 +52,7 @@ const AppLayout = ({ children, window }) => {
   };
 
   const dispatch = useDispatch();
-  const { logInDone, logInError } = useSelector((state) => state.user);
+  const { logInError, me } = useSelector((state) => state.user);
   const menu = useSelector((state) => state.menu.node.children);
   const [menuList, setMenuList] = React.useState(menu);
   const isUpdate = useSelector((state) => state.menu.isUpdate);
@@ -86,7 +86,7 @@ const AppLayout = ({ children, window }) => {
   };
 
   const handleHandle = () => {
-    if (logInDone) {
+    if (me) {
       dispatch(logoutRequestAction());
     } else {
       handleOpen();
@@ -183,7 +183,7 @@ const AppLayout = ({ children, window }) => {
           key='login'
         >
           <Button style={{ color: "#ffffff" }} onClick={handleHandle}>
-            {logInDone ? "로그아웃" : "로그인"}
+            {me ? "로그아웃" : "로그인"}
           </Button>
           <IconButton
             style={{ color: "#ffffff" }}
@@ -233,7 +233,7 @@ const AppLayout = ({ children, window }) => {
           key='login'
         >
           <Button style={{ color: "#ffffff" }} onClick={handleHandle}>
-            {logInDone ? "로그아웃" : "로그인"}
+            {me ? "로그아웃" : "로그인"}
           </Button>
           <IconButton
             style={{ color: "#ffffff" }}

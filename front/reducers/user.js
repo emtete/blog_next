@@ -47,7 +47,7 @@ const reducer = (state = initialState, action) => {
         logInLoading: false,
         logInDone: true,
         logInError: null,
-        me: dummyUser(action.data),
+        me: action.data,
       };
     case "LOG_IN_FAILURE":
       return {
@@ -70,6 +70,7 @@ const reducer = (state = initialState, action) => {
         logOutLoading: false,
         logOutDone: true,
         logOutError: false,
+        me: null,
       };
     case "LOG_OUT_FAILURE":
       return {
