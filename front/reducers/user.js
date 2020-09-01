@@ -2,9 +2,15 @@ export const initialState = {
   logInLoading: false,
   logInDone: false,
   logInError: null,
+
   logOutLoading: false,
   logOutDone: false,
   logOutError: false,
+
+  loadMyInfoLoading: false,
+  loadMyInfoDone: false,
+  loadMyInfoError: false,
+
   user: null,
   me: null,
   signUpdata: {},
@@ -24,13 +30,6 @@ export const logoutRequestAction = (data) => {
     data,
   };
 };
-
-const dummyUser = (data) => ({
-  ...data,
-  nickname: "DEV LIFE",
-  id: 1,
-  Post: [],
-});
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
@@ -78,6 +77,29 @@ const reducer = (state = initialState, action) => {
         logOutLoading: false,
         logOutDone: false,
         logOutError: true,
+      };
+
+    case "LOAD_MY_INFO_REQUEST":
+      return {
+        ...state,
+        loadMyInfoLoading: true,
+        loadMyInfoDone: false,
+        loadMyInfoError: null,
+      };
+    case "LOAD_MY_INFO_SUCCESS":
+      return {
+        ...state,
+        loadMyInfoLoading: false,
+        loadMyInfoDone: true,
+        loadMyInfoError: null,
+        me: action.data,
+      };
+    case "LOAD_MY_INFO_FAILURE":
+      return {
+        ...state,
+        loadMyInfoLoading: false,
+        loadMyInfoDone: false,
+        loadMyInfoError: action.error,
       };
     default:
       return state;

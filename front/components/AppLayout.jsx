@@ -60,6 +60,12 @@ const AppLayout = ({ children, window }) => {
   const router = useRouter();
 
   useEffect(() => {
+    dispatch({
+      type: "LOAD_MY_INFO_REQUEST",
+    });
+  }, []);
+
+  useEffect(() => {
     if (logInError) {
       alert(logInError);
     }

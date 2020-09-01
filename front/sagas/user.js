@@ -52,6 +52,27 @@ function* logOut() {
   }
 }
 
+function loadMyInfoAPI() {
+  return axios.get("/user");
+}
+
+// 비동기 액션 크리에이터
+function* loadMyInfo() {
+  try {
+    const result = yield call(loadMyInfoAPI);
+    yield put({
+      type: "LOAD_MY_INFO_SUCCESS",
+      data: result.data, // 성공 결과
+    });
+  } catch (err) {
+    yield put({
+      // put은 dispatch와 같은 기능을 한다.
+      type: "LOAD_MY_INFO_FAILURE",
+      data: err.response.data, // 실패 결과
+    });
+  }
+}
+
 // 비동기 액션이 실행될 때까지 기다리는
 // 이벤트 리스너와 같은 기능을 하는 함수.
 // take는 일회용이라서 한번만 실행하면 사라진다.
@@ -68,6 +89,10 @@ function* watchLogOut() {
   yield takeLatest("LOG_OUT_REQUEST", logOut);
 }
 
+function* watchLoadMyInfo() {
+  yield takeLatest("LOAD_MY_INFO_REQUEST", loadMyInfo);
+}
+
 export default function* userSaga() {
-  yield all([fork(watchLogIn), fork(watchLogOut)]);
+  yield all([fork(watchLogIn), fork(watchLogOut), fork(watchLoadMyInfo)]);
 }
