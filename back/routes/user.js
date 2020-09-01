@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const passport = require("passport");
 
 const { User } = require("../models");
+const db = require("../models");
 
 const router = express.Router();
 
@@ -25,7 +26,24 @@ router.post("/login", (req, res, next) => {
         return next(loginErr);
       }
 
-      return res.status(200).json(user);
+      const fullUserWithoutPassword = await User.findOne({
+        where: { id: user.id },
+        // attributes: ["id", "nickname", "email"],
+        attributes: {
+          exclude: ["password"],
+        },
+        // include: [
+        //   {
+        // model: Post,
+        // },
+        // {
+        // model: dbUser.
+        // as : 'Followings'
+        // },
+        // ],
+      });
+
+      return res.status(200).json(fullUserWithoutPassword);
     });
   })(req, res, next);
 });
@@ -45,6 +63,7 @@ router.post("/signup", async (req, res, next) => {
     }
 
     const hashedPassword = await bcrypt.hash(req.body.password, 12);
+
     await User.create({
       email: req.body.email,
       nickname: req.body.nickname,
@@ -55,6 +74,12 @@ router.post("/signup", async (req, res, next) => {
     console.error(error);
     next(error); // status 500
   }
+});
+
+router.post("/user/logout", (req, res) => {
+  req.logout();
+  req.session.destroy();
+  res.send("ok");
 });
 
 module.exports = router;
