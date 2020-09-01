@@ -12,11 +12,14 @@ const router = express.Router();
 router.get("/", async (req, res, next) => {
   try {
     if (req.user) {
-      const user = await User.findOne({
-        where: { id: req.user.id },
+      const fullUserWithoutPassword = await User.findOne({
+        where: { id: user.id },
+        attributes: {
+          exclude: ["password"],
+        },
       });
 
-      res.status(200).json(user);
+      res.status(200).json(fullUserWithoutPassword);
     } else {
       res.status(200).json(null);
     }
