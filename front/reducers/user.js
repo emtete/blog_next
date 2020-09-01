@@ -6,7 +6,7 @@ export const initialState = {
   logOutDone: false,
   logOutError: false,
   user: null,
-  me: {},
+  me: null,
   signUpdata: {},
   loginData: {},
 };

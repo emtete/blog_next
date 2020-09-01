@@ -24,7 +24,8 @@ passportConfig();
 
 // app.use는 express 서버에 다른 기능을 장착한다는 의미.
 // 순서 중요.
-app.use(cors({ origin: "*" }));
+// credentials -> 서로 다른 도메인 간 쿠키를 전달 할 수 없는데, 그걸 허용해준다.
+app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 app.use(express.json()); // json 데이터를 req.body 안에 넣어준다.
 app.use(express.urlencoded({ extended: true })); // form 데이터, url encoding된 데이터를  req.body에 넣어준다.
 app.use(cookieParser("next_blog_secret"));
