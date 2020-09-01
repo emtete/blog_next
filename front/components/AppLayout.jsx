@@ -26,7 +26,7 @@ import styled from "styled-components";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import Modal from "@material-ui/core/Modal";
 import { FormControl, TextField, Button } from "@material-ui/core";
 import { useSelector, useDispatch } from "react-redux";
@@ -52,18 +52,18 @@ const AppLayout = ({ children, window }) => {
   };
 
   const dispatch = useDispatch();
-  const logInDone = useSelector((state) => state.user.logInDone);
-  const logInError = useSelector((state) => state.user.logInError);
+  const { logInDone, logInError } = useSelector((state) => state.user);
   const menu = useSelector((state) => state.menu.node.children);
   const [menuList, setMenuList] = React.useState(menu);
   const isUpdate = useSelector((state) => state.menu.isUpdate);
 
   const router = useRouter();
 
-  if (logInError) {
-    alert(logInError);
-    console.log("logInError : ", logInError);
-  }
+  useEffect(() => {
+    if (logInError) {
+      alert(logInError);
+    }
+  }, [logInError]);
 
   const onToggleMenu = (e) => {
     e.isExpand = !e.isExpand;

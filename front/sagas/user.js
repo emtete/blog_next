@@ -26,7 +26,7 @@ function* logIn(action) {
     yield put({
       // put은 dispatch와 같은 기능을 한다.
       type: "LOG_IN_FAILURE",
-      data: err.response.data, // 실패 결과
+      error: err.response.data, // 실패 결과
     });
   }
 }
