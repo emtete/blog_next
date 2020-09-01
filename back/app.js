@@ -2,12 +2,16 @@ const express = require("express");
 const cors = require("cors");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
+const passport = require("passport");
+const dotenv = require("dotenv");
 
 const postRouter = require("./routes/post");
 const userRouter = require("./routes/user");
 const db = require("./models");
 const passportConfig = require("./passport");
 const app = express();
+
+dotenv.config();
 
 db.sequelize
   .sync()
@@ -23,8 +27,14 @@ passportConfig();
 app.use(cors({ origin: "*" }));
 app.use(express.json()); // json 데이터를 req.body 안에 넣어준다.
 app.use(express.urlencoded({ extended: true })); // form 데이터, url encoding된 데이터를  req.body에 넣어준다.
-app.use(cookieParser());
-app.use(session());
+app.use(cookieParser("next_blog_secret"));
+app.use(
+  session({
+    saveUninitialized: false,
+    resave: false,
+    secret: process.env.COOKIE_SECRET,
+  })
+);
 app.use(passport.initialize());
 app.use(passport.session());
 
