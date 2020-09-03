@@ -46,6 +46,12 @@ const theme = createMuiTheme({
     MuiCssBaseline: {
       "@global": {
         "@font-face": [raleway],
+        html: {
+          height: "100%",
+        },
+        body: {
+          height: "100%",
+        },
       },
     },
   },

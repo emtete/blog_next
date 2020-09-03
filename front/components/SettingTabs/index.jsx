@@ -17,6 +17,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
     maxWidth: 360,
+    marginTop: "10%",
     backgroundColor: theme.palette.background.paper,
   },
   nested: {
@@ -38,7 +39,7 @@ const SettingTabs = () => {
       aria-labelledby='nested-list-subheader'
       subheader={
         <ListSubheader component='div' id='nested-list-subheader'>
-          Nested List Items
+          메뉴관리
         </ListSubheader>
       }
       className={classes.root}
