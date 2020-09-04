@@ -8,7 +8,6 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import withReduxSaga from "next-redux-saga";
 
 import wrapper from "../store/configureStore";
-import "react-sortable-tree/style.css";
 
 const MyApp = (props) => {
   const { Component, pageProps } = props;

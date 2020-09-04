@@ -1,27 +1,21 @@
 import React, { Component } from "react";
-// import SortableTree from "react-sortable-tree";
-// import { SortableTreeWithoutDndContext as SortableTree } from "react-sortable-tree";
-// This only needs to be imported once in your app
+import { makeStyles } from "@material-ui/core/styles";
 
-export default class SettingTabs extends Component {
-  // constructor(props) {
-  //   super(props);
+const useStyles = makeStyles((theme) => ({
+  content: {
+    flexGrow: 1,
+    padding: theme.spacing(3),
+  },
+}));
 
-  //   this.state = {
-  //     treeData: [{ title: "Chicken", children: [{ title: "Egg" }] }],
-  //   };
-  // }
+const SettingTabs = () => {
+  const classes = useStyles();
 
-  render() {
-    return (
-      <div
-      // style={{ height: 400, width: 400 }}
-      >
-        {/* <SortableTree
-          treeData={this.state.treeData}
-          onChange={(treeData) => this.setState({ treeData })}
-        /> */}
-      </div>
-    );
-  }
-}
+  return (
+    <main className={classes.content}>
+      <div>abcde</div>
+    </main>
+  );
+};
+
+export default SettingTabs;
