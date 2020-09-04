@@ -52,6 +52,9 @@ const theme = createMuiTheme({
         body: {
           height: "100%",
         },
+        "#__next": {
+          height: "100%",
+        },
       },
     },
   },

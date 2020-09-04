@@ -25,6 +25,7 @@ const drawerWidth = 320;
 export const menuStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
+    height: "100%",
   },
   drawer: {
     [theme.breakpoints.up("sm")]: {
