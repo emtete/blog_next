@@ -113,13 +113,19 @@
   font-size: 16px;
   background: rgb(255, 255, 255);
   box-sizing: border-box;
+
+  &::after {
+    display: block;
+    clear: both;
+    content: "";
+  }
 }
 
-.set_order .item_order::after {
-  display: block;
-  clear: both;
-  content: "";
-}
+// .set_order .item_order::after {
+//   display: block;
+//   clear: both;
+//   content: "";
+// }
 
 .set_order .basic_item::after {
   display: block;

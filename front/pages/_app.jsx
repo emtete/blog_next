@@ -7,7 +7,7 @@ import theme from "../src/theme";
 import withReduxSaga from "next-redux-saga";
 
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import "./temp.css";
+import "./temp.scss";
 
 import wrapper from "../store/configureStore";
 
