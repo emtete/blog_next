@@ -1,8 +1,13 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import styled from "styled-components";
 
 import MenuIcon from "@material-ui/icons/Menu";
+
+import CategoryAll from "./CategoryAll";
+import CategoryOne from "./CategoryOne";
+import CategoryInclude from "./CategoryInclude";
+import CategoryAdd from "./CategoryAdd";
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -14,6 +19,24 @@ const useStyles = makeStyles((theme) => ({
 
 const SettingTabs = () => {
   const classes = useStyles();
+
+  const initData = [
+    {
+      title: "개발일지",
+      numberOfContents: 4,
+    },
+    {
+      title: "프로그래밍",
+      numberOfContents: 11,
+      children: [
+        {
+          title: "test",
+          numberOfContents: 0,
+        },
+      ],
+    },
+  ];
+  const [treeData, setTreeData] = useState(initData);
 
   return (
     <main className={classes.content}>
@@ -35,116 +58,17 @@ const SettingTabs = () => {
             <div className='set_order' id='category-app'>
               <div className='wrap_order'>
                 <div className='list_order'>
-                  <div className='bundle_item'>
-                    <div className='item_order'>
-                      <div className='basic_item'>
-                        <div className='wrap_drag wrap_all'>
-                          <span className='ico_blog ico_drag ico_all'></span>
-                        </div>
-                        <div className='txt_name'>분류 전체보기</div>
-                        <div className='info_btn'>
-                          <span className='btn_post'>추가</span>
-                          <span className='btn_post'>수정</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className='bundle_item'>
-                    <div className='item_order'>
-                      <label className='lab_btn lab_cate'>
-                        <span className='wrap_arr'>
-                          <span className='ico_blog'></span>
-                        </span>
-                        {/* <input
-                          type='button'
-                          class='btn_g'
-                          value='open sub category'
-                        ></input> */}
-                      </label>
-                      <div className='basic_item'>
-                        <div className='wrap_drag'>
-                          <span className='ico_blog ico_drag'></span>
-                        </div>
-                        <div style={{ display: "inline" }}>
-                          <div className='wrap_name'>
-                            <div className='txt_name'>개발일지</div>
-                            <div className='txt_count'>(4)</div>
-                          </div>
-                          <div className='info_btn'>
-                            <span className='btn_post'>추가</span>
-                            <span className='btn_post'>수정</span>
-                            <span className='btn_post disabled'>삭제</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className='bundle_item open_subcate'>
-                    <div className='item_order'>
-                      <label className='lab_btn lab_cate lab_fold'>
-                        <span className='wrap_arr'>
-                          <span className='ico_blog'></span>
-                        </span>
-                        {/* <input
-                          type='button'
-                          class='btn_g'
-                          value='open sub category'
-                        ></input> */}
-                      </label>
-                      <div className='basic_item'>
-                        <div className='wrap_drag'>
-                          <span className='ico_blog ico_drag'></span>
-                        </div>
-                        <div style={{ display: "inline" }}>
-                          <div className='wrap_name'>
-                            <div className='txt_name'>프로그래밍</div>
-                            <div className='txt_count'>(11)</div>
-                          </div>
-                          <div className='info_btn'>
-                            <span className='btn_post'>추가</span>
-                            <span className='btn_post'>수정</span>
-                            <span className='btn_post disabled'>삭제</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className='list_sub'>
-                      <div className='bundle_item open_subcate'>
-                        <div className='item_order'>
-                          <div className='basic_item'>
-                            <div className='wrap_drag'>
-                              <span className='ico_blog ico_drag'></span>
-                            </div>
-                            <div style={{ display: "inline" }}>
-                              <div className='wrap_name'>
-                                <div className='txt_name'>test</div>
-                                <div className='txt_count'>(0)</div>
-                              </div>
-                              <div className='info_btn'>
-                                <span className='btn_post'>추가</span>
-                                <span className='btn_post'>수정</span>
-                                <span className='btn_post'>삭제</span>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  <CategoryAll />
+                  {treeData.map((data) =>
+                    Array.isArray(data.children) && data.children.length > 0 ? (
+                      <CategoryInclude />
+                    ) : (
+                      <CategoryOne />
+                    )
+                  )}
                 </div>
-                <div className='wrap_add'>
-                  <label className='lab_btn lab_add'>
-                    <span className='ico_blog ico_add'></span>
-                    카테고리 추가
-                    <input
-                      type='button'
-                      class='btn_g'
-                      value='카테고리 추가'
-                    ></input>
-                  </label>
-                </div>
+
+                <CategoryAdd />
               </div>
             </div>
             <div class='set_btn'>
