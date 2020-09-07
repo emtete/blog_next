@@ -7,8 +7,9 @@ import MenuIcon from "@material-ui/icons/Menu";
 import CategoryAll from "./CategoryAll";
 import CategoryOne from "./CategoryOne";
 import CategoryInclude from "./CategoryInclude";
-import CategoryAdd from "./CategoryAdd";
+import CategoryAddBtn from "./CategoryAddBtn";
 import CategorySub from "./CategorySub";
+import CategoryAddComp from "./CategoryAddComp";
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -90,47 +91,10 @@ const SettingTabs = () => {
                       />
                     )
                   )}
-                  <div className='bundle_item open_subcate'>
-                    <div className='item_order item_edit'>
-                      <label class='lab_btn lab_cate'>
-                        <span class='wrap_arr'>
-                          <span class='ico_blog'></span>
-                        </span>
-                        <input
-                          type='button'
-                          class='btn_g'
-                          value='open sub category'
-                        />
-                      </label>
-                      <form className='edit_item'>
-                        <label class='lab_tf'>
-                          <strong class='screen_out'>카테고리 Label</strong>
-                          <input
-                            type='text'
-                            class='tf_blog'
-                            maxlength='40'
-                            value=''
-                          />
-                        </label>
-
-                        <div class='order_btn'>
-                          <button type='reset' class='btn_cancel'>
-                            취소
-                          </button>
-                          <button
-                            type='submit'
-                            disabled=''
-                            class='btn_default btn_off'
-                          >
-                            확인
-                          </button>
-                        </div>
-                      </form>
-                    </div>
-                  </div>
+                  <CategoryAddComp />
                 </div>
 
-                <CategoryAdd />
+                <CategoryAddBtn />
               </div>
             </div>
             <div class='set_btn'>

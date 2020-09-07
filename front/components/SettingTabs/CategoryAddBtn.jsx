@@ -1,4 +1,4 @@
-const CategoryAdd = () => {
+const CategoryAddBtn = () => {
   return (
     <div className='wrap_add'>
       <label className='lab_btn lab_add'>
@@ -10,4 +10,4 @@ const CategoryAdd = () => {
   );
 };
 
-export default CategoryAdd;
+export default CategoryAddBtn;
