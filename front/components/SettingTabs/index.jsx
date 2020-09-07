@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, { Component, useState, useRef } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import styled from "styled-components";
 
@@ -8,7 +8,7 @@ import CategoryAll from "./CategoryAll";
 import CategoryOne from "./CategoryOne";
 import CategoryInclude from "./CategoryInclude";
 import CategoryAddBtn from "./CategoryAddBtn";
-import CategorySub from "./CategorySub";
+// import CategorySub from "./CategorySub";
 import CategoryAddComp from "./CategoryAddComp";
 
 const useStyles = makeStyles((theme) => ({
@@ -21,6 +21,7 @@ const useStyles = makeStyles((theme) => ({
 
 const SettingTabs = () => {
   const classes = useStyles();
+  const abc = useRef();
 
   const initData = [
     {
@@ -72,18 +73,11 @@ const SettingTabs = () => {
 
                   {treeData.map((data) =>
                     Array.isArray(data.children) && data.children.length > 0 ? (
-                      <div className='bundle_item open_subcate'>
-                        <CategoryInclude
-                          title={data.title}
-                          numberOfContents={data.numberOfContents}
-                        />
-                        {data.children.map((child) => (
-                          <CategorySub
-                            title={child.title}
-                            numberOfContents={child.numberOfContents}
-                          />
-                        ))}
-                      </div>
+                      <CategoryInclude
+                        title={data.title}
+                        numberOfContents={data.numberOfContents}
+                        children={data.children}
+                      />
                     ) : (
                       <CategoryOne
                         title={data.title}
