@@ -29,6 +29,25 @@
     clear: both;
     content: "";
   }
+
+  & .wrap_add {
+    border: 1px dotted #acb3bf;
+  }
+
+  & .lab_add {
+    float: none;
+    display: block;
+    height: 50px;
+    line-height: 48px;
+    font-size: 16px;
+
+    & .ico_add {
+      width: 13px;
+      height: 13px;
+      margin: 19px 17px 0 19px;
+      background-position: -200px 0;
+    }
+  }
 }
 
 .tit_set {
@@ -65,6 +84,16 @@
   float: left;
   position: relative;
   cursor: pointer;
+
+  &:after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10;
+    content: "";
+  }
 }
 
 /* .lab_btn::after {
@@ -183,8 +212,26 @@
     }
   }
 
-  & .open_subcate .wrap_arr {
-    transform: rotate(90deg);
+  & .open_subcate {
+    & .wrap_arr {
+      transform: rotate(90deg);
+    }
+
+    & .list_sub {
+      display: block;
+    }
+  }
+
+  & .list_sub .bundle_item {
+    margin-left: 60px;
+  }
+
+  & .wrap_add:not(.item_edit) {
+    position: relative;
+  }
+
+  & .set_btn {
+    overflow: hidden;
   }
 } // .blog_category
 
@@ -243,6 +290,14 @@
 
   &.list_order > .bundle_item:last-child {
     margin-bottom: 7px;
+  }
+
+  & + .set_btn {
+    overflow: hidden;
+    margin: 0 -29px;
+    padding: 12px 29px 12px;
+    border-top: 1px solid #f1f3f6;
+    background: #fafbfc;
   }
 } // .set_order
 
@@ -336,4 +391,18 @@
   width: 1px;
   height: 1px;
   opacity: 0;
+}
+
+.btn_save {
+  float: right;
+  width: 158px;
+  height: 38px;
+  font-size: 14px;
+  line-height: 38px;
+  border-radius: 1px;
+  border: 1px solid #333;
+  color: #fff;
+  background: #333;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+  box-sizing: content-box;
 }

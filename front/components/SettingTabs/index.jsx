@@ -110,9 +110,47 @@ const SettingTabs = () => {
                         </div>
                       </div>
                     </div>
+                    <div className='list_sub'>
+                      <div className='bundle_item open_subcate'>
+                        <div className='item_order'>
+                          <div className='basic_item'>
+                            <div className='wrap_drag'>
+                              <span className='ico_blog ico_drag'></span>
+                            </div>
+                            <div style={{ display: "inline" }}>
+                              <div className='wrap_name'>
+                                <div className='txt_name'>test</div>
+                                <div className='txt_count'>(0)</div>
+                              </div>
+                              <div className='info_btn'>
+                                <span className='btn_post'>추가</span>
+                                <span className='btn_post'>수정</span>
+                                <span className='btn_post'>삭제</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
+                <div className='wrap_add'>
+                  <label className='lab_btn lab_add'>
+                    <span className='ico_blog ico_add'></span>
+                    카테고리 추가
+                    <input
+                      type='button'
+                      class='btn_g'
+                      value='카테고리 추가'
+                    ></input>
+                  </label>
+                </div>
               </div>
+            </div>
+            <div class='set_btn'>
+              <button type='button' class='btn_save'>
+                변경사항 저장
+              </button>
             </div>
           </div>
         </div>
