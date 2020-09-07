@@ -421,7 +421,7 @@ button {
 // ---------------------------------------------------------------------
 .item_order {
   & .info_btn {
-    /* display: none; */
+    display: none;
     float: right;
     margin: 14px 0px 0px;
   }
@@ -430,10 +430,18 @@ button {
     /* display: none; */
   }
 
+  &:hover {
+    position: relative;
+    border-color: rgb(165, 173, 186);
+  }
+
   &:hover .btn_post {
     display: inline-block;
   }
 
+  &:hover .info_btn {
+    display: block;
+  }
   // &:hover .edit_item .order_btn {
   //   margin: 9px 0px 0px;
   // }
