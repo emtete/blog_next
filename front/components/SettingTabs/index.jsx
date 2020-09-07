@@ -8,6 +8,7 @@ import CategoryAll from "./CategoryAll";
 import CategoryOne from "./CategoryOne";
 import CategoryInclude from "./CategoryInclude";
 import CategoryAdd from "./CategoryAdd";
+import CategorySub from "./CategorySub";
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -22,15 +23,19 @@ const SettingTabs = () => {
 
   const initData = [
     {
-      title: "개발일지",
+      title: "개발일지..",
       numberOfContents: 4,
     },
     {
-      title: "프로그래밍",
-      numberOfContents: 11,
+      title: "프로그래밍ABC",
+      numberOfContents: 9,
       children: [
         {
-          title: "test",
+          title: "test1",
+          numberOfContents: 0,
+        },
+        {
+          title: "test2",
           numberOfContents: 0,
         },
       ],
@@ -61,9 +66,23 @@ const SettingTabs = () => {
                   <CategoryAll />
                   {treeData.map((data) =>
                     Array.isArray(data.children) && data.children.length > 0 ? (
-                      <CategoryInclude />
+                      <div className='bundle_item open_subcate'>
+                        <CategoryInclude
+                          title={data.title}
+                          numberOfContents={data.numberOfContents}
+                        />
+                        {data.children.map((child) => (
+                          <CategorySub
+                            title={child.title}
+                            numberOfContents={child.numberOfContents}
+                          />
+                        ))}
+                      </div>
                     ) : (
-                      <CategoryOne />
+                      <CategoryOne
+                        title={data.title}
+                        numberOfContents={data.numberOfContents}
+                      />
                     )
                   )}
                 </div>

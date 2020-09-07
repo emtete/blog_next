@@ -1,4 +1,4 @@
-const CategoryOne = () => {
+const CategoryOne = ({ title, numberOfContents }) => {
   return (
     <div className='bundle_item'>
       <div className='item_order'>
@@ -14,8 +14,8 @@ const CategoryOne = () => {
           </div>
           <div style={{ display: "inline" }}>
             <div className='wrap_name'>
-              <div className='txt_name'>개발일지</div>
-              <div className='txt_count'>(4)</div>
+              <div className='txt_name'>{title}</div>
+              <div className='txt_count'>({numberOfContents})</div>
             </div>
             <div className='info_btn'>
               <span className='btn_post'>추가</span>
