@@ -4,9 +4,10 @@ import CategorySub from "./CategorySub";
 
 const CategoryInclude = ({ title, numberOfContents, children }) => {
   const bundelRef = useRef();
+  const listSubRef = useRef();
 
   const onClickArw = (e) => {
-    bundelRef.current.classList.remove("open_subcate");
+    bundelRef.current.classList.toggle("open_subcate");
   };
 
   return (
@@ -18,7 +19,7 @@ const CategoryInclude = ({ title, numberOfContents, children }) => {
           </span>
           <input
             type='button'
-            class='btn_g'
+            className='btn_g'
             value='open sub category'
             onClick={onClickArw}
           ></input>
@@ -40,12 +41,15 @@ const CategoryInclude = ({ title, numberOfContents, children }) => {
           </div>
         </div>
       </div>
-      {children.map((child) => (
-        <CategorySub
-          title={child.title}
-          numberOfContents={child.numberOfContents}
-        />
-      ))}
+      <div className='list_sub' ref={listSubRef}>
+        {children.map((child) => (
+          <CategorySub
+            key={child.title + child.numberOfContents}
+            title={child.title}
+            numberOfContents={child.numberOfContents}
+          />
+        ))}
+      </div>
     </div>
   );
 };

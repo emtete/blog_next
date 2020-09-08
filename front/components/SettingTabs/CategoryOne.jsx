@@ -6,7 +6,11 @@ const CategoryOne = ({ title, numberOfContents }) => {
           <span className='wrap_arr'>
             <span className='ico_blog'></span>
           </span>
-          <input type='button' class='btn_g' value='open sub category'></input>
+          <input
+            type='button'
+            className='btn_g'
+            value='open sub category'
+          ></input>
         </label>
         <div className='basic_item'>
           <div className='wrap_drag'>

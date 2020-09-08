@@ -74,12 +74,14 @@ const SettingTabs = () => {
                   {treeData.map((data) =>
                     Array.isArray(data.children) && data.children.length > 0 ? (
                       <CategoryInclude
+                        key={data.title + data.numberOfContents}
                         title={data.title}
                         numberOfContents={data.numberOfContents}
                         children={data.children}
                       />
                     ) : (
                       <CategoryOne
+                        key={data.title + data.numberOfContents}
                         title={data.title}
                         numberOfContents={data.numberOfContents}
                       />
@@ -91,8 +93,8 @@ const SettingTabs = () => {
                 <CategoryAddBtn />
               </div>
             </div>
-            <div class='set_btn'>
-              <button type='button' class='btn_save'>
+            <div className='set_btn'>
+              <button type='button' className='btn_save'>
                 변경사항 저장
               </button>
             </div>
