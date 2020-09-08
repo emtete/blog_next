@@ -1,7 +1,13 @@
 import { useRef } from "react";
+import { useSelector, useDispatch } from "react-redux";
+
+import { appendChildToRootAction } from "../../reducers/category";
 
 const CategoryAddComp = () => {
   const submitBtnRef = useRef();
+  const textRef = useRef();
+  const dispatch = useDispatch();
+
   const onChangeText = (e) => {
     if (e.target.value.length > 0) {
       submitBtnRef.current.disabled = "";
@@ -12,9 +18,11 @@ const CategoryAddComp = () => {
     }
   };
 
-  // const onSubmitForm = () => {
+  const onSubmitForm = (e) => {
+    e.preventDefault();
+    dispatch(appendChildToRootAction({ title: textRef.current.value }));
+  };
 
-  // }
   return (
     <div className='bundle_item open_subcate'>
       <div className='item_order item_edit'>
@@ -24,13 +32,11 @@ const CategoryAddComp = () => {
           </span>
           <input type='button' className='btn_g' value='open sub category' />
         </label>
-        <form
-          className='edit_item'
-          // onSubmit={onSubmitForm}
-        >
+        <form className='edit_item' onSubmit={onSubmitForm}>
           <label className='lab_tf'>
             <strong className='screen_out'>카테고리 Label</strong>
             <input
+              ref={textRef}
               type='text'
               className='tf_blog'
               maxLength='40'

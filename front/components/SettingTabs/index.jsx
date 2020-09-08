@@ -1,7 +1,7 @@
 import React, { Component, useState, useRef } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import styled from "styled-components";
-// import throttle from "lodash.throttle";
 import debounce from "lodash/debounce";
 
 import MenuIcon from "@material-ui/icons/Menu";
@@ -23,28 +23,9 @@ const useStyles = makeStyles((theme) => ({
 const SettingTabs = () => {
   const classes = useStyles();
   const listOrderRef = useRef();
+  const { treeData } = useSelector((state) => state.category);
+  // const [treeData, setTreeData] = useState(initData);
 
-  const initData = [
-    {
-      title: "개발일지..",
-      numberOfContents: 4,
-    },
-    {
-      title: "프로그래밍ABC",
-      numberOfContents: 9,
-      children: [
-        {
-          title: "test1",
-          numberOfContents: 0,
-        },
-        {
-          title: "test2",
-          numberOfContents: 0,
-        },
-      ],
-    },
-  ];
-  const [treeData, setTreeData] = useState(initData);
   const [newData, setNewData] = useState([{}]);
   const [categoryAddCompArr, setCategoryAddCompArr] = useState([]);
 
@@ -95,7 +76,11 @@ const SettingTabs = () => {
                   {/* <CategoryAddComp /> */}
                   {categoryAddCompArr.length > 0 &&
                     categoryAddCompArr.map((e, i) => (
-                      <CategoryAddComp key={i} />
+                      <CategoryAddComp
+                        key={i}
+                        // treeData={treeData}
+                        // setTreeData={setTreeData}
+                      />
                     ))}
                 </div>
 
