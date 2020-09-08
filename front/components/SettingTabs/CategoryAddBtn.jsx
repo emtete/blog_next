@@ -1,4 +1,17 @@
-const CategoryAddBtn = ({ clickAddBtnThrottled }) => {
+import { useDispatch } from "react-redux";
+import debounce from "lodash/debounce";
+
+import { createNewComponentAction } from "../../reducers/category";
+
+const CategoryAddBtn = () => {
+  const dispatch = useDispatch();
+
+  const onClickAddBtn = () => {
+    dispatch(createNewComponentAction());
+  };
+
+  const clickAddBtnThrottled = debounce(onClickAddBtn, 250);
+
   return (
     <div className='wrap_add'>
       <label className='lab_btn lab_add' onClick={clickAddBtnThrottled}>

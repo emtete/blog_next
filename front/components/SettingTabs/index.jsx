@@ -1,10 +1,6 @@
-import React, { Component, useState, useRef } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
-import styled from "styled-components";
-import debounce from "lodash/debounce";
-
-import MenuIcon from "@material-ui/icons/Menu";
 
 import CategoryAll from "./CategoryAll";
 import CategoryOne from "./CategoryOne";
@@ -22,18 +18,7 @@ const useStyles = makeStyles((theme) => ({
 
 const SettingTabs = () => {
   const classes = useStyles();
-  const listOrderRef = useRef();
-  const { treeData } = useSelector((state) => state.category);
-  // const [treeData, setTreeData] = useState(initData);
-
-  const [newData, setNewData] = useState([{}]);
-  const [categoryAddCompArr, setCategoryAddCompArr] = useState([]);
-
-  const onClickAddBtn = () => {
-    setCategoryAddCompArr([...categoryAddCompArr, { title: "" }]);
-  };
-
-  const clickAddBtnThrottled = debounce(onClickAddBtn, 250);
+  const { treeData, newComponent } = useSelector((state) => state.category);
 
   return (
     <main className={classes.content}>
@@ -54,7 +39,7 @@ const SettingTabs = () => {
             </div>
             <div className='set_order' id='category-app'>
               <div className='wrap_order'>
-                <div className='list_order' ref={listOrderRef}>
+                <div className='list_order'>
                   <CategoryAll />
 
                   {treeData.map((data) =>
@@ -73,18 +58,12 @@ const SettingTabs = () => {
                       />
                     )
                   )}
-                  {/* <CategoryAddComp /> */}
-                  {categoryAddCompArr.length > 0 &&
-                    categoryAddCompArr.map((e, i) => (
-                      <CategoryAddComp
-                        key={i}
-                        // treeData={treeData}
-                        // setTreeData={setTreeData}
-                      />
-                    ))}
+                  {Array.isArray(newComponent) &&
+                    newComponent.length > 0 &&
+                    newComponent.map((e, i) => <CategoryAddComp key={i} />)}
                 </div>
 
-                <CategoryAddBtn clickAddBtnThrottled={clickAddBtnThrottled} />
+                <CategoryAddBtn />
               </div>
             </div>
             <div className='set_btn'>

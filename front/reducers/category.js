@@ -19,11 +19,19 @@ export const initialState = {
       ],
     },
   ],
+  newComponent: [],
 };
 
 export const appendChildToRootAction = (data) => {
   return {
     type: "APPEND_CHILD_TO_ROOT_ACTION",
+    data,
+  };
+};
+
+export const createNewComponentAction = (data) => {
+  return {
+    type: "CREATE_NEW_COMPONENT_ACTION",
     data,
   };
 };
@@ -39,6 +47,17 @@ const reducer = (state = initialState, action) => {
             title: action.data.title,
             numberOfContents: 0,
           },
+        ],
+      };
+
+    case "CREATE_NEW_COMPONENT_ACTION":
+      return {
+        ...state,
+        newComponent: [
+          {
+            title: "",
+          },
+          ...state.newComponent,
         ],
       };
     default:
