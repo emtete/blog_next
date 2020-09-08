@@ -1,7 +1,7 @@
-const CategoryAddBtn = () => {
+const CategoryAddBtn = ({ clickAddBtnThrottled }) => {
   return (
     <div className='wrap_add'>
-      <label className='lab_btn lab_add'>
+      <label className='lab_btn lab_add' onClick={clickAddBtnThrottled}>
         <span className='ico_blog ico_add'></span>
         카테고리 추가
         <input type='button' className='btn_g' value='카테고리 추가'></input>

@@ -4,14 +4,13 @@ import CategorySub from "./CategorySub";
 
 const CategoryInclude = ({ title, numberOfContents, children }) => {
   const bundelRef = useRef();
-  const listSubRef = useRef();
 
   const onClickArw = (e) => {
     bundelRef.current.classList.toggle("open_subcate");
   };
 
   return (
-    <div className='bundle_item open_subcate' ref={bundelRef}>
+    <div className='bundle_item' ref={bundelRef}>
       <div className='item_order'>
         <label className='lab_btn lab_cate lab_fold'>
           <span className='wrap_arr'>
@@ -41,7 +40,7 @@ const CategoryInclude = ({ title, numberOfContents, children }) => {
           </div>
         </div>
       </div>
-      <div className='list_sub' ref={listSubRef}>
+      <div className='list_sub'>
         {children.map((child) => (
           <CategorySub
             key={child.title + child.numberOfContents}

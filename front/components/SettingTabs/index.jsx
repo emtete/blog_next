@@ -1,6 +1,8 @@
 import React, { Component, useState, useRef } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import styled from "styled-components";
+// import throttle from "lodash.throttle";
+import debounce from "lodash/debounce";
 
 import MenuIcon from "@material-ui/icons/Menu";
 
@@ -8,7 +10,6 @@ import CategoryAll from "./CategoryAll";
 import CategoryOne from "./CategoryOne";
 import CategoryInclude from "./CategoryInclude";
 import CategoryAddBtn from "./CategoryAddBtn";
-// import CategorySub from "./CategorySub";
 import CategoryAddComp from "./CategoryAddComp";
 
 const useStyles = makeStyles((theme) => ({
@@ -21,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
 
 const SettingTabs = () => {
   const classes = useStyles();
-  const abc = useRef();
+  const listOrderRef = useRef();
 
   const initData = [
     {
@@ -45,9 +46,13 @@ const SettingTabs = () => {
   ];
   const [treeData, setTreeData] = useState(initData);
   const [newData, setNewData] = useState([{}]);
-  // const addData = () => {
+  const [categoryAddCompArr, setCategoryAddCompArr] = useState([]);
 
-  // };
+  const onClickAddBtn = () => {
+    setCategoryAddCompArr([...categoryAddCompArr, { title: "" }]);
+  };
+
+  const clickAddBtnThrottled = debounce(onClickAddBtn, 250);
 
   return (
     <main className={classes.content}>
@@ -68,7 +73,7 @@ const SettingTabs = () => {
             </div>
             <div className='set_order' id='category-app'>
               <div className='wrap_order'>
-                <div className='list_order'>
+                <div className='list_order' ref={listOrderRef}>
                   <CategoryAll />
 
                   {treeData.map((data) =>
@@ -87,10 +92,14 @@ const SettingTabs = () => {
                       />
                     )
                   )}
-                  <CategoryAddComp />
+                  {/* <CategoryAddComp /> */}
+                  {categoryAddCompArr.length > 0 &&
+                    categoryAddCompArr.map((e, i) => (
+                      <CategoryAddComp key={i} />
+                    ))}
                 </div>
 
-                <CategoryAddBtn />
+                <CategoryAddBtn clickAddBtnThrottled={clickAddBtnThrottled} />
               </div>
             </div>
             <div className='set_btn'>
