@@ -7,6 +7,7 @@ import CategoryOne from "./CategoryOne";
 import CategoryInclude from "./CategoryInclude";
 import CategoryAddBtn from "./CategoryAddBtn";
 import CategoryAddComp from "./CategoryAddComp";
+import CategoryWrap from "./CategoryWrap";
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -42,25 +43,21 @@ const SettingTabs = () => {
                 <div className='list_order'>
                   <CategoryAll />
 
-                  {treeData.map((data) =>
-                    Array.isArray(data.children) && data.children.length > 0 ? (
-                      <CategoryInclude
-                        key={data.title + data.numberOfContents}
-                        title={data.title}
-                        numberOfContents={data.numberOfContents}
-                        children={data.children}
-                      />
-                    ) : (
-                      <CategoryOne
-                        key={data.title + data.numberOfContents}
-                        title={data.title}
-                        numberOfContents={data.numberOfContents}
-                      />
-                    )
-                  )}
+                  {treeData.map((data) => (
+                    <CategoryInclude
+                      key={data.title + data.entries}
+                      title={data.title}
+                      entries={data.entries}
+                      children={data.children}
+                      data={data}
+                    />
+                  ))}
+
                   {Array.isArray(newComponent) &&
                     newComponent.length > 0 &&
-                    newComponent.map((e, i) => <CategoryAddComp key={i} />)}
+                    newComponent.map((e, i) => (
+                      <CategoryWrap key={i} children={<CategoryAddComp />} />
+                    ))}
                 </div>
 
                 <CategoryAddBtn />
