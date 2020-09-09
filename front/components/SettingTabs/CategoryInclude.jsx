@@ -21,7 +21,6 @@ const CategoryInclude = ({ data }) => {
   const onClickUpdate = () => {
     itemOrderRef.current.classList.toggle("item_edit");
     setVisibleBasicItem((prev) => !prev);
-    // ref && ref.current.focus();
     setIsUpdateMode((prev) => !prev);
   };
 

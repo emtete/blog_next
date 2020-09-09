@@ -8,10 +8,12 @@ const CategorySub = ({ data }) => {
 
   const itemOrderRef = useRef();
   const [visibleBasicItem, setVisibleBasicItem] = useState(true);
+  const [isUpdateMode, setIsUpdateMode] = useState(false);
 
   const onClickUpdate = () => {
     itemOrderRef.current.classList.toggle("item_edit");
     setVisibleBasicItem((prev) => !prev);
+    setIsUpdateMode((prev) => !prev);
   };
 
   return (
@@ -38,7 +40,11 @@ const CategorySub = ({ data }) => {
           </div>
         )}
 
-        <CategoryAddComp onClickUpdate={onClickUpdate} data={data} />
+        <CategoryAddComp
+          onClickUpdate={onClickUpdate}
+          data={data}
+          isUpdateMode={isUpdateMode}
+        />
       </div>
     </div>
   );
