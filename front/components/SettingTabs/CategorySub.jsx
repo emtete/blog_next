@@ -2,7 +2,10 @@ import { useRef, useState } from "react";
 
 import CategoryAddComp from "./CategoryAddComp";
 
-const CategorySub = ({ title, entries, data }) => {
+const CategorySub = ({ data }) => {
+  const title = data.title;
+  const entries = data.entries;
+
   const itemOrderRef = useRef();
   const [visibleBasicItem, setVisibleBasicItem] = useState(true);
 

@@ -4,7 +4,11 @@ import { useSelector } from "react-redux";
 import CategorySub from "./CategorySub";
 import CategoryAddComp from "./CategoryAddComp";
 
-const CategoryInclude = ({ title, entries, children, data }) => {
+const CategoryInclude = ({ data }) => {
+  const title = data.title;
+  const entries = data.entries;
+  const children = data.children;
+
   const bundelRef = useRef();
   const itemOrderRef = useRef();
   const itemRef = useRef();

@@ -46,9 +46,9 @@ const SettingTabs = () => {
                   {treeData.map((data) => (
                     <CategoryInclude
                       key={data.title + data.entries}
-                      title={data.title}
-                      entries={data.entries}
-                      children={data.children}
+                      // title={data.title}
+                      // entries={data.entries}
+                      // children={data.children}
                       data={data}
                     />
                   ))}
