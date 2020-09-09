@@ -47,11 +47,37 @@ const CategoryModal = () => {
     if (e.target.className === "container_layer") onClickCancel();
   };
 
+  const selectClickEvent1 = (e) => {
+    const optClasses = Array.from(optRef.current.classList);
+    const isOpened = !!optClasses.find((e) => e === "opt_open");
+
+    const isSelect1 = e.target.className === "layer_opt";
+    const isSelect2 = e.target.parentNode.parentNode.className === "layer_opt";
+
+    const clsNm = e.target.className;
+    const isOpt =
+      clsNm === "btn_opt" ||
+      clsNm === "txt_ellip" ||
+      clsNm === "ico_blog ico_open";
+
+    const isCloseBtn = clsNm === "btn_close" || clsNm === "ico_blog";
+
+    if (isOpened) {
+      if ((!isSelect1 && !isSelect2) || isCloseBtn) {
+        optRef.current.classList.remove("opt_open");
+      }
+    } else if (isOpt) {
+      optRef.current.classList.add("opt_open");
+    }
+  };
+
   useEffect(() => {
     document.addEventListener("click", clickEvent);
+    document.addEventListener("click", selectClickEvent1);
 
     return () => {
       document.removeEventListener("click", clickEvent);
+      document.removeEventListener("click", selectClickEvent1);
     };
   }, []);
 
@@ -80,14 +106,13 @@ const CategoryModal = () => {
                     <button
                       type='button'
                       className='btn_opt'
-                      onClick={onClickUpperBtn}
+                      // onClick={onClickUpperBtn}
                     >
                       <span className='txt_ellip' ref={txtRef1}>
                         선택되지 않음
                       </span>
                       <span className='ico_blog ico_open'></span>
                     </button>
-
                     <div className='layer_opt'>
                       <label className='lab_set on'>
                         <input
@@ -116,7 +141,7 @@ const CategoryModal = () => {
                       <button
                         type='button'
                         className='btn_close'
-                        onClick={onClickUpperBtn}
+                        // onClick={onClickUpperBtn}
                       >
                         <span className='ico_blog'></span>
                       </button>
