@@ -6,10 +6,12 @@ import {
   updateCategoryNameAction,
 } from "../../reducers/category";
 
-const CategoryAddComp = ({ onClickUpdate, data }) => {
+const CategoryAddComp = ({ onClickUpdate, data, isUpdateMode }) => {
   const submitBtnRef = useRef();
   const textRef = useRef();
   const dispatch = useDispatch();
+
+  isUpdateMode && textRef.current.focus();
 
   const onChangeText = (e) => {
     if (e.target.value.length > 0) {

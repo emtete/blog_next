@@ -12,6 +12,8 @@ const CategoryInclude = ({ data }) => {
   const bundelRef = useRef();
   const itemOrderRef = useRef();
   const itemRef = useRef();
+
+  const [isUpdateMode, setIsUpdateMode] = useState(false);
   const [visibleBasicItem, setVisibleBasicItem] = useState(true);
   const { treeData } = useSelector((state) => state.category);
   const isChildren = Array.isArray(children) && children.length > 0;
@@ -19,6 +21,8 @@ const CategoryInclude = ({ data }) => {
   const onClickUpdate = () => {
     itemOrderRef.current.classList.toggle("item_edit");
     setVisibleBasicItem((prev) => !prev);
+    // ref && ref.current.focus();
+    setIsUpdateMode((prev) => !prev);
   };
 
   const onClickArrow = () => {
@@ -60,17 +64,16 @@ const CategoryInclude = ({ data }) => {
             </div>
           </div>
         )}
-        <CategoryAddComp onClickUpdate={onClickUpdate} data={data} />
+        <CategoryAddComp
+          onClickUpdate={onClickUpdate}
+          data={data}
+          isUpdateMode={isUpdateMode}
+        />
       </div>
       <div className='list_sub'>
         {isChildren &&
           children.map((child) => (
-            <CategorySub
-              key={child.title + child.entries}
-              title={child.title}
-              entries={child.entries}
-              data={child}
-            />
+            <CategorySub key={child.title + child.entries} data={child} />
           ))}
       </div>
     </div>

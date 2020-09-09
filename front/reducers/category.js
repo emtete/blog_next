@@ -126,7 +126,7 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         treeData: [...state.treeData],
-        update: [...state.append, { ...newObject }],
+        update: [...state.update, { ...newObject }],
       };
 
     default:
