@@ -3,7 +3,10 @@ import { useSelector, useDispatch } from "react-redux";
 
 import CategorySub from "./CategorySub";
 import CategoryAddComp from "./CategoryAddComp";
-import { toggleIsMoveModeAction } from "../../reducers/category";
+import {
+  toggleIsMoveModeAction,
+  setSelectedNodeAction,
+} from "../../reducers/category";
 
 const CategoryInclude = ({ data }) => {
   const title = data.title;
@@ -28,6 +31,7 @@ const CategoryInclude = ({ data }) => {
 
   const onClickMove = () => {
     dispatch(toggleIsMoveModeAction({ isMoveMode: true }));
+    dispatch(setSelectedNodeAction({ node: data }));
   };
 
   const onClickArrow = () => {

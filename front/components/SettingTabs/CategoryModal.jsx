@@ -1,13 +1,18 @@
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
-import { toggleIsMoveModeAction } from "../../reducers/category";
+import {
+  toggleIsMoveModeAction,
+  setSelectedNodeAction,
+} from "../../reducers/category";
 
 const CategoryModal = () => {
   const dispatch = useDispatch();
+  const { node } = useSelector((state) => state.category);
 
   const onClickCancel = () => {
     dispatch(toggleIsMoveModeAction({ isMoveMode: false }));
+    dispatch(setSelectedNodeAction({ node: {} }));
   };
 
   const clickEvent = (e) => {
@@ -35,7 +40,7 @@ const CategoryModal = () => {
         <div className='inner_blog_layer inner_blog_layer5'>
           <form>
             <div className='cont_layer'>
-              <strong className='tit_popup'>'프로그래밍111' 이동</strong>
+              <strong className='tit_popup'>'{node.title}' 이동</strong>
               <p className='txt_popup'>
                 카테고리를 옮길 기준이 되는 카테고리를 선택하세요.
               </p>

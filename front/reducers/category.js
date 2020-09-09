@@ -40,6 +40,7 @@ export const initialState = {
   delete: [],
   update: [],
   isMoveMode: false,
+  node: {},
 };
 
 export const appendChildToRootAction = (data) => {
@@ -66,6 +67,13 @@ export const updateCategoryNameAction = (data) => {
 export const toggleIsMoveModeAction = (data) => {
   return {
     type: "TOGGLE_IS_MOVE_MODE_ACTION",
+    data,
+  };
+};
+
+export const setSelectedNodeAction = (data) => {
+  return {
+    type: "SET_SELECTED_NODE_ACTION",
     data,
   };
 };
@@ -118,6 +126,12 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         isMoveMode: action.data.isMoveMode,
+      };
+
+    case "SET_SELECTED_NODE_ACTION":
+      return {
+        ...state,
+        node: action.data.node,
       };
 
     case "UPDATE_CATEGORY_NAME_ACTION":
