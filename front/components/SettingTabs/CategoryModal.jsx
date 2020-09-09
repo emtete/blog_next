@@ -6,10 +6,12 @@ import { toggleIsMoveModeAction } from "../../reducers/category";
 const CategoryModal = () => {
   const dispatch = useDispatch();
 
+  const onClickCancel = () => {
+    dispatch(toggleIsMoveModeAction({ isMoveMode: false }));
+  };
+
   const clickEvent = (e) => {
-    // console.log(e.target.className);
-    if (e.target.className === "container_layer")
-      dispatch(toggleIsMoveModeAction({ isMoveMode: false }));
+    if (e.target.className === "container_layer") onClickCancel();
   };
 
   useEffect(() => {
@@ -97,7 +99,11 @@ const CategoryModal = () => {
               </div>
             </div>
             <div className='fld_btn'>
-              <button type='reset' className='btn_cancel'>
+              <button
+                type='reset'
+                className='btn_cancel'
+                onClick={onClickCancel}
+              >
                 취소
               </button>
               <button type='submit' className='btn_default btn_off' disabled=''>
