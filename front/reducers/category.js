@@ -39,6 +39,7 @@ export const initialState = {
   append: [],
   delete: [],
   update: [],
+  isMoveMode: false,
 };
 
 export const appendChildToRootAction = (data) => {
@@ -58,6 +59,13 @@ export const createNewComponentAction = (data) => {
 export const updateCategoryNameAction = (data) => {
   return {
     type: "UPDATE_CATEGORY_NAME_ACTION",
+    data,
+  };
+};
+
+export const toggleIsMoveModeAction = (data) => {
+  return {
+    type: "TOGGLE_IS_MOVE_MODE_ACTION",
     data,
   };
 };
@@ -104,6 +112,12 @@ const reducer = (state = initialState, action) => {
           },
           ...state.newComponent,
         ],
+      };
+
+    case "TOGGLE_IS_MOVE_MODE_ACTION":
+      return {
+        ...state,
+        isMoveMode: action.data.isMoveMode,
       };
 
     case "UPDATE_CATEGORY_NAME_ACTION":

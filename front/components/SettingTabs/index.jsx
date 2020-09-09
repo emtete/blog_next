@@ -8,6 +8,7 @@ import CategoryInclude from "./CategoryInclude";
 import CategoryAddBtn from "./CategoryAddBtn";
 import CategoryAddComp from "./CategoryAddComp";
 import CategoryWrap from "./CategoryWrap";
+import CategoryModal from "./CategoryModal";
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -19,7 +20,9 @@ const useStyles = makeStyles((theme) => ({
 
 const SettingTabs = () => {
   const classes = useStyles();
-  const { treeData, newComponent } = useSelector((state) => state.category);
+  const { treeData, newComponent, isMoveMode } = useSelector(
+    (state) => state.category
+  );
 
   return (
     <main className={classes.content}>
@@ -67,95 +70,8 @@ const SettingTabs = () => {
             </div>
           </div>
         </div>
-        <div className='container_layer'>
-          <div
-            className='blog_layer'
-            style={{
-              position: "fixed",
-              top: "50%",
-              marginTop: "-227px",
-              zIndex: 10,
-            }}
-          >
-            <div className='inner_blog_layer inner_blog_layer5'>
-              <form>
-                <div className='cont_layer'>
-                  <strong class='tit_popup'>'프로그래밍111' 이동</strong>
-                  <p class='txt_popup'>
-                    카테고리를 옮길 기준이 되는 카테고리를 선택하세요.
-                  </p>
-                  <div className='wrap_set'>
-                    <div className='item_set item_sub'>
-                      <div className='opt_set opt_category'>
-                        <button type='button' class='btn_opt'>
-                          <span class='txt_ellip'>선택되지 않음</span>
-                          <span class='ico_blog ico_open'></span>
-                        </button>
-                        <div className='layer_opt'>
-                          <label class='lab_set on'>
-                            <input type='radio' class='inp_set' value='' />
-                            <span class='txt_set txt_ellip'>선택되지 않음</span>
-                          </label>
 
-                          <label class='lab_set'>
-                            <input type='radio' class='inp_set' value='' />
-                            <span class='txt_set txt_ellip'>개발일지</span>
-                          </label>
-
-                          <label class='lab_set'>
-                            <input type='radio' class='inp_set' value='' />
-                            <span class='txt_set txt_ellip'>ttt</span>
-                          </label>
-
-                          <button type='button' class='btn_close'>
-                            <span class='ico_blog'></span>
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className='radio_blog radio_cate'>
-                    <label class='lab_set'>
-                      <input
-                        type='radio'
-                        name='moveCate'
-                        class='inp_set'
-                        disabled=''
-                      />
-                      <span class='txt_set'>
-                        <span class='ico_addcate ico_addcate1'></span>
-                        선택한 카테고리 위로 카테고리를 옮깁니다.
-                      </span>
-                    </label>
-
-                    <label class='lab_set'>
-                      <input
-                        type='radio'
-                        name='moveCate'
-                        class='inp_set'
-                        disabled=''
-                      />
-                      <span class='txt_set'>
-                        <span class='ico_addcate ico_addcate2'></span>
-                        선택한 카테고리 아래로 카테고리를 옮깁니다.
-                      </span>
-                    </label>
-                  </div>
-                </div>
-                {/*  */}
-                <div class='fld_btn'>
-                  <button type='reset' class='btn_cancel'>
-                    취소
-                  </button>
-                  <button type='submit' class='btn_default btn_off' disabled=''>
-                    확인
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
+        {isMoveMode && <CategoryModal />}
       </div>
     </main>
   );

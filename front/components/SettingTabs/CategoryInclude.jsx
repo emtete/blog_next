@@ -1,14 +1,16 @@
 import { useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import CategorySub from "./CategorySub";
 import CategoryAddComp from "./CategoryAddComp";
+import { toggleIsMoveModeAction } from "../../reducers/category";
 
 const CategoryInclude = ({ data }) => {
   const title = data.title;
   const entries = data.entries;
   const children = data.children;
 
+  const dispatch = useDispatch();
   const bundelRef = useRef();
   const itemOrderRef = useRef();
   const itemRef = useRef();
@@ -22,6 +24,10 @@ const CategoryInclude = ({ data }) => {
     itemOrderRef.current.classList.toggle("item_edit");
     setVisibleBasicItem((prev) => !prev);
     setIsUpdateMode((prev) => !prev);
+  };
+
+  const onClickMove = () => {
+    dispatch(toggleIsMoveModeAction({ isMoveMode: true }));
   };
 
   const onClickArrow = () => {
@@ -58,7 +64,9 @@ const CategoryInclude = ({ data }) => {
                 <span className='btn_post' onClick={onClickUpdate}>
                   수정
                 </span>
-                <span className='btn_post'>이동</span>
+                <span className='btn_post' onClick={onClickMove}>
+                  이동
+                </span>
                 <span className='btn_post disabled'>삭제</span>
               </div>
             </div>
