@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
@@ -7,22 +7,57 @@ import {
 } from "../../reducers/category";
 
 const CategoryModal = () => {
+  const optRef = useRef();
+  const txtRef1 = useRef();
+
   const dispatch = useDispatch();
-  const { node } = useSelector((state) => state.category);
+  const { selectedNode, treeData } = useSelector((state) => state.category);
+
+  const onClickRadio = (e) => {
+    const targetValue = e.target.value;
+    const targetTxt = e.target.nextSibling.textContent;
+    const layerChildren = Array.from(e.target.parentNode.parentNode.children);
+
+    layerChildren.map((node) => {
+      const childValue = node.children[0].value;
+      const isLabSet = node.classList[0] === "lab_set";
+      const isClicked = targetValue == childValue;
+
+      if (isLabSet && isClicked) {
+        node.classList.add("on");
+        node.cheked = true;
+        txtRef1.current.textContent = targetTxt;
+      } else if (isLabSet && !isClicked) {
+        node.classList.remove("on");
+      }
+    });
+
+    onClickUpperBtn();
+  };
+  const onClickUpperBtn = () => {
+    optRef.current.classList.toggle("opt_open");
+  };
 
   const onClickCancel = () => {
     dispatch(toggleIsMoveModeAction({ isMoveMode: false }));
-    dispatch(setSelectedNodeAction({ node: {} }));
+    dispatch(setSelectedNodeAction({ selectedNode: null }));
   };
 
   const clickEvent = (e) => {
     if (e.target.className === "container_layer") onClickCancel();
   };
 
+  const tempClickEvent = (e) => {
+    console.log(e.target.className === "layer_opt");
+  };
+
   useEffect(() => {
     document.addEventListener("click", clickEvent);
+    document.addEventListener("click", tempClickEvent);
+
     return () => {
       document.removeEventListener("click", clickEvent);
+      document.removeEventListener("click", tempClickEvent);
     };
   }, []);
 
@@ -40,34 +75,60 @@ const CategoryModal = () => {
         <div className='inner_blog_layer inner_blog_layer5'>
           <form>
             <div className='cont_layer'>
-              <strong className='tit_popup'>'{node.title}' 이동</strong>
+              <strong className='tit_popup'>'{selectedNode.title}' 이동</strong>
               <p className='txt_popup'>
                 카테고리를 옮길 기준이 되는 카테고리를 선택하세요.
               </p>
               <div className='wrap_set'>
                 <div className='item_set item_sub'>
-                  <div className='opt_set opt_category'>
-                    <button type='button' className='btn_opt'>
-                      <span className='txt_ellip'>선택되지 않음</span>
+                  {/* opt_open */}
+                  <div className='opt_set opt_category' ref={optRef}>
+                    <button
+                      type='button'
+                      className='btn_opt'
+                      onClick={onClickUpperBtn}
+                    >
+                      <span className='txt_ellip' ref={txtRef1}>
+                        선택되지 않음
+                      </span>
                       <span className='ico_blog ico_open'></span>
                     </button>
+
                     <div className='layer_opt'>
                       <label className='lab_set on'>
-                        <input type='radio' className='inp_set' value='' />
+                        <input
+                          type='radio'
+                          className='inp_set'
+                          value=''
+                          onClick={onClickRadio}
+                        />
                         <span className='txt_set txt_ellip'>선택되지 않음</span>
                       </label>
 
-                      <label className='lab_set'>
-                        <input type='radio' className='inp_set' value='' />
-                        <span className='txt_set txt_ellip'>개발일지</span>
-                      </label>
+                      {treeData.map((node) => (
+                        <label key={node.id + node.title} className='lab_set'>
+                          <input
+                            type='radio'
+                            className='inp_set'
+                            value={node.id}
+                            onClick={onClickRadio}
+                          />
+                          <span className='txt_set txt_ellip'>
+                            {node.title}
+                          </span>
+                        </label>
+                      ))}
 
-                      <label className='lab_set'>
+                      {/* <label className='lab_set'>
                         <input type='radio' className='inp_set' value='' />
                         <span className='txt_set txt_ellip'>ttt</span>
-                      </label>
+                      </label> */}
 
-                      <button type='button' className='btn_close'>
+                      <button
+                        type='button'
+                        className='btn_close'
+                        onClick={onClickUpperBtn}
+                      >
                         <span className='ico_blog'></span>
                       </button>
                     </div>
@@ -81,7 +142,7 @@ const CategoryModal = () => {
                     type='radio'
                     name='moveCate'
                     className='inp_set'
-                    disabled=''
+                    disabled={true}
                   />
                   <span className='txt_set'>
                     <span className='ico_addcate ico_addcate1'></span>

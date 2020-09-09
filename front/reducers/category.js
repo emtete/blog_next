@@ -40,8 +40,23 @@ export const initialState = {
   delete: [],
   update: [],
   isMoveMode: false,
-  node: {},
+  selectedNode: null,
+  treeHelper: {
+    // cnt: 0,
+    // appendCnt: 0,
+    // nodeCount: 0,
+    indexPath: {
+      1: [0],
+      2: [1],
+      3: [1, 0],
+      4: [1, 1],
+    },
+  },
 };
+
+// const setIndexPath = () => {
+//   state
+// }
 
 export const appendChildToRootAction = (data) => {
   return {
@@ -131,7 +146,7 @@ const reducer = (state = initialState, action) => {
     case "SET_SELECTED_NODE_ACTION":
       return {
         ...state,
-        node: action.data.node,
+        selectedNode: action.data.selectedNode,
       };
 
     case "UPDATE_CATEGORY_NAME_ACTION":
