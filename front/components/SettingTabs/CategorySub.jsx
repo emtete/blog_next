@@ -30,10 +30,11 @@ const CategorySub = ({ data }) => {
                 <div className='txt_count'>({entries})</div>
               </div>
               <div className='info_btn'>
-                <span className='btn_post'>추가</span>
+                {/* <span className='btn_post'>추가</span> */}
                 <span className='btn_post' onClick={onClickUpdate}>
                   수정
                 </span>
+                <span className='btn_post'>이동</span>
                 <span className='btn_post'>삭제</span>
               </div>
             </div>
