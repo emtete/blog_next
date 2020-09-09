@@ -47,17 +47,11 @@ const CategoryModal = () => {
     if (e.target.className === "container_layer") onClickCancel();
   };
 
-  const tempClickEvent = (e) => {
-    console.log(e.target.className === "layer_opt");
-  };
-
   useEffect(() => {
     document.addEventListener("click", clickEvent);
-    document.addEventListener("click", tempClickEvent);
 
     return () => {
       document.removeEventListener("click", clickEvent);
-      document.removeEventListener("click", tempClickEvent);
     };
   }, []);
 
@@ -118,11 +112,6 @@ const CategoryModal = () => {
                           </span>
                         </label>
                       ))}
-
-                      {/* <label className='lab_set'>
-                        <input type='radio' className='inp_set' value='' />
-                        <span className='txt_set txt_ellip'>ttt</span>
-                      </label> */}
 
                       <button
                         type='button'
