@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
@@ -8,15 +8,34 @@ import {
 import CategorySelect from "./CategorySelect";
 
 const CategoryModal = () => {
-  const optRef1 = useRef();
-  const optRef2 = useRef();
-  const txtRef1 = useRef();
+  // const optRef1 = useRef();
+  // const optRef2 = useRef();
+  // const txtRef1 = useRef();
+
+  // const radioRef1 = useRef();
+  // const radioRef2 = useRef();
+  // const radioRef3 = useRef();
+
+  const [disabledRadio1, setDisabledRadio1] = useState(true);
+  const [disabledRadio2, setDisabledRadio2] = useState(true);
+  const [disabledRadio3, setDisabledRadio3] = useState(true);
 
   const dispatch = useDispatch();
   const { selectedNode, treeData } = useSelector((state) => state.category);
   const haveChildren =
     Array.isArray(selectedNode.children) && selectedNode.children.length > 0;
 
+  const onChangeSelect1 = (e) => {
+    if (e.target.value !== "") {
+      setDisabledRadio1(false);
+      setDisabledRadio2(false);
+      setDisabledRadio3(false);
+    } else {
+      setDisabledRadio1(true);
+      setDisabledRadio2(true);
+      setDisabledRadio3(true);
+    }
+  };
   const onClickCancel = () => {
     dispatch(toggleIsMoveModeAction({ isMoveMode: false }));
     dispatch(setSelectedNodeAction({ selectedNode: null }));
@@ -57,8 +76,12 @@ const CategoryModal = () => {
                 {/*  */}
                 <div className='item_set item_sub'>
                   상위
-                  <select name='abc1' className='opt_category'>
-                    <option value>선택되지 않음</option>
+                  <select
+                    name='abc1'
+                    className='opt_category'
+                    onChange={onChangeSelect1}
+                  >
+                    <option value=''>선택되지 않음</option>
                     {treeData.map((node) => (
                       <option value={node.id}>{node.title}</option>
                     ))}
@@ -85,7 +108,7 @@ const CategoryModal = () => {
                     type='radio'
                     name='moveCate'
                     className='inp_set'
-                    // disabled={true}
+                    disabled={disabledRadio1}
                   />
                   <span className='txt_set'>
                     <span className='ico_addcate ico_addcate1'></span>
@@ -98,7 +121,7 @@ const CategoryModal = () => {
                     type='radio'
                     name='moveCate'
                     className='inp_set'
-                    disabled=''
+                    disabled={disabledRadio2}
                   />
                   <span className='txt_set'>
                     <span className='ico_addcate ico_addcate2'></span>
@@ -112,7 +135,7 @@ const CategoryModal = () => {
                       type='radio'
                       name='moveCate'
                       className='inp_set'
-                      disabled=''
+                      disabled={disabledRadio3}
                     />
                     <span className='txt_set'>
                       <span className='ico_addcate ico_addcate3'></span>
