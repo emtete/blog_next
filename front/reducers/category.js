@@ -72,6 +72,13 @@ export const createNewComponentAction = (data) => {
   };
 };
 
+export const deleteNewComponentAction = (data) => {
+  return {
+    type: "DELETE_NEW_COMPONENT_ACTION",
+    data,
+  };
+};
+
 export const updateCategoryNameAction = (data) => {
   return {
     type: "UPDATE_CATEGORY_NAME_ACTION",
@@ -117,24 +124,48 @@ const reducer = (state = initialState, action) => {
         priority: state.treeData.length,
         depth: 1,
         parent: 0,
-        id: -(state.append.length + 1),
+        // id: -(state.append.length + 1),
       };
 
       return {
         ...state,
         treeData: [...state.treeData, { ...newObject }],
         append: [...state.append, { ...newObject }],
+        treeHelper: {
+          ...state.treeHelper,
+          indexPath: {
+            ...state.treeHelper.indexPath,
+            [newObject.id]: [newObject.priority],
+          },
+        },
       };
 
     case "CREATE_NEW_COMPONENT_ACTION":
+      const newId =
+        state.newComponent.length > 0
+          ? parseInt(state.newComponent[state.newComponent.length - 1].id) - 1
+          : -1;
+
       return {
         ...state,
         newComponent: [
           {
             title: "",
+            id: newId,
           },
           ...state.newComponent,
         ],
+      };
+
+    case "DELETE_NEW_COMPONENT_ACTION":
+      const index = state.newComponent.findIndex(
+        (e) => e.id === action.data.id
+      );
+      const clone = JSON.parse(JSON.stringify(state.newComponent));
+      clone.splice(index, 1);
+      return {
+        ...state,
+        newComponent: [...clone],
       };
 
     case "TOGGLE_IS_MOVE_MODE_ACTION":

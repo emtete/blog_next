@@ -42,7 +42,6 @@ const excludeOwnNode = (treeData, selectedNode) => {
   if (selectedNode.depth == 1) {
     index = treeData.findIndex((e) => e.id == modalId);
     treeData.splice(index, 1);
-    // console.log(treeData);
   } //
   else if (selectedNode.depth == 2) {
     const parentIndex = treeData.findIndex((e) => e.id === selectedNode.parent);
@@ -51,6 +50,7 @@ const excludeOwnNode = (treeData, selectedNode) => {
 };
 
 const CategoryModal = () => {
+  const selectRef1 = useRef();
   const [selectContents2, setSelectContents2] = useState();
   const [disabledSelect2, setDisabledSelect2] = useState(true);
   const [disabledRadio1, setDisabledRadio1] = useState(true);
@@ -68,10 +68,25 @@ const CategoryModal = () => {
   excludeOwnNode(treeDataCopied, selectedNode);
 
   const onChangeSelect1 = (e) => {
-    if (e.target.value !== "") {
+    // 선택되지 않음 선택시
+    if (e.target.value === "") {
+      setDisabledRadio1(true);
+      setDisabledRadio2(true);
+      setDisabledRadio3(true);
+
+      setDisabledSelect2(true);
+      setSelectContents2(undefined);
+    } // 선택되지 않음 이외의 값 선택시
+    else {
+      // select1의 값이 parentId 와 다른 경우
+      if (e.target.value != selectedNode.parent) {
+        setDisabledRadio3(false);
+      } else {
+        setDisabledRadio3(true);
+      }
+
       setDisabledRadio1(false);
       setDisabledRadio2(false);
-      setDisabledRadio3(false);
 
       const selectedHaveChildren = getHaveChildren(
         null,
@@ -82,13 +97,22 @@ const CategoryModal = () => {
       setSelectContents2(
         getSelectContents2(treeDataCopied, e.target.value, selectedNode.id)
       );
-    } else {
-      setDisabledRadio1(true);
-      setDisabledRadio2(true);
-      setDisabledRadio3(true);
+    }
+  };
 
-      setDisabledSelect2(true);
-      setSelectContents2(undefined);
+  const onChangeSelect2 = (e) => {
+    const selVal1 =
+      selectRef1.current.options[selectRef1.current.selectedIndex].value;
+
+    // 선택되지 않음 선택시
+    if (e.target.value === "") {
+      // select1의 값이 parentId 와 다른 경우만.
+      if (selVal1 != selectedNode.parent) {
+        setDisabledRadio3(false);
+      }
+    } // 선택되지 않음 이외의 값 선택시
+    else {
+      setDisabledRadio3(true);
     }
   };
 
@@ -102,6 +126,7 @@ const CategoryModal = () => {
     if (e.target.className === "container_layer") onClickCancel();
   };
 
+  // 이벤트 바인딩
   useEffect(() => {
     document.addEventListener("click", clickOutSideEvent);
 
@@ -136,6 +161,7 @@ const CategoryModal = () => {
                     name='abc1'
                     className='opt_category'
                     onChange={onChangeSelect1}
+                    ref={selectRef1}
                   >
                     <option value=''>선택되지 않음</option>
                     {treeDataCopied.map((node) => (
@@ -154,8 +180,9 @@ const CategoryModal = () => {
                       name='abc2'
                       className='opt_category'
                       disabled={disabledSelect2}
+                      onChange={onChangeSelect2}
                     >
-                      <option value>선택되지 않음</option>
+                      <option value=''>선택되지 않음</option>
                       {selectContents2 &&
                         selectContents2.map((node) => (
                           <option key={node.id + node.title} value={node.id}>

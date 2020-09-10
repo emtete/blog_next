@@ -4,15 +4,22 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   appendChildToRootAction,
   updateCategoryNameAction,
+  deleteNewComponentAction,
 } from "../../reducers/category";
 
-const CategoryAddComp = ({ onClickUpdate, data, isUpdateMode }) => {
+const CategoryAddComp = ({ onClickUpdate, data, isUpdateMode, id }) => {
   const submitBtnRef = useRef();
   const textRef = useRef();
   const dispatch = useDispatch();
 
   isUpdateMode && textRef.current.focus();
-
+  const onClickCancel = () => {
+    if (onClickUpdate) {
+      onClickUpdate();
+    } else {
+      dispatch(deleteNewComponentAction({ id: id }));
+    }
+  };
   const onChangeText = (e) => {
     if (e.target.value.length > 0) {
       submitBtnRef.current.disabled = "";
@@ -54,7 +61,7 @@ const CategoryAddComp = ({ onClickUpdate, data, isUpdateMode }) => {
       </label>
 
       <div className='order_btn'>
-        <button type='reset' className='btn_cancel' onClick={onClickUpdate}>
+        <button type='reset' className='btn_cancel' onClick={onClickCancel}>
           취소
         </button>
         <button

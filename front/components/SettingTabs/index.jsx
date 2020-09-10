@@ -56,7 +56,10 @@ const SettingTabs = () => {
                   {Array.isArray(newComponent) &&
                     newComponent.length > 0 &&
                     newComponent.map((e, i) => (
-                      <CategoryWrap key={i} children={<CategoryAddComp />} />
+                      <CategoryWrap
+                        key={i}
+                        children={<CategoryAddComp id={e.id} />}
+                      />
                     ))}
                 </div>
 
