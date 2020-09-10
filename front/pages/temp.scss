@@ -439,6 +439,16 @@ select {
     height: 1px;
     opacity: 0.01;
 
+    &:checked + .txt_set::before {
+      border-color: rgb(51, 51, 51);
+      background: radial-gradient(
+        at center center,
+        rgb(255, 255, 255) 20%,
+        rgb(51, 51, 51) 20%,
+        rgb(51, 51, 51) 100%
+      );
+    }
+
     &:disabled + .txt_set {
       color: #959595;
       cursor: not-allowed;
