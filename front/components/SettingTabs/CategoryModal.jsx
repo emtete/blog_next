@@ -8,15 +8,10 @@ import {
 import CategorySelect from "./CategorySelect";
 
 // 두번째 셀렉트 박스의 컨텐츠를 가져온다.
-const getSelectContents2 = (treeData, upperId, modalId) => {
-  for (let i = 0; i < treeData.length; i++) {
-    if (upperId == treeData[i].id) {
-      // 모달 띄울 때, 선택된 노드는 제외시킨다.
-      if (treeData[i.children]) {
-        const index = treeData[i].children.findIndex((e) => e.id == modalId);
-        treeData[i].children.splice(index, 1);
-      }
-      return treeData[i].children;
+const getSelectContents2 = (treeDataCopied, upperId, modalId) => {
+  for (let i = 0; i < treeDataCopied.length; i++) {
+    if (upperId == treeDataCopied[i].id) {
+      return treeDataCopied[i].children;
     }
   }
 };
@@ -39,6 +34,22 @@ const getHaveChildren = (node, treeNode, id) => {
   return Array.isArray(targetNode.children) && targetNode.children.length > 0;
 };
 
+// 모달 띄울 때, 선택된 노드를 제외시키다.
+const excludeOwnNode = (treeData, selectedNode) => {
+  const modalId = selectedNode.id;
+  let index;
+
+  if (selectedNode.depth == 1) {
+    index = treeData.findIndex((e) => e.id == modalId);
+    treeData.splice(index, 1);
+    // console.log(treeData);
+  } //
+  else if (selectedNode.depth == 2) {
+    const parentIndex = treeData.findIndex((e) => e.id === selectedNode.parent);
+    treeData[parentIndex].children.splice(selectedNode.priority, 1);
+  }
+};
+
 const CategoryModal = () => {
   const [selectContents2, setSelectContents2] = useState();
   const [disabledSelect2, setDisabledSelect2] = useState(true);
@@ -50,6 +61,12 @@ const CategoryModal = () => {
   const { selectedNode, treeData } = useSelector((state) => state.category);
   const haveChildren = getHaveChildren(selectedNode);
 
+  // deep copy
+  const treeDataCopied = JSON.parse(JSON.stringify(treeData));
+
+  // 모달 띄울 때, 선택된 노드를 제외시키다.
+  excludeOwnNode(treeDataCopied, selectedNode);
+
   const onChangeSelect1 = (e) => {
     if (e.target.value !== "") {
       setDisabledRadio1(false);
@@ -58,12 +75,12 @@ const CategoryModal = () => {
 
       const selectedHaveChildren = getHaveChildren(
         null,
-        treeData,
+        treeDataCopied,
         e.target.value
       );
       setDisabledSelect2(!selectedHaveChildren);
       setSelectContents2(
-        getSelectContents2(treeData, e.target.value, selectedNode.id)
+        getSelectContents2(treeDataCopied, e.target.value, selectedNode.id)
       );
     } else {
       setDisabledRadio1(true);
@@ -121,7 +138,7 @@ const CategoryModal = () => {
                     onChange={onChangeSelect1}
                   >
                     <option value=''>선택되지 않음</option>
-                    {treeData.map((node) => (
+                    {treeDataCopied.map((node) => (
                       <option key={node.id + node.title} value={node.id}>
                         {node.title}
                       </option>
