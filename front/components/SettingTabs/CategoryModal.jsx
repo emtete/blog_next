@@ -5,81 +5,33 @@ import {
   toggleIsMoveModeAction,
   setSelectedNodeAction,
 } from "../../reducers/category";
+import CategorySelect from "./CategorySelect";
 
 const CategoryModal = () => {
-  const optRef = useRef();
+  const optRef1 = useRef();
+  const optRef2 = useRef();
   const txtRef1 = useRef();
 
   const dispatch = useDispatch();
   const { selectedNode, treeData } = useSelector((state) => state.category);
-
-  const onClickRadio = (e) => {
-    const targetValue = e.target.value;
-    const targetTxt = e.target.nextSibling.textContent;
-    const layerChildren = Array.from(e.target.parentNode.parentNode.children);
-
-    layerChildren.map((node) => {
-      const childValue = node.children[0].value;
-      const isLabSet = node.classList[0] === "lab_set";
-      const isClicked = targetValue == childValue;
-
-      if (isLabSet && isClicked) {
-        node.classList.add("on");
-        node.cheked = true;
-        txtRef1.current.textContent = targetTxt;
-      } else if (isLabSet && !isClicked) {
-        node.classList.remove("on");
-      }
-    });
-
-    onClickUpperBtn();
-  };
-  const onClickUpperBtn = () => {
-    optRef.current.classList.toggle("opt_open");
-  };
+  const haveChildren =
+    Array.isArray(selectedNode.children) && selectedNode.children.length > 0;
 
   const onClickCancel = () => {
     dispatch(toggleIsMoveModeAction({ isMoveMode: false }));
     dispatch(setSelectedNodeAction({ selectedNode: null }));
   };
 
-  const clickEvent = (e) => {
+  // 모달 바깥 클릭시, 창 닫기
+  const clickOutSideEvent = (e) => {
     if (e.target.className === "container_layer") onClickCancel();
   };
 
-  const selectClickEvent1 = (e) => {
-    const optClasses = Array.from(optRef.current.classList);
-    const isOpened = !!optClasses.find((e) => e === "opt_open");
-
-    const isSelect1 = e.target.className === "layer_opt";
-    const isSelect2 = e.target.parentNode.parentNode.className === "layer_opt";
-
-    const clsNm = e.target.className;
-    const isOpt =
-      clsNm === "btn_opt" ||
-      clsNm === "txt_ellip" ||
-      clsNm === "ico_blog ico_open";
-
-    const isCloseBtn = clsNm === "btn_close" || clsNm === "ico_blog";
-
-    if (isOpened) {
-      if ((!isSelect1 && !isSelect2) || isCloseBtn) {
-        // selectbox 가 열려있다면, 해당 조건이 만족할 때 닫는다.
-        optRef.current.classList.remove("opt_open");
-      }
-    } else if (isOpt) {
-      // selectbox 가 닫혀있다면, 해당 조건이 만족할 때 연다.
-      optRef.current.classList.add("opt_open");
-    }
-  };
-
   useEffect(() => {
-    document.addEventListener("click", clickEvent);
-    document.addEventListener("click", selectClickEvent1);
+    document.addEventListener("click", clickOutSideEvent);
 
     return () => {
-      document.removeEventListener("click", clickEvent);
-      document.removeEventListener("click", selectClickEvent1);
+      document.removeEventListener("click", clickOutSideEvent);
     };
   }, []);
 
@@ -102,87 +54,29 @@ const CategoryModal = () => {
                 카테고리를 옮길 기준이 되는 카테고리를 선택하세요.
               </p>
               <div className='wrap_set'>
+                {/*  */}
                 <div className='item_set item_sub'>
                   상위
-                  <div className='opt_set opt_category' ref={optRef}>
-                    <button type='button' className='btn_opt'>
-                      <span className='txt_ellip' ref={txtRef1}>
-                        선택되지 않음
-                      </span>
-                      <span className='ico_blog ico_open'></span>
-                    </button>
-                    <div className='layer_opt'>
-                      <label className='lab_set on'>
-                        <input
-                          type='radio'
-                          className='inp_set'
-                          value=''
-                          onClick={onClickRadio}
-                        />
-                        <span className='txt_set txt_ellip'>선택되지 않음</span>
-                      </label>
-
-                      {treeData.map((node) => (
-                        <label key={node.id + node.title} className='lab_set'>
-                          <input
-                            type='radio'
-                            className='inp_set'
-                            value={node.id}
-                            onClick={onClickRadio}
-                          />
-                          <span className='txt_set txt_ellip'>
-                            {node.title}
-                          </span>
-                        </label>
-                      ))}
-
-                      <button type='button' className='btn_close'>
-                        <span className='ico_blog'></span>
-                      </button>
-                    </div>
-                  </div>
+                  <select name='abc1' className='opt_category'>
+                    <option value>선택되지 않음</option>
+                    {treeData.map((node) => (
+                      <option value={node.id}>{node.title}</option>
+                    ))}
+                  </select>
                 </div>
 
-                <div className='item_set item_sub'>
-                  하위
-                  <div className='opt_set opt_category' ref={optRef}>
-                    <button type='button' className='btn_opt'>
-                      <span className='txt_ellip' ref={txtRef1}>
-                        선택되지 않음
-                      </span>
-                      <span className='ico_blog ico_open'></span>
-                    </button>
-                    <div className='layer_opt'>
-                      <label className='lab_set on'>
-                        <input
-                          type='radio'
-                          className='inp_set'
-                          value=''
-                          onClick={onClickRadio}
-                        />
-                        <span className='txt_set txt_ellip'>선택되지 않음</span>
-                      </label>
-
+                {!haveChildren && (
+                  <div className='item_set item_sub'>
+                    하위
+                    {/* opt_set */}
+                    <select name='abc2' className='opt_category'>
+                      <option value>선택되지 않음</option>
                       {treeData.map((node) => (
-                        <label key={node.id + node.title} className='lab_set'>
-                          <input
-                            type='radio'
-                            className='inp_set'
-                            value={node.id}
-                            onClick={onClickRadio}
-                          />
-                          <span className='txt_set txt_ellip'>
-                            {node.title}
-                          </span>
-                        </label>
+                        <option value={node.id}>{node.title}</option>
                       ))}
-
-                      <button type='button' className='btn_close'>
-                        <span className='ico_blog'></span>
-                      </button>
-                    </div>
+                    </select>
                   </div>
-                </div>
+                )}
               </div>
 
               <div className='radio_blog radio_cate'>
@@ -191,7 +85,7 @@ const CategoryModal = () => {
                     type='radio'
                     name='moveCate'
                     className='inp_set'
-                    disabled={true}
+                    // disabled={true}
                   />
                   <span className='txt_set'>
                     <span className='ico_addcate ico_addcate1'></span>
@@ -212,18 +106,20 @@ const CategoryModal = () => {
                   </span>
                 </label>
 
-                <label className='lab_set'>
-                  <input
-                    type='radio'
-                    name='moveCate'
-                    className='inp_set'
-                    disabled=''
-                  />
-                  <span className='txt_set'>
-                    <span className='ico_addcate ico_addcate3'></span>
-                    선택한 카테고리의 하위 카테고리로 옮깁니다.
-                  </span>
-                </label>
+                {!haveChildren && (
+                  <label className='lab_set'>
+                    <input
+                      type='radio'
+                      name='moveCate'
+                      className='inp_set'
+                      disabled=''
+                    />
+                    <span className='txt_set'>
+                      <span className='ico_addcate ico_addcate3'></span>
+                      선택한 카테고리의 하위 카테고리로 옮깁니다.
+                    </span>
+                  </label>
+                )}
               </div>
             </div>
             <div className='fld_btn'>
