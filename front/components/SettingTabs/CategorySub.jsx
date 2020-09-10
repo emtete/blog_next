@@ -24,7 +24,7 @@ const CategorySub = ({ data }) => {
 
   const onClickMove = () => {
     dispatch(toggleIsMoveModeAction({ isMoveMode: true }));
-    dispatch(setSelectedNodeAction({ node: data }));
+    dispatch(setSelectedNodeAction({ selectedNode: data }));
   };
 
   return (

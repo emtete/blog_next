@@ -7,35 +7,74 @@ import {
 } from "../../reducers/category";
 import CategorySelect from "./CategorySelect";
 
+// 두번째 셀렉트 박스의 컨텐츠를 가져온다.
+const getSelectContents2 = (treeData, upperId, modalId) => {
+  for (let i = 0; i < treeData.length; i++) {
+    if (upperId == treeData[i].id) {
+      // 모달 띄울 때, 선택된 노드는 제외시킨다.
+      if (treeData[i.children]) {
+        const index = treeData[i].children.findIndex((e) => e.id == modalId);
+        treeData[i].children.splice(index, 1);
+      }
+      return treeData[i].children;
+    }
+  }
+};
+
+// 자식노드가 있는지 여부를 반환한다.
+// node만 넣을 수도 있고 id로 확인하려 한다면
+// node 에 null을 넣고 2,3번째 args를 넣는다.
+const getHaveChildren = (node, treeNode, id) => {
+  let targetNode;
+
+  if (node) {
+    targetNode = node;
+  } else if (id) {
+    const targetIndex = treeNode.findIndex((n) => n.id == id);
+    if (targetIndex !== -1) {
+      targetNode = treeNode[targetIndex];
+    }
+  }
+
+  return Array.isArray(targetNode.children) && targetNode.children.length > 0;
+};
+
 const CategoryModal = () => {
-  // const optRef1 = useRef();
-  // const optRef2 = useRef();
-  // const txtRef1 = useRef();
-
-  // const radioRef1 = useRef();
-  // const radioRef2 = useRef();
-  // const radioRef3 = useRef();
-
+  const [selectContents2, setSelectContents2] = useState();
+  const [disabledSelect2, setDisabledSelect2] = useState(true);
   const [disabledRadio1, setDisabledRadio1] = useState(true);
   const [disabledRadio2, setDisabledRadio2] = useState(true);
   const [disabledRadio3, setDisabledRadio3] = useState(true);
 
   const dispatch = useDispatch();
   const { selectedNode, treeData } = useSelector((state) => state.category);
-  const haveChildren =
-    Array.isArray(selectedNode.children) && selectedNode.children.length > 0;
+  const haveChildren = getHaveChildren(selectedNode);
 
   const onChangeSelect1 = (e) => {
     if (e.target.value !== "") {
       setDisabledRadio1(false);
       setDisabledRadio2(false);
       setDisabledRadio3(false);
+
+      const selectedHaveChildren = getHaveChildren(
+        null,
+        treeData,
+        e.target.value
+      );
+      setDisabledSelect2(!selectedHaveChildren);
+      setSelectContents2(
+        getSelectContents2(treeData, e.target.value, selectedNode.id)
+      );
     } else {
       setDisabledRadio1(true);
       setDisabledRadio2(true);
       setDisabledRadio3(true);
+
+      setDisabledSelect2(true);
+      setSelectContents2(undefined);
     }
   };
+
   const onClickCancel = () => {
     dispatch(toggleIsMoveModeAction({ isMoveMode: false }));
     dispatch(setSelectedNodeAction({ selectedNode: null }));
@@ -83,7 +122,9 @@ const CategoryModal = () => {
                   >
                     <option value=''>선택되지 않음</option>
                     {treeData.map((node) => (
-                      <option value={node.id}>{node.title}</option>
+                      <option key={node.id + node.title} value={node.id}>
+                        {node.title}
+                      </option>
                     ))}
                   </select>
                 </div>
@@ -92,11 +133,18 @@ const CategoryModal = () => {
                   <div className='item_set item_sub'>
                     하위
                     {/* opt_set */}
-                    <select name='abc2' className='opt_category'>
+                    <select
+                      name='abc2'
+                      className='opt_category'
+                      disabled={disabledSelect2}
+                    >
                       <option value>선택되지 않음</option>
-                      {treeData.map((node) => (
-                        <option value={node.id}>{node.title}</option>
-                      ))}
+                      {selectContents2 &&
+                        selectContents2.map((node) => (
+                          <option key={node.id + node.title} value={node.id}>
+                            {node.title}
+                          </option>
+                        ))}
                     </select>
                   </div>
                 )}
