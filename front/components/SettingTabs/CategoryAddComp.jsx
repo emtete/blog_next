@@ -13,11 +13,12 @@ const CategoryAddComp = ({ onClickUpdate, data, isUpdateMode, id }) => {
   const dispatch = useDispatch();
 
   isUpdateMode && textRef.current.focus();
+
   const onClickCancel = () => {
     if (onClickUpdate) {
       onClickUpdate();
     } else {
-      dispatch(deleteNewComponentAction({ id: id }));
+      dispatch(deleteNewComponentAction({ id }));
     }
   };
   const onChangeText = (e) => {
@@ -42,7 +43,8 @@ const CategoryAddComp = ({ onClickUpdate, data, isUpdateMode, id }) => {
         })
       );
     } else {
-      dispatch(appendChildToRootAction({ title: textRef.current.value }));
+      dispatch(appendChildToRootAction({ title: textRef.current.value, id }));
+      dispatch(deleteNewComponentAction({ id }));
     }
   };
 

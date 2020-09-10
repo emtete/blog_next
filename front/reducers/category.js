@@ -124,7 +124,7 @@ const reducer = (state = initialState, action) => {
         priority: state.treeData.length,
         depth: 1,
         parent: 0,
-        // id: -(state.append.length + 1),
+        id: action.data.id,
       };
 
       return {
