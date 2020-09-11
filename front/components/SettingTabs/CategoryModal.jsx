@@ -56,6 +56,12 @@ const CategoryModal = () => {
   const [disabledRadio1, setDisabledRadio1] = useState(true);
   const [disabledRadio2, setDisabledRadio2] = useState(true);
   const [disabledRadio3, setDisabledRadio3] = useState(true);
+  const [selectedRadio, setSelectedRadio] = useState();
+  const [radioGroup, setRadioGroup] = useState({
+    radio1: false,
+    radio2: false,
+    radio3: false,
+  });
 
   const dispatch = useDispatch();
   const { selectedNode, treeData } = useSelector((state) => state.category);
@@ -73,6 +79,7 @@ const CategoryModal = () => {
       setDisabledRadio1(true);
       setDisabledRadio2(true);
       setDisabledRadio3(true);
+      changeAllRadioToFalse();
 
       setDisabledSelect2(true);
       setSelectContents2(undefined);
@@ -114,6 +121,31 @@ const CategoryModal = () => {
     else {
       setDisabledRadio3(true);
     }
+  };
+
+  const onChangeRadio = (e) => {
+    let obj = {};
+
+    for (let key in radioGroup) {
+      if (e.target.value == key) {
+        obj[key] = true;
+        setSelectedRadio(key);
+      } else {
+        obj[key] = false;
+      }
+    }
+    setRadioGroup({ ...obj });
+  };
+
+  const changeAllRadioToFalse = () => {
+    let obj = {};
+
+    for (let key in radioGroup) {
+      obj[key] = false;
+    }
+
+    setRadioGroup({ ...obj });
+    setSelectedRadio(undefined);
   };
 
   const onClickCancel = () => {
@@ -201,6 +233,9 @@ const CategoryModal = () => {
                     name='moveCate'
                     className='inp_set'
                     disabled={disabledRadio1}
+                    onClick={onChangeRadio}
+                    value='radio1'
+                    checked={radioGroup["radio1"]}
                   />
                   <span className='txt_set'>
                     <span className='ico_addcate ico_addcate1'></span>
@@ -214,6 +249,9 @@ const CategoryModal = () => {
                     name='moveCate'
                     className='inp_set'
                     disabled={disabledRadio2}
+                    onClick={onChangeRadio}
+                    value='radio2'
+                    checked={radioGroup["radio2"]}
                   />
                   <span className='txt_set'>
                     <span className='ico_addcate ico_addcate2'></span>
@@ -228,6 +266,9 @@ const CategoryModal = () => {
                       name='moveCate'
                       className='inp_set'
                       disabled={disabledRadio3}
+                      onClick={onChangeRadio}
+                      value='radio3'
+                      checked={radioGroup["radio3"]}
                     />
                     <span className='txt_set'>
                       <span className='ico_addcate ico_addcate3'></span>
@@ -245,7 +286,11 @@ const CategoryModal = () => {
               >
                 취소
               </button>
-              <button type='submit' className='btn_default btn_off' disabled=''>
+              <button
+                type='submit'
+                className={`btn_default ${!selectedRadio && "btn_off"}`}
+                disabled={!selectedRadio}
+              >
                 확인
               </button>
             </div>
