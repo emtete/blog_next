@@ -8,7 +8,7 @@ import {
 import CategorySelect from "./CategorySelect";
 
 // 두번째 셀렉트 박스의 컨텐츠를 가져온다.
-const getSelectContents2 = (treeDataCopied, upperId, modalId) => {
+const getSelectContents2 = (treeDataCopied, upperId) => {
   for (let i = 0; i < treeDataCopied.length; i++) {
     if (upperId == treeDataCopied[i].id) {
       return treeDataCopied[i].children;
@@ -53,6 +53,10 @@ const CategoryModal = () => {
   const selectRef1 = useRef();
   const [selectContents2, setSelectContents2] = useState();
   const [disabledSelect2, setDisabledSelect2] = useState(true);
+
+  const [selectValue1, setSelectValue1] = useState();
+  const [selectValue2, setSelectValue2] = useState();
+
   const [disabledRadio1, setDisabledRadio1] = useState(true);
   const [disabledRadio2, setDisabledRadio2] = useState(true);
   const [disabledRadio3, setDisabledRadio3] = useState(true);
@@ -64,7 +68,9 @@ const CategoryModal = () => {
   });
 
   const dispatch = useDispatch();
-  const { selectedNode, treeData } = useSelector((state) => state.category);
+  const { selectedNode, treeData, treeHelper } = useSelector(
+    (state) => state.category
+  );
   const haveChildren = getHaveChildren(selectedNode);
 
   // deep copy
@@ -74,6 +80,8 @@ const CategoryModal = () => {
   excludeOwnNode(treeDataCopied, selectedNode);
 
   const onChangeSelect1 = (e) => {
+    setSelectValue1(e.target.value);
+
     // 선택되지 않음 선택시
     if (e.target.value === "") {
       setDisabledRadio1(true);
@@ -108,13 +116,14 @@ const CategoryModal = () => {
   };
 
   const onChangeSelect2 = (e) => {
-    const selVal1 =
-      selectRef1.current.options[selectRef1.current.selectedIndex].value;
+    setSelectValue2(e.target.value);
+    // const selVal1 =
+    //   selectRef1.current.options[selectRef1.current.selectedIndex].value;
 
     // 선택되지 않음 선택시
     if (e.target.value === "") {
       // select1의 값이 parentId 와 다른 경우만.
-      if (selVal1 != selectedNode.parent) {
+      if (selectValue1 != selectedNode.parent) {
         setDisabledRadio3(false);
       }
     } // 선택되지 않음 이외의 값 선택시
@@ -153,6 +162,39 @@ const CategoryModal = () => {
     dispatch(setSelectedNodeAction({ selectedNode: null }));
   };
 
+  const onSubmitForm = (e) => {
+    e.preventDefault();
+    // console.log(treeHelper.indexPath[selectValue1]);
+    // console.log(selectedRadio);
+    // getSelectContents2(treeDataCopied, selectValue2);
+
+    const selectedId = selectValue2 ? selectValue2 : selectValue1;
+    const selectedIndex = [...treeHelper.indexPath[selectedId]];
+    let targetIndex;
+
+    switch (selectedRadio) {
+      case "radio1": // 삭제 후 append 후 같은 depth의 priority 수정
+        targetIndex =
+          selectedIndex.length === 1
+            ? [selectedIndex[0] - 1]
+            : [selectedIndex[0], selectedIndex[1] - 1];
+        break;
+      case "radio2":
+        targetIndex =
+          selectedIndex.length === 1
+            ? [selectedIndex[0] + 1]
+            : [selectedIndex[0], selectedIndex[1] + 1];
+        break;
+      case "radio3": // 삭제 후 마지막(targetIndex)에 append..
+        const children = treeDataCopied[selectedIndex].children;
+        targetIndex = [
+          selectedIndex[0],
+          children[children.length - 1].priority + 1,
+        ];
+        break;
+    }
+  };
+
   // 모달 바깥 클릭시, 창 닫기
   const clickOutSideEvent = (e) => {
     if (e.target.className === "container_layer") onClickCancel();
@@ -179,7 +221,7 @@ const CategoryModal = () => {
         }}
       >
         <div className='inner_blog_layer inner_blog_layer5'>
-          <form>
+          <form onSubmit={onSubmitForm}>
             <div className='cont_layer'>
               <strong className='tit_popup'>'{selectedNode.title}' 이동</strong>
               <p className='txt_popup'>
@@ -194,6 +236,7 @@ const CategoryModal = () => {
                     className='opt_category'
                     onChange={onChangeSelect1}
                     ref={selectRef1}
+                    value={selectValue1}
                   >
                     <option value=''>선택되지 않음</option>
                     {treeDataCopied.map((node) => (
@@ -213,6 +256,7 @@ const CategoryModal = () => {
                       className='opt_category'
                       disabled={disabledSelect2}
                       onChange={onChangeSelect2}
+                      value={selectValue2}
                     >
                       <option value=''>선택되지 않음</option>
                       {selectContents2 &&
