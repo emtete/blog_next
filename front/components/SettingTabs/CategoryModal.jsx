@@ -35,22 +35,19 @@ const getHaveChildren = (node, treeNode, id) => {
 };
 
 // 모달 띄울 때, 선택된 노드를 제외시키다.
-const excludeOwnNode = (treeData, selectedNode) => {
-  const modalId = selectedNode.id;
-  let index;
-
-  if (selectedNode.depth == 1) {
-    index = treeData.findIndex((e) => e.id == modalId);
+const excludeOwnNode = (treeData, modalNode) => {
+  if (modalNode.depth == 1) {
+    const index = treeData.findIndex((e) => e.id == modalNode.id);
     treeData.splice(index, 1);
   } //
-  else if (selectedNode.depth == 2) {
-    const parentIndex = treeData.findIndex((e) => e.id === selectedNode.parent);
-    treeData[parentIndex].children.splice(selectedNode.priority, 1);
+  else if (modalNode.depth == 2) {
+    const parentIndex = treeData.findIndex((e) => e.id === modalNode.parent);
+    treeData[parentIndex].children.splice(modalNode.priority, 1);
   }
 };
 
 const CategoryModal = () => {
-  const selectRef1 = useRef();
+  // const selectRef1 = useRef();
   const [selectContents2, setSelectContents2] = useState();
   const [disabledSelect2, setDisabledSelect2] = useState(true);
 
@@ -71,19 +68,24 @@ const CategoryModal = () => {
   const { selectedNode, treeData, treeHelper } = useSelector(
     (state) => state.category
   );
-  const haveChildren = getHaveChildren(selectedNode);
+  const modalNode = selectedNode;
+  const haveChildren = getHaveChildren(modalNode);
 
   // deep copy
   const treeDataCopied = JSON.parse(JSON.stringify(treeData));
 
   // 모달 띄울 때, 선택된 노드를 제외시키다.
-  excludeOwnNode(treeDataCopied, selectedNode);
+  excludeOwnNode(treeDataCopied, modalNode);
 
   const onChangeSelect1 = (e) => {
-    setSelectValue1(e.target.value);
+    const id = e.target.value;
+    const selectedPriority = parseInt(treeHelper.indexPath[id][0]);
+    const modalNodePriority = parseInt(modalNode.priority);
+    const isModalNodeDepth1 = 0 == modalNode.parent; // modalNode의 depth가 1인지의 여부
+    setSelectValue1(id);
 
     // 선택되지 않음 선택시
-    if (e.target.value === "") {
+    if (id === "") {
       setDisabledRadio1(true);
       setDisabledRadio2(true);
       setDisabledRadio3(true);
@@ -94,41 +96,70 @@ const CategoryModal = () => {
     } // 선택되지 않음 이외의 값 선택시
     else {
       // select1의 값이 parentId 와 다른 경우
-      if (e.target.value != selectedNode.parent) {
+      if (id != modalNode.parent) {
         setDisabledRadio3(false);
       } else {
         setDisabledRadio3(true);
       }
+      // 위 두 경우는 modalNode와 selectedNode가 서로 인접한 경우.
+      if (isModalNodeDepth1 && modalNodePriority === selectedPriority - 1) {
+        setDisabledRadio1(true);
+        setDisabledRadio2(false);
+      } //
+      else if (
+        isModalNodeDepth1 &&
+        modalNodePriority === selectedPriority + 1
+      ) {
+        setDisabledRadio1(false);
+        setDisabledRadio2(true);
+      } //
+      else {
+        setDisabledRadio1(false);
+        setDisabledRadio2(false);
+      }
 
-      setDisabledRadio1(false);
-      setDisabledRadio2(false);
-
-      const selectedHaveChildren = getHaveChildren(
-        null,
-        treeDataCopied,
-        e.target.value
-      );
+      const selectedHaveChildren = getHaveChildren(null, treeDataCopied, id);
       setDisabledSelect2(!selectedHaveChildren);
-      setSelectContents2(
-        getSelectContents2(treeDataCopied, e.target.value, selectedNode.id)
-      );
+      setSelectContents2(getSelectContents2(treeDataCopied, id, modalNode.id));
     }
   };
 
   const onChangeSelect2 = (e) => {
-    setSelectValue2(e.target.value);
-    // const selVal1 =
-    //   selectRef1.current.options[selectRef1.current.selectedIndex].value;
+    const id = e.target.value;
+    const selectedPriority = parseInt(treeHelper.indexPath[id][1]);
+    const modalNodePriority = parseInt(modalNode.priority);
+    const isEqModalAndSelectedParent = selectValue1 == modalNode.parent; // modalNode와 selectedNode의 parent가 같은지의 여부
+    setSelectValue2(id);
 
     // 선택되지 않음 선택시
-    if (e.target.value === "") {
+    if (id === "") {
       // select1의 값이 parentId 와 다른 경우만.
-      if (selectValue1 != selectedNode.parent) {
+      if (selectValue1 != modalNode.parent) {
         setDisabledRadio3(false);
       }
     } // 선택되지 않음 이외의 값 선택시
     else {
       setDisabledRadio3(true);
+
+      // 위 두 경우는 modalNode와 selectedNode가 서로 인접한 경우.
+      if (
+        isEqModalAndSelectedParent &&
+        modalNodePriority === selectedPriority - 1
+      ) {
+        setDisabledRadio1(true);
+        setDisabledRadio2(false);
+      } //
+      else if (
+        isEqModalAndSelectedParent &&
+        modalNodePriority === selectedPriority + 1
+      ) {
+        setDisabledRadio1(false);
+        setDisabledRadio2(true);
+      } //
+      else {
+        setDisabledRadio1(false);
+        setDisabledRadio2(false);
+      }
     }
   };
 
@@ -164,15 +195,17 @@ const CategoryModal = () => {
 
   const onSubmitForm = (e) => {
     e.preventDefault();
-    // console.log(treeHelper.indexPath[selectValue1]);
-    // console.log(selectedRadio);
-    // getSelectContents2(treeDataCopied, selectValue2);
 
     const selectedId = selectValue2 ? selectValue2 : selectValue1;
     const selectedIndex = [...treeHelper.indexPath[selectedId]];
     let targetIndex;
 
     switch (selectedRadio) {
+      // 같은 parent 내에서 이동시
+      // 현재보다 아래로 이동시 targetIndex - 1 해야한다.
+      // 자기 자신을 먼저 삭제한 후 이동하기 때문이다.
+      // 그렇게 계산하지 말고, 일단 삭제한 후 targetIndex를 구한다면 괜찮을 것 같다.??
+
       case "radio1": // 삭제 후 append 후 같은 depth의 priority 수정
         targetIndex =
           selectedIndex.length === 1
@@ -195,6 +228,8 @@ const CategoryModal = () => {
         ];
         break;
     }
+    console.log(targetIndex);
+    // onClickCancel();
   };
 
   // 모달 바깥 클릭시, 창 닫기
@@ -225,7 +260,7 @@ const CategoryModal = () => {
         <div className='inner_blog_layer inner_blog_layer5'>
           <form onSubmit={onSubmitForm}>
             <div className='cont_layer'>
-              <strong className='tit_popup'>'{selectedNode.title}' 이동</strong>
+              <strong className='tit_popup'>'{modalNode.title}' 이동</strong>
               <p className='txt_popup'>
                 카테고리를 옮길 기준이 되는 카테고리를 선택하세요.
               </p>
@@ -237,7 +272,7 @@ const CategoryModal = () => {
                     name='abc1'
                     className='opt_category'
                     onChange={onChangeSelect1}
-                    ref={selectRef1}
+                    // ref={selectRef1}
                     value={selectValue1}
                   >
                     <option value=''>선택되지 않음</option>
