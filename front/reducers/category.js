@@ -130,11 +130,29 @@ const getDeletedTargetTreeData = (state, id) => {
   return [treeDataCopied, targetDepth];
 };
 
+const resetIndexPath = (treeDataCopied) => {
+  const clonePath = {};
+
+  treeDataCopied.map((node1, index1) => {
+    const children = node1.children;
+    if (Array.isArray(children) && children.length > 0) {
+      children.map((node2, index2) => {
+        clonePath[node2.id] = [index1, index2];
+      });
+    }
+    clonePath[node1.id] = [index1];
+  });
+
+  return clonePath;
+};
+
 // 매개변수로 주어진 depth의 priority를 다시 세팅, 해당 트리데이터를 리턴한다.
 const settingPriorityIn = (treeData, depth, state, id) => {
+  const updatedIdArr = [];
   if (depth === 1) {
     treeData.map((n, i) => {
       n.priority = i;
+      updatedIdArr.push(n.id);
     });
   } //
   else if (depth === 2) {
@@ -142,45 +160,49 @@ const settingPriorityIn = (treeData, depth, state, id) => {
 
     treeData[parentIndex].children.map((n, i) => {
       n.priority = i;
+      updatedIdArr.push(n.id);
     });
   }
-  return treeData;
+  return [treeData, updatedIdArr];
 };
 
-const manageCategoryCrud = (state, id, crud) => {
+const manageCategoryCrud = (state, updatedIdArr, deletedIdArr) => {
   const appendedClone = state.appendedCategories;
   const updatedClone = state.updatedCategories;
   const deletedClone = state.deletedCategories;
 
-  const appendedIndex = appendedClone.findIndex((eid) => eid == id);
-  const updatedIndex = updatedClone.findIndex((eid) => eid == id);
-  const deletedIndex = deletedClone.findIndex((eid) => eid == id);
+  let appendedIndex;
+  let updatedIndex;
+  // let deletedIndex;
 
-  switch (crud) {
-    case "c":
-      break;
-    case "u":
-      // appended에 id가 있다면 그냥 둠
-      // updated에 id가 있다면 그냥 둠
-      // 둘 모두에 id가 없다면 추가.
+  // appended에 id가 있다면 그냥 둠
+  // updated에 id가 있다면 그냥 둠
+  // 둘 모두에 id가 없다면 추가.
+  if (updatedIdArr) {
+    updatedIdArr.map((uid) => {
+      appendedIndex = appendedClone.findIndex((eid) => eid == uid);
+      updatedIndex = updatedClone.findIndex((eid) => eid == uid);
       if (appendedIndex == -1 && updatedIndex == -1) {
-        updatedClone.push(id);
+        updatedClone.push(uid);
       }
+    });
+  }
 
-      break;
-    case "d":
-      // append에 id가 있다면 삭제
-      // update에 id가 있다면 삭제 후 deleted에 추가
-      // 두곳에 아무것도 없다면 deleted에 추가
+  // append에 id가 있다면 삭제
+  // update에 id가 있다면 삭제 후 deleted에 추가
+  // 두곳에 아무것도 없다면 deleted에 추가
+  if (deletedIdArr) {
+    deletedIdArr.map((did) => {
+      appendedIndex = appendedClone.findIndex((eid) => eid == did);
+      updatedIndex = updatedClone.findIndex((eid) => eid == did);
       if (appendedIndex != -1) {
         appendedClone.splice(appendedIndex, 1);
       } // if (updatedIndex == -1)
       else {
         updatedIndex != -1 && updatedClone.splice(updatedIndex, 1);
-        deletedClone.push(id);
+        deletedClone.push(did);
       }
-
-      break;
+    });
   }
 
   return [appendedClone, updatedClone, deletedClone];
@@ -209,6 +231,8 @@ const reducer = (state = initialState, action) => {
   let updatedClone;
   let deletedClone;
   let _;
+  let updatedIdArr;
+  let clonePath;
 
   switch (action.type) {
     case "CREATE_NEW_COMPONENT_ACTION":
@@ -271,13 +295,20 @@ const reducer = (state = initialState, action) => {
 
     case "DELETE_NODE_ACTION":
       id = action.data.id;
+
       [treeDataCopied, targetDepth] = getDeletedTargetTreeData(state, id);
-      sortedData = settingPriorityIn(treeDataCopied, targetDepth, state, id);
+      [sortedData, updatedIdArr] = settingPriorityIn(
+        treeDataCopied,
+        targetDepth,
+        state,
+        id
+      );
+      clonePath = resetIndexPath(sortedData);
 
       [appendedClone, updatedClone, deletedClone] = manageCategoryCrud(
         state,
-        id,
-        "d"
+        updatedIdArr,
+        [id]
       );
 
       return {
@@ -286,6 +317,12 @@ const reducer = (state = initialState, action) => {
         appendedCategories: [...appendedClone],
         updatedCategories: [...updatedClone],
         deletedCategories: [...deletedClone],
+        treeHelper: {
+          ...state.treeHelper,
+          indexPath: {
+            ...clonePath,
+          },
+        },
       };
 
     case "UPDATE_CATEGORY_NAME_ACTION":
@@ -303,7 +340,7 @@ const reducer = (state = initialState, action) => {
         updatedNode.title = title;
       }
 
-      [_, updatedClone, _] = manageCategoryCrud(state, id, "u");
+      [_, updatedClone, _] = manageCategoryCrud(state, [id]);
 
       return {
         ...state,
