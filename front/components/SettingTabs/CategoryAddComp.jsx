@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from "react-redux";
 
 import {
   updateCategoryNameAction,
-  deleteNewComponentAction,
   setUpdateModeAction,
 } from "../../reducers/category";
 
@@ -28,7 +27,7 @@ const CategoryAddComp = ({ data }) => {
 
   const onClickCancel = () => {
     if (data.isNew) {
-      dispatch(deleteNewComponentAction({ id }));
+      dispatch(deleteNodeAction({ id }));
     } else {
       dispatch(setUpdateModeAction({ id, isEditMode: false }));
     }

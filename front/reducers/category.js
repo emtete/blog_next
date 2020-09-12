@@ -77,13 +77,6 @@ export const createNewComponentAction = (data) => {
   };
 };
 
-export const deleteNewComponentAction = (data) => {
-  return {
-    type: "DELETE_NEW_COMPONENT_ACTION",
-    data,
-  };
-};
-
 export const updateCategoryNameAction = (data) => {
   return {
     type: "UPDATE_CATEGORY_NAME_ACTION",
@@ -139,9 +132,6 @@ const getDeletedTargetTreeData = (state, id) => {
 
 // 매개변수로 주어진 depth의 priority를 다시 세팅, 해당 트리데이터를 리턴한다.
 const settingPriorityIn = (treeData, depth, state, id) => {
-  // const targetIndex = state.treeHelper.indexPath[action.data.id];
-  // const treeDataCopied = deepCopy(state.treeData);
-
   if (depth === 1) {
     treeData.map((n, i) => {
       n.priority = i;
@@ -174,6 +164,8 @@ const reducer = (state = initialState, action) => {
   let updatedNode;
   let firstNode;
   let secondNode;
+  let treeDataCopied;
+  let targetDepth;
 
   switch (action.type) {
     case "CREATE_NEW_COMPONENT_ACTION":
@@ -206,16 +198,6 @@ const reducer = (state = initialState, action) => {
         categoryInEditMode: [...state.categoryInEditMode, newId],
       };
 
-    case "DELETE_NEW_COMPONENT_ACTION":
-      index = state.treeData.findIndex((e) => e.id === action.data.id);
-      clone = deepCopy(state.treeData);
-      clone.splice(index, 1);
-
-      return {
-        ...state,
-        treeData: [...clone],
-      };
-
     case "TOGGLE_IS_MOVE_MODE_ACTION":
       return {
         ...state,
@@ -245,7 +227,7 @@ const reducer = (state = initialState, action) => {
       };
 
     case "DELETE_NODE_ACTION":
-      const [treeDataCopied, targetDepth] = getDeletedTargetTreeData(
+      [treeDataCopied, targetDepth] = getDeletedTargetTreeData(
         state,
         action.data.id
       );
