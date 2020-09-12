@@ -249,18 +249,10 @@ const reducer = (state = initialState, action) => {
 
       if (path.length === 1) {
         updatedNode = clone[path[0]];
-
-        if (updatedNode["isNew"] !== undefined) {
-          updatedNode.isNew = false;
-        }
         updatedNode.title = title;
       } //
       else if (path.length === 2) {
         updatedNode = clone[path[0]].children[path[1]];
-
-        if (updatedNode["isNew"] !== undefined) {
-          updatedNode.isNew = false;
-        }
         updatedNode.title = title;
       }
 

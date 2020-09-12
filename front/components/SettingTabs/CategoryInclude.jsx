@@ -27,10 +27,6 @@ const CategoryInclude = ({ data }) => {
   const isEditMode = categoryInEditMode.findIndex((eid) => eid === id) !== -1;
   const isChildren = Array.isArray(children) && children.length > 0;
 
-  const onClickDel = () => {
-    dispatch(deleteNodeAction({ id }));
-  };
-
   useEffect(() => {
     if (isEditMode) {
       itemOrderRef.current.classList.add("item_edit");
@@ -39,6 +35,10 @@ const CategoryInclude = ({ data }) => {
       itemOrderRef.current.classList.remove("item_edit");
     }
   }, [categoryInEditMode]);
+
+  const onClickDel = () => {
+    dispatch(deleteNodeAction({ id }));
+  };
 
   const onClickUpdate = () => {
     dispatch(setUpdateModeAction({ id, isEditMode: true }));
