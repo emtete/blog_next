@@ -47,20 +47,8 @@ const SettingTabs = () => {
                   <CategoryAll />
 
                   {treeData.map((data) => (
-                    <CategoryInclude
-                      key={data.title + data.entries}
-                      data={data}
-                    />
+                    <CategoryInclude key={data.title + data.id} data={data} />
                   ))}
-
-                  {Array.isArray(newComponent) &&
-                    newComponent.length > 0 &&
-                    newComponent.map((e, i) => (
-                      <CategoryWrap
-                        key={i}
-                        children={<CategoryAddComp id={e.id} />}
-                      />
-                    ))}
                 </div>
 
                 <CategoryAddBtn />

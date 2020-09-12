@@ -15,6 +15,7 @@ export const initialState = {
       depth: 1,
       parent: 0,
       id: 2,
+
       children: [
         {
           title: "test1",
@@ -35,6 +36,7 @@ export const initialState = {
       ],
     },
   ],
+  categoryInEditMode: [],
   newComponent: [],
   append: [],
   delete: [],
@@ -54,13 +56,16 @@ export const initialState = {
   },
 };
 
-// const setIndexPath = () => {
-//   state
-// }
-
-export const appendChildToRootAction = (data) => {
+export const deleteNodeAction = (data) => {
   return {
-    type: "APPEND_CHILD_TO_ROOT_ACTION",
+    type: "DELETE_NODE_ACTION",
+    data,
+  };
+};
+
+export const setUpdateModeAction = (data) => {
+  return {
+    type: "SET_UPDATE_MODE_ACTION",
     data,
   };
 };
@@ -100,13 +105,56 @@ export const setSelectedNodeAction = (data) => {
   };
 };
 
-const getParentPriority = (state, parent) => {
-  if (parent == 0) return 0;
+// const getNode = (state, action) => {
+//   const clone = deepCopy(state.treeData);
+//   const id = action.data.id;
+//   const targetPath = state.treeHelper.indexPath[id];
 
-  for (let i = 0; i < state.treeData.length; i++) {
-    if (state.treeData[i].id === parent) return state.treeData[i].priority;
+//   if (targetPath.length === 1) {
+//     return clone[targetPath[0]];
+//   } else if (targetPath.length === 2) {
+//     return clone[targetPath[0]].children[targetPath[1]];
+//   }
+//   return undefined;
+// };
+
+const deepCopy = (target) => {
+  return JSON.parse(JSON.stringify(target));
+};
+
+// 타겟을 삭제한 트리데이터를 리턴한다.
+const getDeletedTargetTreeData = (state, id) => {
+  const targetIndex = state.treeHelper.indexPath[id];
+  const treeDataCopied = deepCopy(state.treeData);
+  const targetDepth = targetIndex.length;
+
+  if (targetDepth === 1) {
+    treeDataCopied.splice(targetIndex[0], 1);
+  } else if (targetDepth === 2) {
+    treeDataCopied[targetIndex[0]].children.splice(targetIndex[1], 1);
   }
-  return -1;
+
+  return [treeDataCopied, targetDepth];
+};
+
+// 매개변수로 주어진 depth의 priority를 다시 세팅, 해당 트리데이터를 리턴한다.
+const settingPriorityIn = (treeData, depth, state, id) => {
+  // const targetIndex = state.treeHelper.indexPath[action.data.id];
+  // const treeDataCopied = deepCopy(state.treeData);
+
+  if (depth === 1) {
+    treeData.map((n, i) => {
+      n.priority = i;
+    });
+  } //
+  else if (depth === 2) {
+    const parentIndex = state.treeHelper.indexPath[id][0];
+
+    treeData[parentIndex].children.map((n, i) => {
+      n.priority = i;
+    });
+  }
+  return treeData;
 };
 
 const reducer = (state = initialState, action) => {
@@ -115,16 +163,33 @@ const reducer = (state = initialState, action) => {
   let priority;
   let parent;
   let parentPriority;
+  let targetIndex;
+  let clone;
+  let sortedData;
+  let newId;
+  let index;
+  let node;
+  let path;
+  let id;
+  let updatedNode;
+  let firstNode;
+  let secondNode;
 
   switch (action.type) {
-    case "APPEND_CHILD_TO_ROOT_ACTION":
+    case "CREATE_NEW_COMPONENT_ACTION":
+      newId =
+        state.treeData.length > 0
+          ? -parseInt(state.treeData[state.treeData.length - 1].priority) - 1
+          : -1;
+
       newObject = {
-        title: action.data.title,
+        title: "",
         entries: 0,
         priority: state.treeData.length,
         depth: 1,
         parent: 0,
-        id: action.data.id,
+        id: newId,
+        isNew: true,
       };
 
       return {
@@ -138,34 +203,17 @@ const reducer = (state = initialState, action) => {
             [newObject.id]: [newObject.priority],
           },
         },
-      };
-
-    case "CREATE_NEW_COMPONENT_ACTION":
-      const newId =
-        state.newComponent.length > 0
-          ? parseInt(state.newComponent[state.newComponent.length - 1].id) - 1
-          : -1;
-
-      return {
-        ...state,
-        newComponent: [
-          {
-            title: "",
-            id: newId,
-          },
-          ...state.newComponent,
-        ],
+        categoryInEditMode: [...state.categoryInEditMode, newId],
       };
 
     case "DELETE_NEW_COMPONENT_ACTION":
-      const index = state.newComponent.findIndex(
-        (e) => e.id === action.data.id
-      );
-      const clone = JSON.parse(JSON.stringify(state.newComponent));
+      index = state.treeData.findIndex((e) => e.id === action.data.id);
+      clone = deepCopy(state.treeData);
       clone.splice(index, 1);
+
       return {
         ...state,
-        newComponent: [...clone],
+        treeData: [...clone],
       };
 
     case "TOGGLE_IS_MOVE_MODE_ACTION":
@@ -174,33 +222,70 @@ const reducer = (state = initialState, action) => {
         isMoveMode: action.data.isMoveMode,
       };
 
+    case "SET_UPDATE_MODE_ACTION":
+      clone = deepCopy(state.categoryInEditMode);
+      id = action.data.id;
+
+      if (action.data.isEditMode) {
+        clone.push(id);
+      } else {
+        targetIndex = clone.findIndex((eid) => eid == id);
+        clone.splice(targetIndex, 1);
+      }
+
+      return {
+        ...state,
+        categoryInEditMode: [...clone],
+      };
+
     case "SET_SELECTED_NODE_ACTION":
       return {
         ...state,
         selectedNode: action.data.selectedNode,
       };
 
+    case "DELETE_NODE_ACTION":
+      const [treeDataCopied, targetDepth] = getDeletedTargetTreeData(
+        state,
+        action.data.id
+      );
+      sortedData = settingPriorityIn(
+        treeDataCopied,
+        targetDepth,
+        state,
+        action.data.id
+      );
+      return {
+        ...state,
+        treeData: [...sortedData],
+      };
+
     case "UPDATE_CATEGORY_NAME_ACTION":
       title = action.data.title;
-      priority = action.data.priority;
-      parent = action.data.parent;
-      parentPriority = getParentPriority(state, parent);
+      clone = deepCopy(state.treeData);
+      path = state.treeHelper.indexPath[action.data.id];
 
-      switch (parentPriority) {
-        case 0:
-          newObject = state.treeData[priority];
-          break;
-        case -1:
-          break;
-        default:
-          newObject = state.treeData[parentPriority].children[priority];
+      if (path.length === 1) {
+        updatedNode = clone[path[0]];
+
+        if (updatedNode["isNew"] !== undefined) {
+          updatedNode.isNew = false;
+        }
+        updatedNode.title = title;
+      } //
+      else if (path.length === 2) {
+        updatedNode = clone[path[0]].children[path[1]];
+
+        if (updatedNode["isNew"] !== undefined) {
+          updatedNode.isNew = false;
+        }
+        updatedNode.title = title;
       }
-      newObject.title = title;
 
       return {
         ...state,
-        treeData: [...state.treeData],
-        update: [...state.update, { ...newObject }],
+        treeData: [...clone],
+        update: [...state.update, { ...updatedNode }],
       };
 
     default:

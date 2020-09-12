@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import CategorySub from "./CategorySub";
@@ -6,27 +6,42 @@ import CategoryAddComp from "./CategoryAddComp";
 import {
   toggleIsMoveModeAction,
   setSelectedNodeAction,
+  deleteNodeAction,
+  setUpdateModeAction,
 } from "../../reducers/category";
+
+const inline = { display: "inline" };
 
 const CategoryInclude = ({ data }) => {
   const title = data.title;
   const entries = data.entries;
   const children = data.children;
+  const id = data.id;
 
   const dispatch = useDispatch();
   const bundelRef = useRef();
   const itemOrderRef = useRef();
   const itemRef = useRef();
 
-  const [isUpdateMode, setIsUpdateMode] = useState(false);
-  const [visibleBasicItem, setVisibleBasicItem] = useState(true);
-  const { treeData } = useSelector((state) => state.category);
+  const { categoryInEditMode } = useSelector((state) => state.category);
+  const isEditMode = categoryInEditMode.findIndex((eid) => eid === id) !== -1;
   const isChildren = Array.isArray(children) && children.length > 0;
 
+  const onClickDel = () => {
+    dispatch(deleteNodeAction({ id }));
+  };
+
+  useEffect(() => {
+    if (isEditMode) {
+      itemOrderRef.current.classList.add("item_edit");
+    } //
+    else {
+      itemOrderRef.current.classList.remove("item_edit");
+    }
+  }, [categoryInEditMode]);
+
   const onClickUpdate = () => {
-    itemOrderRef.current.classList.toggle("item_edit");
-    setVisibleBasicItem((prev) => !prev);
-    setIsUpdateMode((prev) => !prev);
+    dispatch(setUpdateModeAction({ id, isEditMode: true }));
   };
 
   const onClickMove = () => {
@@ -52,13 +67,12 @@ const CategoryInclude = ({ data }) => {
             onClick={onClickArrow}
           ></input>
         </label>
-
-        {visibleBasicItem && (
+        {!isEditMode && (
           <div className='basic_item' ref={itemRef}>
             <div className='wrap_drag'>
               <span className='ico_blog ico_drag'></span>
             </div>
-            <div style={{ display: "inline" }}>
+            <div style={inline}>
               <div className='wrap_name'>
                 <div className='txt_name'>{title}</div>
                 <div className='txt_count'>({entries})</div>
@@ -71,16 +85,14 @@ const CategoryInclude = ({ data }) => {
                 <span className='btn_post' onClick={onClickMove}>
                   이동
                 </span>
-                <span className='btn_post disabled'>삭제</span>
+                <span className='btn_post disabled' onClick={onClickDel}>
+                  삭제
+                </span>
               </div>
             </div>
           </div>
         )}
-        <CategoryAddComp
-          onClickUpdate={onClickUpdate}
-          data={data}
-          isUpdateMode={isUpdateMode}
-        />
+        <CategoryAddComp data={data} />
       </div>
       <div className='list_sub'>
         {isChildren &&

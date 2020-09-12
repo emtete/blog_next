@@ -179,12 +179,14 @@ const CategoryModal = () => {
             ? [selectedIndex[0] - 1]
             : [selectedIndex[0], selectedIndex[1] - 1];
         break;
+
       case "radio2":
         targetIndex =
           selectedIndex.length === 1
             ? [selectedIndex[0] + 1]
             : [selectedIndex[0], selectedIndex[1] + 1];
         break;
+
       case "radio3": // 삭제 후 마지막(targetIndex)에 append..
         const children = treeDataCopied[selectedIndex].children;
         targetIndex = [

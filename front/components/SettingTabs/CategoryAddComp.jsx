@@ -1,27 +1,41 @@
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import {
-  appendChildToRootAction,
   updateCategoryNameAction,
   deleteNewComponentAction,
+  setUpdateModeAction,
 } from "../../reducers/category";
 
-const CategoryAddComp = ({ onClickUpdate, data, isUpdateMode, id }) => {
+const CategoryAddComp = ({ data }) => {
+  const id = data.id;
+
   const submitBtnRef = useRef();
   const textRef = useRef();
   const dispatch = useDispatch();
+  const [title, setTitle] = useState("");
 
-  isUpdateMode && textRef.current.focus();
+  // const { categoryInEditMode } = useSelector((state) => state.category);
+  // const editLength = categoryInEditMode.length;
+  // const isFocus = categoryInEditMode[editLength - 1] === id;
+
+  // useEffect(() => {
+  //   console.log(textRef.current.focus());
+  //   textRef.current.focus();
+  // if (isFocus) {
+  // }
+  // }, [textRef.current, categoryInEditMode]);
 
   const onClickCancel = () => {
-    if (onClickUpdate) {
-      onClickUpdate();
-    } else {
+    if (data.isNew) {
       dispatch(deleteNewComponentAction({ id }));
+    } else {
+      dispatch(setUpdateModeAction({ id, isEditMode: false }));
     }
   };
+
   const onChangeText = (e) => {
+    setTitle(e.target.value);
     if (e.target.value.length > 0) {
       submitBtnRef.current.disabled = "";
       submitBtnRef.current.classList.remove("btn_off");
@@ -33,19 +47,13 @@ const CategoryAddComp = ({ onClickUpdate, data, isUpdateMode, id }) => {
 
   const onSubmitForm = (e) => {
     e.preventDefault();
-
-    if (data) {
-      dispatch(
-        updateCategoryNameAction({
-          title: textRef.current.value,
-          priority: data.priority,
-          parent: data.parent,
-        })
-      );
-    } else {
-      dispatch(appendChildToRootAction({ title: textRef.current.value, id }));
-      dispatch(deleteNewComponentAction({ id }));
-    }
+    dispatch(
+      updateCategoryNameAction({
+        id,
+        title,
+      })
+    );
+    dispatch(setUpdateModeAction({ id, isEditMode: false }));
   };
 
   return (
@@ -57,8 +65,9 @@ const CategoryAddComp = ({ onClickUpdate, data, isUpdateMode, id }) => {
           type='text'
           className='tf_blog'
           maxLength='40'
-          // value='tf_blog'
+          value={title}
           onChange={onChangeText}
+          autoFocus={true}
         />
       </label>
 
