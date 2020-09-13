@@ -35,6 +35,56 @@ export const initialState = {
         },
       ],
     },
+    {
+      title: "test3",
+      entries: 4,
+      priority: 2,
+      depth: 1,
+      parent: 0,
+      id: 5,
+    },
+    {
+      title: "test4",
+      entries: 4,
+      priority: 3,
+      depth: 1,
+      parent: 0,
+      id: 6,
+      children: [
+        {
+          title: "test41",
+          entries: 0,
+          priority: 0,
+          depth: 2,
+          parent: 6,
+          id: 8,
+        },
+        {
+          title: "test42",
+          entries: 0,
+          priority: 1,
+          depth: 2,
+          parent: 6,
+          id: 9,
+        },
+        {
+          title: "test43",
+          entries: 0,
+          priority: 2,
+          depth: 2,
+          parent: 6,
+          id: 10,
+        },
+      ],
+    },
+    {
+      title: "test5",
+      entries: 4,
+      priority: 4,
+      depth: 1,
+      parent: 0,
+      id: 7,
+    },
   ],
   categoryInEditMode: [],
   newComponent: [],
@@ -48,12 +98,19 @@ export const initialState = {
     // appendCnt: 0,
     // nodeCount: 0,
     indexPath: {
-      1: [0],
-      2: [1],
-      3: [1, 0],
-      4: [1, 1],
+      // 1: [0],
+      // 2: [1],
+      // 3: [1, 0],
+      // 4: [1, 1],
     },
   },
+};
+
+export const resetIndexPathAction = (data) => {
+  return {
+    type: "RESET_INDEX_PATH_ACTION",
+    data,
+  };
 };
 
 export const deleteNodeAction = (data) => {
@@ -149,7 +206,6 @@ const resetIndexPath = (treeDataCopied) => {
     }
     clonePath[node1.id] = [index1];
   });
-
   return clonePath;
 };
 
@@ -335,6 +391,20 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         selectedNode: deepCopy(action.data.selectedNode),
+      };
+
+    case "RESET_INDEX_PATH_ACTION":
+      clone = deepCopy(state.treeData);
+      clonePath = resetIndexPath(clone);
+
+      return {
+        ...state,
+        treeHelper: {
+          ...state.treeHelper,
+          indexPath: {
+            ...clonePath,
+          },
+        },
       };
 
     case "SPLICE_NODE_ACTION":

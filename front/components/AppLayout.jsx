@@ -34,6 +34,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { modalStyles, getModalStyle } from "./layout/LoginStyles";
 import { ToggleButton, menuStyles } from "./layout/styles";
 import { loginRequestAction, logoutRequestAction } from "../reducers/user";
+import { resetIndexPathAction } from "../reducers/category";
 import useInput from "../hooks/useInput";
 
 const AppLayout = ({ children, window }) => {
@@ -58,6 +59,8 @@ const AppLayout = ({ children, window }) => {
   const isUpdate = useSelector((state) => state.menu.isUpdate);
 
   const router = useRouter();
+
+  dispatch(resetIndexPathAction());
 
   useEffect(() => {
     dispatch({
