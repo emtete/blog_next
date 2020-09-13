@@ -98,6 +98,13 @@ export const setSelectedNodeAction = (data) => {
   };
 };
 
+export const spliceNodeAction = (data) => {
+  return {
+    type: "SPLICE_NODE_ACTION",
+    data,
+  };
+};
+
 // const getNode = (state, action) => {
 //   const clone = deepCopy(state.treeData);
 //   const id = action.data.id;
@@ -146,6 +153,38 @@ const resetIndexPath = (treeDataCopied) => {
   return clonePath;
 };
 
+const resetIndexPathAndPriority = (treeDataCopied, indexPath) => {
+  const clonePath = {};
+  const updatedIdArr = [];
+
+  treeDataCopied.map((node1, index1) => {
+    const children = node1.children;
+    if (Array.isArray(children) && children.length > 0) {
+      children.map((node2, index2) => {
+        // path의 값이 이전과 다르다면
+        const indexPath2 = indexPath[node2.id];
+        if (indexPath2[0] != index1 || indexPath2[1] != index2) {
+          updatedIdArr.push(node2.id);
+        }
+
+        clonePath[node2.id] = [index1, index2];
+        node2.priority = index2;
+      });
+    }
+
+    // path의 값이 이전과 다르다면
+    const indexPath1 = indexPath[node1.id];
+    if (indexPath1[0] != index1) {
+      updatedIdArr.push(node1.id);
+    }
+
+    clonePath[node1.id] = [index1];
+    node1.priority = index1;
+  });
+
+  return [clonePath, treeDataCopied, updatedIdArr];
+};
+
 // 매개변수로 주어진 depth의 priority를 다시 세팅, 해당 트리데이터를 리턴한다.
 const settingPriorityIn = (treeData, depth, state, id) => {
   const updatedIdArr = [];
@@ -167,9 +206,9 @@ const settingPriorityIn = (treeData, depth, state, id) => {
 };
 
 const manageCategoryCrud = (state, updatedIdArr, deletedIdArr) => {
-  const appendedClone = state.appendedCategories;
-  const updatedClone = state.updatedCategories;
-  const deletedClone = state.deletedCategories;
+  const appendedClone = deepCopy(state.appendedCategories);
+  const updatedClone = deepCopy(state.updatedCategories);
+  const deletedClone = deepCopy(state.deletedCategories);
 
   let appendedIndex;
   let updatedIndex;
@@ -214,12 +253,15 @@ const reducer = (state = initialState, action) => {
   let priority;
   let parent;
   let parentPriority;
+  let selectedIndex;
   let targetIndex;
+  let modalIndex;
+  let index;
   let clone;
   let sortedData;
   let newId;
-  let index;
   let node;
+  let modalNode;
   let path;
   let id;
   let updatedNode;
@@ -233,6 +275,8 @@ const reducer = (state = initialState, action) => {
   let _;
   let updatedIdArr;
   let clonePath;
+  let isMoveInSameCategory;
+  let isDown;
 
   switch (action.type) {
     case "CREATE_NEW_COMPONENT_ACTION":
@@ -290,7 +334,70 @@ const reducer = (state = initialState, action) => {
     case "SET_SELECTED_NODE_ACTION":
       return {
         ...state,
-        selectedNode: action.data.selectedNode,
+        selectedNode: deepCopy(action.data.selectedNode),
+      };
+
+    case "SPLICE_NODE_ACTION":
+      modalNode = state.selectedNode;
+      clone = deepCopy(state.treeData);
+      targetIndex = action.data.targetIndex;
+      isMoveInSameCategory = action.data.isMoveInSameCategory;
+      clonePath = deepCopy(state.treeHelper.indexPath);
+      modalIndex = clonePath[modalNode.id];
+      isDown = false;
+
+      // 아래로 이동하는 경우, 이동 전 노드가 삭제되면 그 이후의 노드들의 위치가 -1된다.
+      // 위로 이동하는 경우, 노드를 위에 끼워넣으면 원본의 위치가 +1된다.
+      if (isMoveInSameCategory && targetIndex.length === 1) {
+        isDown = targetIndex[0] > modalIndex[0];
+        if (isDown) {
+          targetIndex[0] = targetIndex[0] - 1;
+        } else {
+          modalIndex[0] = modalIndex[0] + 1;
+        }
+      } //
+      else if (isMoveInSameCategory && targetIndex.length === 2) {
+        isDown = targetIndex[1] > modalIndex[1];
+        if (isDown) {
+          targetIndex[1] = targetIndex[1] - 1;
+        } else {
+          modalIndex[1] = modalIndex[1] + 1;
+        }
+      }
+
+      // modalNode 끼워넣기
+      if (targetIndex.length === 1) {
+        clone.splice(targetIndex[0], 0, modalNode);
+      } else if (targetIndex.length === 2) {
+        clone[targetIndex[0]].children.splice(targetIndex[1], 0, modalNode);
+      }
+
+      // 원본 지우기
+      if (modalIndex.length === 1) {
+        clone.splice(modalIndex[0], 1);
+      } else if (modalIndex.length === 2) {
+        clone[modalIndex[0]].children.splice(modalIndex[1], 1);
+      }
+
+      // 순서 재설정
+      [clonePath, clone, updatedIdArr] = resetIndexPathAndPriority(
+        clone,
+        clonePath
+      );
+
+      [_, updatedClone, _] = manageCategoryCrud(state, updatedIdArr);
+
+      return {
+        ...state,
+        // selectedNode: deepCopy(action.data.selectedNode),
+        treeData: [...clone],
+        treeHelper: {
+          ...state.treeHelper,
+          indexPath: {
+            ...clonePath,
+          },
+        },
+        updatedCategories: [...updatedClone],
       };
 
     case "DELETE_NODE_ACTION":

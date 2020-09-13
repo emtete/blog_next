@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   toggleIsMoveModeAction,
   setSelectedNodeAction,
+  spliceNodeAction,
 } from "../../reducers/category";
 import CategorySelect from "./CategorySelect";
 
@@ -46,6 +47,18 @@ const excludeOwnNode = (treeData, modalNode) => {
   }
 };
 
+const getParent = (id, treeData, indexPath) => {
+  const path = indexPath[id];
+  let parentId;
+
+  if (path.length === 1) {
+    parentId = treeData[path[0]].parent;
+  } else if (path.length === 2) {
+    parentId = treeData[path[0]].children[path[1]].parent;
+  }
+  return parentId;
+};
+
 const CategoryModal = () => {
   // const selectRef1 = useRef();
   const [selectContents2, setSelectContents2] = useState();
@@ -82,6 +95,8 @@ const CategoryModal = () => {
     const selectedPriority = parseInt(treeHelper.indexPath[id][0]);
     const modalNodePriority = parseInt(modalNode.priority);
     const isModalNodeDepth1 = 0 == modalNode.parent; // modalNode의 depth가 1인지의 여부
+    const isMoveInSameCategory =
+      getParent(id, treeDataCopied, treeHelper.indexPath) == modalNode.parent; // 같은 폴더에서의 이동인지 여부
     setSelectValue1(id);
 
     // 선택되지 않음 선택시
@@ -95,8 +110,9 @@ const CategoryModal = () => {
       setSelectContents2(undefined);
     } // 선택되지 않음 이외의 값 선택시
     else {
-      // select1의 값이 parentId 와 다른 경우
-      if (id != modalNode.parent) {
+      // 같은 카테고리에서의 이동이 아니라면
+      if (!isMoveInSameCategory) {
+        // if (id != modalNode.parent) {
         setDisabledRadio3(false);
       } else {
         setDisabledRadio3(true);
@@ -129,12 +145,14 @@ const CategoryModal = () => {
     const selectedPriority = parseInt(treeHelper.indexPath[id][1]);
     const modalNodePriority = parseInt(modalNode.priority);
     const isEqModalAndSelectedParent = selectValue1 == modalNode.parent; // modalNode와 selectedNode의 parent가 같은지의 여부
+    const isMoveInSameCategory =
+      getParent(id, treeDataCopied, treeHelper.indexPath) == modalNode.parent; // 같은 폴더에서의 이동인지 여부
     setSelectValue2(id);
 
     // 선택되지 않음 선택시
     if (id === "") {
-      // select1의 값이 parentId 와 다른 경우만.
-      if (selectValue1 != modalNode.parent) {
+      // 같은 카테고리에서의 이동이 아니라면
+      if (!isMoveInSameCategory) {
         setDisabledRadio3(false);
       }
     } // 선택되지 않음 이외의 값 선택시
@@ -198,6 +216,9 @@ const CategoryModal = () => {
 
     const selectedId = selectValue2 ? selectValue2 : selectValue1;
     const selectedIndex = [...treeHelper.indexPath[selectedId]];
+    const isMoveInSameCategory =
+      getParent(selectedId, treeDataCopied, treeHelper.indexPath) ==
+      modalNode.parent; // 같은 폴더에서의 이동인지 여부
     let targetIndex;
 
     switch (selectedRadio) {
@@ -209,8 +230,8 @@ const CategoryModal = () => {
       case "radio1": // 삭제 후 append 후 같은 depth의 priority 수정
         targetIndex =
           selectedIndex.length === 1
-            ? [selectedIndex[0] - 1]
-            : [selectedIndex[0], selectedIndex[1] - 1];
+            ? [selectedIndex[0]]
+            : [selectedIndex[0], selectedIndex[1]];
         break;
 
       case "radio2":
@@ -228,8 +249,8 @@ const CategoryModal = () => {
         ];
         break;
     }
-    console.log(targetIndex);
-    // onClickCancel();
+    dispatch(spliceNodeAction({ targetIndex, isMoveInSameCategory }));
+    onClickCancel();
   };
 
   // 모달 바깥 클릭시, 창 닫기
