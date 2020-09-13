@@ -333,6 +333,7 @@ const reducer = (state = initialState, action) => {
   let clonePath;
   let isMoveInSameCategory;
   let isDown;
+  let isChanged;
 
   switch (action.type) {
     case "CREATE_NEW_COMPONENT_ACTION":
@@ -418,29 +419,48 @@ const reducer = (state = initialState, action) => {
 
       // 아래로 이동하는 경우, 이동 전 노드가 삭제되면 그 이후의 노드들의 위치가 -1된다.
       // 위로 이동하는 경우, 노드를 위에 끼워넣으면 원본의 위치가 +1된다.
-      if (isMoveInSameCategory && targetIndex.length === 1) {
+      // if (isMoveInSameCategory && targetIndex.length === 1) {
+      if (targetIndex.length === 1) {
         isDown = targetIndex[0] > modalIndex[0];
-        if (isDown) {
-          targetIndex[0] = targetIndex[0] - 1;
-        } else {
-          modalIndex[0] = modalIndex[0] + 1;
-        }
+        //   if (isDown) {
+        //     targetIndex[0] = targetIndex[0] - 1;
+        //   } else {
+        //     modalIndex[0] = modalIndex[0] + 1;
+        //   }
       } //
-      else if (isMoveInSameCategory && targetIndex.length === 2) {
+      // else if (isMoveInSameCategory && targetIndex.length === 2) {
+      else if (targetIndex.length === 2) {
         isDown = targetIndex[1] > modalIndex[1];
-        if (isDown) {
-          targetIndex[1] = targetIndex[1] - 1;
-        } else {
-          modalIndex[1] = modalIndex[1] + 1;
-        }
+        //   if (isDown) {
+        //     targetIndex[1] = targetIndex[1] - 1;
+        //   } else {
+        //     modalIndex[1] = modalIndex[1] + 1;
+        //   }
       }
 
       // modalNode 끼워넣기
+      // 끼워넣기 이후 이전에 저장된 indexPath와 실제 treeData의 index가
+      // 서로 일치하지 않을 수 있다. (treeData의 순서가 바뀌기 때문에)
+      // 순서가 바꼈는지 확인.
       if (targetIndex.length === 1) {
         clone.splice(targetIndex[0], 0, modalNode);
+        isChanged = targetIndex[0] != clonePath[modalNode.id][0] ? 1 : 0;
       } else if (targetIndex.length === 2) {
         clone[targetIndex[0]].children.splice(targetIndex[1], 0, modalNode);
+        isChanged =
+          targetIndex[0] != clonePath[modalNode.id][0]
+            ? 0
+            : targetIndex[1] != clonePath[modalNode.id][1]
+            ? 1
+            : -1;
       }
+
+      // path 변화가 있다면 modalIndex 수정
+      if (isChanged != -1) {
+        modalIndex[isChanged] = isDown
+          ? modalIndex[isChanged] - 1
+          : modalIndex[isChanged] + 1;
+      } //
 
       // 원본 지우기
       if (modalIndex.length === 1) {

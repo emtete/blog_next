@@ -60,9 +60,8 @@ const AppLayout = ({ children, window }) => {
 
   const router = useRouter();
 
-  dispatch(resetIndexPathAction());
-
   useEffect(() => {
+    dispatch(resetIndexPathAction());
     dispatch({
       type: "LOAD_MY_INFO_REQUEST",
     });
