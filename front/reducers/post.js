@@ -262,6 +262,11 @@ const reducer = (state = initialState, action) => {
           ...state.mainPosts,
         ],
       };
+
+    case "WRITE_POST_REQUEST":
+      return {
+        ...state,
+      };
     default:
       return state;
   }

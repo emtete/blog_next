@@ -87,6 +87,10 @@ const Wyzywig = () => {
     const categoryId = selectValue;
     const data = { author, title, categoryId, content };
     // dispatch(addPost({ title, date, content, id }), [title, date, content, id]);
+    dispatch({
+      type: "WRITE_POST_REQUEST",
+      data,
+    });
   };
 
   const onChangeText = (e) => {
@@ -98,13 +102,15 @@ const Wyzywig = () => {
       <form onSubmit={onSubmitForm}>
         <FormControl>
           <select
-            value={handleSelect}
+            value={selectValue}
             onChange={handleSelect}
             style={{ width: 200 }}
           >
             <option value=''>카테고리 선택</option>
             {selectContents.map((content) => (
-              <option value={content.id}>{content.title}</option>
+              <option key={content.id + content.title} value={content.id}>
+                {content.title}
+              </option>
             ))}
           </select>
           <TextField id='title' label='title' onChange={onChangeText} />

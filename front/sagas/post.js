@@ -9,14 +9,15 @@ import {
 } from "redux-saga/effects";
 import axios from "axios";
 
-function writePostAPI() {
-  return axios.get("/post/write");
+function writePostAPI(data) {
+  console.log(111);
+  return axios.post("/post/write", { data });
 }
 
 // 비동기 액션 크리에이터
-function* writePost() {
+function* writePost(action) {
   try {
-    const result = yield call(writePostAPI);
+    const result = yield call(writePostAPI, action.data);
     yield put({
       type: "WRITE_POST_SUCCESS",
       data: result.data, // 성공 결과
