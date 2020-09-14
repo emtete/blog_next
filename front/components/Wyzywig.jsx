@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, { Component, useState, useEffect } from "react";
 import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
 import dynamic from "next/dynamic";
 import draftToHtml from "draftjs-to-html";
@@ -38,13 +38,43 @@ const getDateStr = (date) => {
   return sYear + sMonth + sDate + sHours + sMinutes + sSeconds;
 };
 
+const getIsArray = (element) => {
+  return Array.isArray(element) && element.length > 0;
+};
+
+const deepCopy = (obj) => JSON.parse(JSON.stringify(obj));
+
+const getTreeToFlatData = (treeData) => {
+  const treeDataClone = deepCopy(treeData);
+  const clone = [];
+
+  treeDataClone.map((node1, index1) => {
+    clone.push(node1);
+    if (getIsArray(node1.children)) {
+      node1.children.map((node2, index2) => {
+        clone.push(node2);
+      });
+    }
+  });
+
+  return clone;
+};
+
 const Wyzywig = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const mainPosts = useSelector((state) => state.post.mainPosts);
+  const { treeData } = useSelector((state) => state.category);
+  const flatDataArr = getTreeToFlatData(treeData);
 
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const [title, setTitle] = useState("");
+  const [selectContents, setSelectContents] = useState(flatDataArr);
+  const [selectValue, setSelectValue] = useState("");
+
+  const handleSelect = (e) => {
+    setSelectValue(e.target.value);
+  };
 
   const onEditorStateChange = (editorState) => {
     setEditorState(editorState);
@@ -53,9 +83,10 @@ const Wyzywig = () => {
   const onSubmitForm = (e) => {
     e.preventDefault();
     const content = convertToRaw(editorState.getCurrentContent());
-    const date = "1년 전";
-    const id = getDateStr(new Date());
-    dispatch(addPost({ title, date, content, id }), [title, date, content, id]);
+    const author = "victor_77";
+    const categoryId = selectValue;
+    const data = { author, title, categoryId, content };
+    // dispatch(addPost({ title, date, content, id }), [title, date, content, id]);
   };
 
   const onChangeText = (e) => {
@@ -66,6 +97,16 @@ const Wyzywig = () => {
     <main className={classes.content}>
       <form onSubmit={onSubmitForm}>
         <FormControl>
+          <select
+            value={handleSelect}
+            onChange={handleSelect}
+            style={{ width: 200 }}
+          >
+            <option value=''>카테고리 선택</option>
+            {selectContents.map((content) => (
+              <option value={content.id}>{content.title}</option>
+            ))}
+          </select>
           <TextField id='title' label='title' onChange={onChangeText} />
           <br />
           <Editor

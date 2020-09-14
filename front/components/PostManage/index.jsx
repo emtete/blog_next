@@ -1,4 +1,7 @@
+import { useSelector } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
+
+import Post from "./Post";
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -10,6 +13,7 @@ const useStyles = makeStyles((theme) => ({
 
 const PostManage = () => {
   const classes = useStyles();
+  const { items } = useSelector((state) => state.post.item);
 
   return (
     <main className={classes.content}>
@@ -18,11 +22,6 @@ const PostManage = () => {
           <h3 className='tit_cont'>
             글 관리
             <span className='txt_count'> 15</span>
-            {/* <a //href='/manage/post/?returnURL=/manage/posts'
-              class='link_write'
-            >
-              글 쓰기<span class='ico_blog'></span>
-            </a> */}
           </h3>
           <div className='wrap_search'>
             <div className='check_blog'>
@@ -31,40 +30,51 @@ const PostManage = () => {
                 선택 됨
               </label>
             </div>
+            <div className='opt_blog'>
+              <select
+                name='abc1'
+                className='opt_category'
+                // onChange={onChangeSelect1}
+                // ref={selectRef1}
+                // value={selectValue1}
+              >
+                <option value=''>선택되지 않음</option>
+                <option value='1'>선택되지 않음1</option>
+                {/* {treeDataCopied.map((node) => (
+                  <option key={node.id + node.title} value={node.id}>
+                    {node.title}
+                  </option>
+                ))} */}
+              </select>
+            </div>
           </div>
           <div className='wrap_list'>
             <ul className='list_post list_post_type2'>
-              <li>
-                <div className='check_blog'>
-                  <input
-                    type='checkbox'
-                    id='inpCheck36'
-                    className='inp_check'
-                  />
-                  <label for='inpCheck36' className='ico_blog ico_checkbox'>
-                    선택 안됨
-                  </label>
-                </div>
-                <div className='post_cont'>
-                  <strong className='tit_post tit_ellip'>
-                    <a
-                      // href='https://emtete.tistory.com/36'
-                      title='material-ui, CSS Baseline api'
-                      className='link_cont'
-                      target='_blank'
-                    >
-                      material-ui, CSS Baseline api
-                    </a>
-                  </strong>
-                  <a //href='/manage/posts?category=758257'
-                  >
-                    <span className='txt_cate txt_ellip'>프로그래밍</span>
-                  </a>
-                  <span className='txt_info txt_ellip'>victor_77</span>
-                  <span className='txt_info'>2020-09-03 14:00</span>
-                </div>
+              {items.map((item) => (
+                <li key={item.id + item.published}>
+                  <Post item={item} />
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className='wrap_paging'>
+            <strong className='screen_out'>현재 1페이지</strong>
+            <a className='link_paging'>
+              <span className='ico_blog ico_prev'>이전 페이지 없음</span>
+            </a>
+            <ul className='list_paging'>
+              <li className='on'>
+                <a
+                  className='link_num' //href="/manage/posts?category=-3&amp;page=1&amp;searchKeyword=&amp;searchType=title&amp;visibility=all"
+                >
+                  1
+                </a>
               </li>
             </ul>
+            <a className='link_paging'>
+              <span className='ico_blog ico_next'>다음 페이지 없음</span>
+            </a>
           </div>
         </div>
       </div>

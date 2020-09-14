@@ -1,4 +1,49 @@
 export const initialState = {
+  item: {
+    totalCount: 0,
+    items: [
+      {
+        id: "1",
+        author: "victor_77",
+        title: "material-ui, CSS Baseline api1",
+        category: "프로그래밍",
+        categoryId: "758257",
+        published: "2020-09-03 14:00",
+      },
+      {
+        id: "2",
+        author: "victor_77",
+        title: "material-ui, CSS Baseline api2",
+        category: "프로그래밍",
+        categoryId: "758257",
+        published: "2020-09-03 14:00",
+      },
+      {
+        id: "3",
+        author: "victor_77",
+        title: "material-ui, CSS Baseline api3",
+        category: "프로그래밍",
+        categoryId: "758257",
+        published: "2020-09-03 14:00",
+      },
+      {
+        id: "4",
+        author: "victor_77",
+        title: "material-ui, CSS Baseline api4",
+        category: "프로그래밍",
+        categoryId: "758257",
+        published: "2020-09-03 14:00",
+      },
+      {
+        id: "5",
+        author: "victor_77",
+        title: "material-ui, CSS Baseline api5",
+        category: "프로그래밍",
+        categoryId: "758257",
+        published: "2020-09-03 14:00",
+      },
+    ],
+  },
   mainPosts: {
     "/1/0": [
       {
