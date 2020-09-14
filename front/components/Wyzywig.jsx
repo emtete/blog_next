@@ -63,6 +63,7 @@ const getTreeToFlatData = (treeData) => {
 const Wyzywig = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const { me } = useSelector((state) => state.user);
   const mainPosts = useSelector((state) => state.post.mainPosts);
   const { treeData } = useSelector((state) => state.category);
   const flatDataArr = getTreeToFlatData(treeData);
@@ -82,11 +83,13 @@ const Wyzywig = () => {
 
   const onSubmitForm = (e) => {
     e.preventDefault();
-    const content = convertToRaw(editorState.getCurrentContent());
+    const content = JSON.stringify(
+      convertToRaw(editorState.getCurrentContent())
+    );
     const author = "victor_77";
     const categoryId = selectValue;
-    const data = { author, title, categoryId, content };
-    // dispatch(addPost({ title, date, content, id }), [title, date, content, id]);
+    const data = { UserId: me.id, author, title, categoryId, content };
+    console.log(content);
     dispatch({
       type: "WRITE_POST_REQUEST",
       data,

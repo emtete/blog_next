@@ -73,7 +73,7 @@ router.post("/login", isNotLoggedIn, (req, res, next) => {
 // next???
 router.post("/signup", async (req, res, next) => {
   try {
-    console.log("test : ", req.body.email);
+    // console.log("test : ", req.body.email);
     const exUser = await User.findOne({
       where: {
         email: req.body.email,

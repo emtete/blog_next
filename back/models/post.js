@@ -1,7 +1,22 @@
-module.exports = (equelize, DataTypes) => {
+module.exports = (sequelize, DataTypes) => {
   const Post = sequelize.define(
     "Post",
     {
+      author: {
+        type: DataTypes.STRING(30),
+        allowNull: false,
+        unique: false,
+      },
+      title: {
+        type: DataTypes.STRING(50),
+        allowNull: false,
+        unique: false,
+      },
+      categoryId: {
+        type: DataTypes.STRING(30),
+        allowNull: false,
+        unique: false,
+      },
       content: {
         type: DataTypes.TEXT,
         allowNull: false,
