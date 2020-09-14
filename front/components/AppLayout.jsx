@@ -235,6 +235,20 @@ const AppLayout = ({ children, window }) => {
           </ListItemIcon>
           <ListItemText primary='메뉴관리' style={{ color: "#dbdfe2" }} />
         </ListItem>
+
+        <ListItem
+          button
+          style={{ color: "#dbdfe2" }}
+          onClick={() => {
+            router.push("/postManage");
+          }}
+        >
+          <ListItemIcon>
+            <InboxIcon style={{ color: "#dbdfe2" }} />
+          </ListItemIcon>
+          <ListItemText primary='글관리' style={{ color: "#dbdfe2" }} />
+        </ListItem>
+
         <Divider style={{ backgroundColor: "#ffffff" }} />
         <ListItem
           style={{ color: "#dbdfe2", justifyContent: "center" }}

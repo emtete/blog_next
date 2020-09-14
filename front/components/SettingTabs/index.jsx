@@ -28,7 +28,7 @@ const SettingTabs = () => {
     <main className={classes.content}>
       <div id='mArticle'>
         <div className='blog_category'>
-          <h3 className='tit_category'>카테고리 관리</h3>
+          <h3 className='tit_cont'>카테고리 관리</h3>
           <div className='wrap_set'>
             <strong className='tit_set'>
               카테고리 순서를 변경하고 주제 연결을 설정할 수 있습니다.
