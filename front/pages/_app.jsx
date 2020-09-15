@@ -6,6 +6,7 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import theme from "../src/theme";
 import withReduxSaga from "next-redux-saga";
 
+import AppLayout from "../components/AppLayout";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import "./temp.scss";
 
@@ -22,6 +23,7 @@ const MyApp = (props) => {
     }
   }, []);
 
+  console.log("_app rendering");
   return (
     <React.Fragment>
       <Head>
@@ -34,7 +36,9 @@ const MyApp = (props) => {
       <ThemeProvider theme={theme}>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
-        <Component {...pageProps} />
+        <AppLayout>
+          <Component {...pageProps} />
+        </AppLayout>
       </ThemeProvider>
     </React.Fragment>
   );

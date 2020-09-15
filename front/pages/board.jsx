@@ -10,7 +10,12 @@ const Board = () => {
   // useEffect(() => {
   //   setWyzysig(import("../components/Wyzywig"));
   // });
-  return <AppLayout>{Wyzywig ? <Wyzywig /> : <div>loading</div>}</AppLayout>;
+  return <Wyzywig />;
+  // {
+  //   Wyzywig ?  : <div>loading</div>;
+  // }
+  // <AppLayout>
+  // </AppLayout>
 };
 
 export default Board;

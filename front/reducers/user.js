@@ -13,8 +13,38 @@ export const initialState = {
 
   user: null,
   me: null,
+  isLoginMode: false,
+  isAdminMode: false,
   signUpdata: {},
   loginData: {},
+};
+
+export const startLogInModeAction = (data) => {
+  return {
+    type: "START_LOG_IN_MODE_ACTION",
+    data,
+  };
+};
+
+export const endLogInModeAction = (data) => {
+  return {
+    type: "END_LOG_IN_MODE_ACTION",
+    data,
+  };
+};
+
+export const startAdminModeAction = (data) => {
+  return {
+    type: "START_ADMIN_MODE_ACTION",
+    data,
+  };
+};
+
+export const endAdminModeAction = (data) => {
+  return {
+    type: "END_ADMIN_MODE_ACTION",
+    data,
+  };
 };
 
 export const loginRequestAction = (data) => {
@@ -33,6 +63,30 @@ export const logoutRequestAction = (data) => {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case "START_LOG_IN_MODE_ACTION":
+      return {
+        ...state,
+        isLoginMode: true,
+      };
+
+    case "END_LOG_IN_MODE_ACTION":
+      return {
+        ...state,
+        isLoginMode: false,
+      };
+
+    case "START_ADMIN_MODE_ACTION":
+      return {
+        ...state,
+        isAdminMode: true,
+      };
+
+    case "END_ADMIN_MODE_ACTION":
+      return {
+        ...state,
+        isAdminMode: false,
+      };
+
     case "LOG_IN_REQUEST":
       return {
         ...state,

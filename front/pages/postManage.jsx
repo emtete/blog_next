@@ -1,11 +1,11 @@
-import AppLayout from "../components/AppLayout";
+// import AppLayout from "../components/AppLayout";
 import PostManage from "../components/PostManage";
 
 const postManage = () => {
   return (
-    <AppLayout>
+    // <AppLayout>
       <PostManage></PostManage>
-    </AppLayout>
+    {/* </AppLayout> */}
   );
 };
 

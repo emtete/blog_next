@@ -1,11 +1,11 @@
-import AppLayout from "../components/AppLayout";
+// import AppLayout from "../components/AppLayout";
 import SettingTabs from "../components/SettingTabs";
 
 const settings = () => {
   return (
-    <AppLayout>
+    // <AppLayout>
       <SettingTabs></SettingTabs>
-    </AppLayout>
+    {/* </AppLayout> */}
   );
 };
 

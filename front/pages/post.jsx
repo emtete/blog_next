@@ -1,12 +1,12 @@
-import AppLayout from "../components/AppLayout";
+// import AppLayout from "../components/AppLayout";
 import PostList from "../components/PostList";
 
 const Post = () => {
   return (
-    <AppLayout>
+    // <AppLayout>
       <div style={{ marginBottom: 50 }}></div>
       <PostList />
-    </AppLayout>
+    {/* </AppLayout> */}
   );
 };
 
