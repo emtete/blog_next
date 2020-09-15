@@ -31,7 +31,7 @@ function* writePost(action) {
 }
 
 function getPostListAPI(data) {
-  return axios.post("/post/get", { data });
+  return axios.get("/post/getList", { data });
 }
 
 // 비동기 액션 크리에이터
@@ -51,6 +51,28 @@ function* getPostList(action) {
   }
 }
 
+function getPostOneAPI(data) {
+  return axios.get("/post/getOne", { id: data.id });
+}
+
+// 비동기 액션 크리에이터
+function* getPostOne(action) {
+  try {
+    const result = yield call(getPostOneAPI, action.data);
+    console.log(result);
+    yield put({
+      type: "GET_POST_ONE_SUCCESS",
+      data: result.data, // 성공 결과
+    });
+  } catch (err) {
+    yield put({
+      // put은 dispatch와 같은 기능을 한다.
+      type: "GET_POST_ONE_FAILURE",
+      data: err.response.data, // 실패 결과
+    });
+  }
+}
+
 function* watchWritePost() {
   yield takeLatest("WRITE_POST_REQUEST", writePost);
 }
@@ -59,6 +81,14 @@ function* watchGetPostList() {
   yield takeLatest("GET_POST_LIST_REQUEST", getPostList);
 }
 
+function* watchGetPostOne() {
+  yield takeLatest("GET_POST_ONE_REQUEST", getPostOne);
+}
+
 export default function* postSaga() {
-  yield all([fork(watchWritePost), fork(watchGetPostList)]);
+  yield all([
+    fork(watchWritePost),
+    fork(watchGetPostList),
+    fork(watchGetPostOne),
+  ]);
 }

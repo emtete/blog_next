@@ -14,9 +14,25 @@ router.post("/write", async (req, res, next) => {
   }
 });
 
-router.post("/get", async (req, res, next) => {
+router.get("/getList", async (req, res, next) => {
   try {
-    const post = await Post.findAll();
+    const post = await Post.findAll({
+      attributes: {
+        exclude: ["content"],
+      },
+    });
+    res.status(201).json(post);
+  } catch (err) {
+    console.error(err);
+    next(err); // status 500
+  }
+});
+
+router.get("/getOne", async (req, res, next) => {
+  try {
+    const post = await Post.findOne({
+      id: req.body.id,
+    });
     res.status(201).json(post);
   } catch (err) {
     console.error(err);

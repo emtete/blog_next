@@ -21,7 +21,7 @@ const PostManage = () => {
 
   useEffect(() => {
     //
-    dispatch(getPostListAction());
+    dispatch(getPostListAction({}));
   }, []);
 
   return (

@@ -13,7 +13,7 @@ router.get("/", async (req, res, next) => {
   try {
     if (req.user) {
       const fullUserWithoutPassword = await User.findOne({
-        where: { id: user.id },
+        where: { id: req.user.id },
         attributes: {
           exclude: ["password"],
         },

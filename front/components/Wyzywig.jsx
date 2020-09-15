@@ -6,7 +6,7 @@ import { TextField, FormControl, Button } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 
-// import { addPost } from "../reducers/post";
+import { getPostOneAction } from "../reducers/post";
 
 const Editor = dynamic(
   () => import("react-draft-wysiwyg").then((mod) => mod.Editor),
@@ -64,7 +64,7 @@ const Wyzywig = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { me } = useSelector((state) => state.user);
-  const mainPosts = useSelector((state) => state.post.mainPosts);
+  const { newPost } = useSelector((state) => state.post);
   const { treeData } = useSelector((state) => state.category);
   const flatDataArr = getTreeToFlatData(treeData);
 
@@ -100,6 +100,10 @@ const Wyzywig = () => {
     setTitle(e.target.value);
   };
 
+  useEffect(() => {
+    setTitle(newPost.title);
+  }, [newPost]);
+
   return (
     <main className={classes.content}>
       <form onSubmit={onSubmitForm}>
@@ -116,7 +120,12 @@ const Wyzywig = () => {
               </option>
             ))}
           </select>
-          <TextField id='title' label='title' onChange={onChangeText} />
+          <TextField
+            id='title'
+            label='title'
+            onChange={onChangeText}
+            value={title}
+          />
           <br />
           <Editor
             editorState={editorState}

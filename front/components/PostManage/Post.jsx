@@ -1,4 +1,14 @@
+import { useRouter } from "next/router";
+import { useDispatch } from "react-redux";
+
 const Post = ({ item }) => {
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const onClickUpdate = () => {
+    dispatch(getPostOneAction({ id: item.id }));
+    router.push("/board");
+  };
+
   return (
     <>
       <div className='check_blog'>
@@ -28,7 +38,9 @@ const Post = ({ item }) => {
       <div className='post_btn'>
         <div className='info_btn'>
           <div>
-            <span className='btn_post'>수정</span>
+            <span className='btn_post' onClick={onClickUpdate}>
+              수정
+            </span>
           </div>
         </div>
       </div>
