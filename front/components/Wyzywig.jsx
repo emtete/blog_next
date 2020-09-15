@@ -6,7 +6,7 @@ import { TextField, FormControl, Button } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 
-import { addPost } from "../reducers/post";
+// import { addPost } from "../reducers/post";
 
 const Editor = dynamic(
   () => import("react-draft-wysiwyg").then((mod) => mod.Editor),

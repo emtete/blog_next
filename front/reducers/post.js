@@ -2,46 +2,46 @@ export const initialState = {
   item: {
     totalCount: 0,
     items: [
-      {
-        id: "1",
-        author: "victor_77",
-        title: "material-ui, CSS Baseline api1",
-        category: "프로그래밍",
-        categoryId: "758257",
-        published: "2020-09-03 14:00",
-      },
-      {
-        id: "2",
-        author: "victor_77",
-        title: "material-ui, CSS Baseline api2",
-        category: "프로그래밍",
-        categoryId: "758257",
-        published: "2020-09-03 14:00",
-      },
-      {
-        id: "3",
-        author: "victor_77",
-        title: "material-ui, CSS Baseline api3",
-        category: "프로그래밍",
-        categoryId: "758257",
-        published: "2020-09-03 14:00",
-      },
-      {
-        id: "4",
-        author: "victor_77",
-        title: "material-ui, CSS Baseline api4",
-        category: "프로그래밍",
-        categoryId: "758257",
-        published: "2020-09-03 14:00",
-      },
-      {
-        id: "5",
-        author: "victor_77",
-        title: "material-ui, CSS Baseline api5",
-        category: "프로그래밍",
-        categoryId: "758257",
-        published: "2020-09-03 14:00",
-      },
+      // {
+      //   id: "1",
+      //   author: "victor_77",
+      //   title: "material-ui, CSS Baseline api1",
+      //   category: "프로그래밍",
+      //   categoryId: "758257",
+      //   published: "2020-09-03 14:00",
+      // },
+      // {
+      //   id: "2",
+      //   author: "victor_77",
+      //   title: "material-ui, CSS Baseline api2",
+      //   category: "프로그래밍",
+      //   categoryId: "758257",
+      //   published: "2020-09-03 14:00",
+      // },
+      // {
+      //   id: "3",
+      //   author: "victor_77",
+      //   title: "material-ui, CSS Baseline api3",
+      //   category: "프로그래밍",
+      //   categoryId: "758257",
+      //   published: "2020-09-03 14:00",
+      // },
+      // {
+      //   id: "4",
+      //   author: "victor_77",
+      //   title: "material-ui, CSS Baseline api4",
+      //   category: "프로그래밍",
+      //   categoryId: "758257",
+      //   published: "2020-09-03 14:00",
+      // },
+      // {
+      //   id: "5",
+      //   author: "victor_77",
+      //   title: "material-ui, CSS Baseline api5",
+      //   category: "프로그래밍",
+      //   categoryId: "758257",
+      //   published: "2020-09-03 14:00",
+      // },
     ],
   },
   mainPosts: {
@@ -239,9 +239,32 @@ export const initialState = {
   },
 };
 
-export const addPost = (data) => {
+// export const addPost = (data) => {
+//   return {
+//     type: "ADD_POST",
+//     data,
+//   };
+// };
+
+const getData = (data) => {
+  const arr = [];
+  data.map((element) => {
+    arr.push({
+      id: element.UserId,
+      author: element.author,
+      title: element.title,
+      category: "임시값",
+      categoryId: element.categoryId,
+      published: element.createdAt,
+    });
+  });
+
+  return arr;
+};
+
+export const getPostListAction = (data) => {
   return {
-    type: "ADD_POST",
+    type: "GET_POST_LIST_REQUEST",
     data,
   };
 };
@@ -267,6 +290,37 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
       };
+
+    case "WRITE_POST_SUCCESS":
+      return {
+        ...state,
+      };
+
+    case "WRITE_POST_FAILURE":
+      return {
+        ...state,
+      };
+
+    case "GET_POST_LIST_REQUEST":
+      return {
+        ...state,
+      };
+
+    case "GET_POST_LIST_SUCCESS":
+      const jsonData = getData(action.data);
+      return {
+        ...state,
+        item: {
+          totalCount: action.data.length,
+          items: jsonData,
+        },
+      };
+
+    case "GET_POST_LIST_FAILURE":
+      return {
+        ...state,
+      };
+
     default:
       return state;
   }

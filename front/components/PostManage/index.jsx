@@ -1,7 +1,10 @@
-import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 
 import Post from "./Post";
+
+import { getPostListAction } from "../../reducers/post";
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -13,7 +16,13 @@ const useStyles = makeStyles((theme) => ({
 
 const PostManage = () => {
   const classes = useStyles();
+  const dispatch = useDispatch();
   const { items } = useSelector((state) => state.post.item);
+
+  useEffect(() => {
+    //
+    dispatch(getPostListAction());
+  }, []);
 
   return (
     <main className={classes.content}>
