@@ -129,6 +129,7 @@ const reducer = (state = initialState, action) => {
         logInError: null,
 
         me: null,
+        isAdminMode: false,
       };
     case "LOG_OUT_FAILURE":
       return {
