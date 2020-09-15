@@ -296,6 +296,8 @@ const AppLayout = ({ children, window }) => {
   const container =
     window !== undefined ? () => window().document.body : undefined;
 
+  console.log("AppLayout rendering");
+
   return (
     <div className={classes.root}>
       <CssBaseline />

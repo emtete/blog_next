@@ -6,7 +6,7 @@ import { TextField, FormControl, Button } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 
-import { getPostOneAction } from "../reducers/post";
+import { getPostOneAction, removeOrgPostAction } from "../reducers/post";
 
 const Editor = dynamic(
   () => import("react-draft-wysiwyg").then((mod) => mod.Editor),
@@ -25,18 +25,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const getDateStr = (date) => {
-  let sYear = date.getFullYear();
-  let sMonth = date.getMonth() + 1;
-  let sDate = date.getDate();
-  let sHours = date.getHours();
-  let sMinutes = date.getMinutes();
-  let sSeconds = date.getSeconds();
+// const getDateStr = (date) => {
+//   let sYear = date.getFullYear();
+//   let sMonth = date.getMonth() + 1;
+//   let sDate = date.getDate();
+//   let sHours = date.getHours();
+//   let sMinutes = date.getMinutes();
+//   let sSeconds = date.getSeconds();
 
-  sMonth = sMonth > 9 ? sMonth : "0" + sMonth;
-  sDate = sDate > 9 ? sDate : "0" + sDate;
-  return sYear + sMonth + sDate + sHours + sMinutes + sSeconds;
-};
+//   sMonth = sMonth > 9 ? sMonth : "0" + sMonth;
+//   sDate = sDate > 9 ? sDate : "0" + sDate;
+//   return sYear + sMonth + sDate + sHours + sMinutes + sSeconds;
+// };
 
 const getIsArray = (element) => {
   return Array.isArray(element) && element.length > 0;
@@ -64,17 +64,24 @@ const Wyzywig = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { me } = useSelector((state) => state.user);
-  const { newPost } = useSelector((state) => state.post);
+  const { orgPost } = useSelector((state) => state.post);
+  const [post, setPost] = useState(orgPost);
+
+  const [title, setTitle] = useState("");
   const { treeData } = useSelector((state) => state.category);
   const flatDataArr = getTreeToFlatData(treeData);
-
-  const [editorState, setEditorState] = useState(EditorState.createEmpty());
-  const [title, setTitle] = useState("");
   const [selectContents, setSelectContents] = useState(flatDataArr);
-  const [selectValue, setSelectValue] = useState("");
+  const [categoryId, setCategoryId] = useState("");
+
+  const editorContent =
+    post.content !== null
+      ? EditorState.createWithContent(convertFromRaw(post.content))
+      : EditorState.createEmpty();
+
+  const [editorState, setEditorState] = useState(editorContent);
 
   const handleSelect = (e) => {
-    setSelectValue(e.target.value);
+    setCategoryId(e.target.value);
   };
 
   const onEditorStateChange = (editorState) => {
@@ -87,9 +94,8 @@ const Wyzywig = () => {
       convertToRaw(editorState.getCurrentContent())
     );
     const author = "victor_77";
-    const categoryId = selectValue;
+    const categoryId = categoryId;
     const data = { UserId: me.id, author, title, categoryId, content };
-    console.log(content);
     dispatch({
       type: "WRITE_POST_REQUEST",
       data,
@@ -101,17 +107,20 @@ const Wyzywig = () => {
   };
 
   useEffect(() => {
-    setTitle(newPost.title);
-  }, [newPost]);
+    if (orgPost.title != "") {
+      dispatch(removeOrgPostAction());
+    }
+  }, []);
+  console.log("Wyzywig rendering");
 
   return (
     <main className={classes.content}>
       <form onSubmit={onSubmitForm}>
         <FormControl>
           <select
-            value={selectValue}
+            value={post.categoryId}
             onChange={handleSelect}
-            style={{ width: 200 }}
+            // style={{ width: 200 }}
           >
             <option value=''>카테고리 선택</option>
             {selectContents.map((content) => (
@@ -124,7 +133,7 @@ const Wyzywig = () => {
             id='title'
             label='title'
             onChange={onChangeText}
-            value={title}
+            value={post.title}
           />
           <br />
           <Editor

@@ -1,9 +1,14 @@
 export const initialState = {
+  // idToModify: undefined,
   orgPost: {
     title: "",
+    categoryId: "",
+    content: null,
   },
   newPost: {
     title: "",
+    categoryId: "",
+    content: null,
   },
   item: {
     totalCount: 0,
@@ -42,6 +47,13 @@ export const getPostOneAction = (data) => {
   };
 };
 
+export const removeOrgPostAction = (data) => {
+  return {
+    type: "REMOVE_ORG_POST_ACTION",
+    data,
+  };
+};
+
 const reducer = (state = initialState, action) => {
   let jsonData;
 
@@ -59,6 +71,16 @@ const reducer = (state = initialState, action) => {
           },
           ...state.mainPosts,
         ],
+      };
+
+    case "REMOVE_ORG_POST_ACTION":
+      return {
+        ...state,
+        orgPost: {
+          title: "",
+          categoryId: "",
+          content: null,
+        },
       };
 
     case "WRITE_POST_REQUEST":
@@ -106,15 +128,6 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         orgPost: {
-          id: action.data.id,
-          author: action.data.author,
-          title: action.data.title,
-          content: action.data.content,
-          category: "임시값",
-          categoryId: action.data.categoryId,
-          published: action.data.createdAt,
-        },
-        newPost: {
           id: action.data.id,
           author: action.data.author,
           title: action.data.title,
