@@ -23,7 +23,6 @@ const MyApp = (props) => {
     }
   }, []);
 
-  console.log("_app rendering");
   return (
     <React.Fragment>
       <Head>

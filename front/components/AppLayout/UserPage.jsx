@@ -28,13 +28,13 @@ import Modal from "@material-ui/core/Modal";
 const UserPage = ({ menuList }) => {
   const classes = menuStyles();
 
-  const handleHandle = () => {
-    // if (me) {
-    //   dispatch(logoutRequestAction());
-    // } else {
-    //   handleOpen();
-    // }
-  };
+  // const handleHandle = () => {
+  //   if (me) {
+  //     dispatch(logoutRequestAction());
+  //   } else {
+  //     handleOpen();
+  //   }
+  // };
   return (
     <div>
       <div className={(classes.toolbar, classes.toolbarCustomising)}>
@@ -92,33 +92,6 @@ const UserPage = ({ menuList }) => {
           </div>
         ))}
         <Common />
-        {/* <Divider style={{ backgroundColor: "#ffffff" }} />
-        <ListItem
-          style={{ color: "#dbdfe2", justifyContent: "center" }}
-          key='login'
-        >
-          <Button style={{ color: "#ffffff" }} onClick={handleHandle}>
-            {me ? "로그아웃" : "로그인"}
-          </Button>
-          <IconButton
-            style={{ color: "#ffffff" }}
-            aria-label='upload picture'
-            component='span'
-            onClick={onHandleAdmim}
-          >
-            {isAdmin ? <PersonIcon /> : <SettingsIcon />}
-          </IconButton>
-          <div>
-            <Modal
-              open={open}
-              onClose={handleClose}
-              aria-labelledby='simple-modal-title'
-              aria-describedby='simple-modal-description'
-            >
-              {body}
-            </Modal>
-          </div>
-        </ListItem> */}
       </List>
     </div>
   );

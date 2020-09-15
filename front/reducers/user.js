@@ -123,6 +123,11 @@ const reducer = (state = initialState, action) => {
         logOutLoading: false,
         logOutDone: true,
         logOutError: false,
+
+        logInLoading: false,
+        logInDone: false,
+        logInError: null,
+
         me: null,
       };
     case "LOG_OUT_FAILURE":

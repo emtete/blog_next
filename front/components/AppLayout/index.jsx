@@ -43,18 +43,10 @@ import LoginModal from "./LoginModal";
 const AppLayout = ({ children, window }) => {
   const classes = menuStyles();
   const theme = useTheme();
-  // const [mobileOpen, setMobileOpen] = React.useState(false);
-
-  // const handleDrawerToggle = () => {
-  //   setMobileOpen(!mobileOpen);
-  // };
 
   const dispatch = useDispatch();
-  const {
-    //logInError,
-    me,
-    isLoginMode,
-  } = useSelector((state) => state.user);
+  const me = useSelector((state) => state.user.me);
+  const isAdminMode = useSelector((state) => state.user.isAdminMode);
   const menu = useSelector((state) => state.menu.node.children);
   const [menuList, setMenuList] = React.useState(menu);
 
@@ -66,71 +58,6 @@ const AppLayout = ({ children, window }) => {
       type: "LOAD_MY_INFO_REQUEST",
     });
   }, []);
-
-  // useEffect(() => {
-  //   if (logInError) {
-  //     alert(logInError);
-  //   }
-  // }, [logInError]);
-
-  // const onToggleMenu = (e) => {
-  //   e.isExpand = !e.isExpand;
-  //   setMenuList([...menuList]);
-  // };
-
-  // modal start---
-  // const modalClasses = modalStyles();
-  // const [modalStyle] = React.useState(getModalStyle);
-  // const [open, setOpen] = React.useState(false);
-  // const [id, onChangeId] = useInput("");
-  // const [password, onChangePassword] = useInput("");
-
-  // const handleOpen = () => {
-  //   setOpen(true);
-  // };
-
-  // const handleClose = () => {
-  //   setOpen(false);
-  // };
-
-  // const handleHandle = () => {
-  //   if (me) {
-  //     dispatch(logoutRequestAction());
-  //   } else {
-  //     handleOpen();
-  //   }
-  // };
-
-  // const onSubmitForm = (e) => {
-  //   e.preventDefault();
-  //   dispatch(loginRequestAction({ email: id, password }));
-  //   handleClose();
-  // };
-
-  // const body = (
-  //   <div style={modalStyle} className={modalClasses.paper}>
-  //     <h2 id='simple-modal-title'>로그인</h2>
-  //     <form
-  //       onSubmit={onSubmitForm}
-  //       className={classes.root}
-  //       noValidate
-  //       autoComplete='off'
-  //     >
-  //       <FormControl>
-  //         <TextField id='id' label='id' onChange={onChangeId} />
-  //         <TextField id='id' label='password' onChange={onChangePassword} />
-  //         <br />
-  //         <Button variant='contained' color='primary' type='submit'>
-  //           로그인
-  //         </Button>
-  //       </FormControl>
-  //     </form>
-  //   </div>
-  // );
-  // modal end---
-
-  // const container =
-  //   window !== undefined ? () => window().document.body : undefined;
 
   console.log("AppLayout rendering");
 
@@ -168,7 +95,7 @@ const AppLayout = ({ children, window }) => {
             variant='permanent'
             open
           >
-            {me ? <ManagerPage /> : <UserPage menuList={menuList} />}
+            {isAdminMode ? <ManagerPage /> : <UserPage menuList={menuList} />}
           </Drawer>
         </Hidden>
       </nav>

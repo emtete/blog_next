@@ -34,30 +34,30 @@ import Modal from "@material-ui/core/Modal";
 
 const Common = () => {
   const dispatch = useDispatch();
-  const {
-    //logInError,
-    isAdminMode,
-    me,
-    isLoginMode,
-  } = useSelector((state) => state.user);
+
+  const me = useSelector((state) => state.user.me);
+  const isLoginMode = useSelector((state) => state.user.isLoginMode);
+  const isAdminMode = useSelector((state) => state.user.isAdminMode);
 
   const handleLogin = () => {
     if (me) {
-      dispatch(logoutRequestAction());
+      dispatch({ type: "LOG_OUT_REQUEST" });
     } else {
-      // handleOpen();
-      dispatch(startLogInModeAction());
+      // dispatch(startLogInModeAction());
+      dispatch({ type: "START_LOG_IN_MODE_ACTION" });
     }
   };
 
-  const handleManageMode = () => {
+  const handleAdminMode = () => {
     if (isAdminMode) {
-      dispatch(endAdminModeAction());
+      // dispatch(endAdminModeAction());
+      dispatch({ type: "END_ADMIN_MODE_ACTION" });
     } else {
-      dispatch(startAdminModeAction());
+      // dispatch(startAdminModeAction());
+      dispatch({ type: "START_ADMIN_MODE_ACTION" });
     }
   };
-
+  console.log("Common.jsx rendering");
   return (
     <>
       <Divider style={{ backgroundColor: "#ffffff" }} />
@@ -70,28 +70,11 @@ const Common = () => {
         </Button>
 
         {me && (
-          <Button style={{ color: "#ffffff" }} onClick={handleManageMode}>
+          <Button style={{ color: "#ffffff" }} onClick={handleAdminMode}>
             {isAdminMode ? "사용자 페이지" : "관리자 페이지"}
           </Button>
         )}
-        {/* <IconButton
-          style={{ color: "#ffffff" }}
-          aria-label='upload picture'
-          component='span'
-          // onClick={onHandleAdmim}
-        >
-          {me ? <PersonIcon /> : <SettingsIcon />}
-        </IconButton> */}
-        <div>
-          {/* <Modal
-            open={open}
-            onClose={handleClose}
-            aria-labelledby='simple-modal-title'
-            aria-describedby='simple-modal-description'
-          >
-            {body}
-          </Modal> */}
-        </div>
+        <div></div>
       </ListItem>
       {isLoginMode && <LoginModal />}
     </>
