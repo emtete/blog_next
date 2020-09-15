@@ -53,10 +53,9 @@ const AppLayout = ({ children, window }) => {
   const router = useRouter();
 
   useEffect(() => {
-    dispatch(resetIndexPathAction());
-    dispatch({
-      type: "LOAD_MY_INFO_REQUEST",
-    });
+    // dispatch(resetIndexPathAction());
+    dispatch({ type: "RESET_INDEX_PATH_ACTION" });
+    dispatch({ type: "LOAD_MY_INFO_REQUEST" });
   }, []);
 
   console.log("AppLayout rendering");
