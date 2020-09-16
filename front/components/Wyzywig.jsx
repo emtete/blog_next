@@ -1,12 +1,10 @@
 import React, { Component, useState, useEffect } from "react";
-import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
+import { useDispatch, useSelector } from "react-redux";
 import dynamic from "next/dynamic";
 import draftToHtml from "draftjs-to-html";
-import { TextField, FormControl, Button } from "@material-ui/core";
-import { useDispatch, useSelector } from "react-redux";
+import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
 import { makeStyles } from "@material-ui/core/styles";
-
-import { getPostOneAction, removeOrgPostAction } from "../reducers/post";
+import { TextField, FormControl, Button } from "@material-ui/core";
 
 const Editor = dynamic(
   () => import("react-draft-wysiwyg").then((mod) => mod.Editor),
@@ -24,19 +22,6 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(3),
   },
 }));
-
-// const getDateStr = (date) => {
-//   let sYear = date.getFullYear();
-//   let sMonth = date.getMonth() + 1;
-//   let sDate = date.getDate();
-//   let sHours = date.getHours();
-//   let sMinutes = date.getMinutes();
-//   let sSeconds = date.getSeconds();
-
-//   sMonth = sMonth > 9 ? sMonth : "0" + sMonth;
-//   sDate = sDate > 9 ? sDate : "0" + sDate;
-//   return sYear + sMonth + sDate + sHours + sMinutes + sSeconds;
-// };
 
 const getIsArray = (element) => {
   return Array.isArray(element) && element.length > 0;
@@ -66,7 +51,7 @@ const Wyzywig = () => {
   const me = useSelector((state) => state.user.me);
   const orgPost = deepCopy(useSelector((state) => state.post.orgPost));
   const [post, setPost] = useState(orgPost);
-
+  // console.log(post);
   const [title, setTitle] = useState("");
   const treeData = useSelector((state) => state.category.treeData);
   const flatDataArr = getTreeToFlatData(treeData);
@@ -80,17 +65,24 @@ const Wyzywig = () => {
 
   const [editorState, setEditorState] = useState(editorContent);
 
-  const handleSelect = (e) => {
-    setCategoryId(e.target.value);
+  const handleTitle = (e) => {
+    setPost({ ...post, title: e.target.value });
+  };
+
+  const handleCategoryId = (e) => {
+    let selectText;
+
+    Array.from(e.target.children).map((node) => {
+      if (node.value == e.target.value) {
+        selectText = node.textContent;
+      }
+    });
+
+    setPost({ ...post, categoryId: e.target.value, categoryName: selectText });
   };
 
   const onEditorStateChange = (editorState) => {
     setEditorState(editorState);
-  };
-
-  const onChangeText = (e) => {
-    // setTitle(e.target.value);
-    setPost({ ...post, title: e.target.value });
   };
 
   const onSubmitForm = (e) => {
@@ -98,10 +90,33 @@ const Wyzywig = () => {
     const content = JSON.stringify(
       convertToRaw(editorState.getCurrentContent())
     );
-    const author = "victor_77";
-    const categoryId = categoryId;
-    const data = { UserId: me.id, author, title, categoryId, content };
-    dispatch({ type: "WRITE_POST_REQUEST", data });
+
+    // 새로 작성
+    if (orgPost.title === "") {
+      const author = "victor_77";
+      const data = {
+        id: post.id,
+        UserId: me.id,
+        author: author,
+        title: post.title,
+        categoryName: post.categoryName,
+        categoryId: post.categoryId,
+        content: post.content,
+      };
+      dispatch({ type: "WRITE_POST_REQUEST", data });
+    } // 수정
+    else {
+      const data = {
+        id: post.id,
+        UserId: me.id,
+        author: post.author,
+        title: post.title,
+        categoryName: post.categoryName,
+        categoryId: post.categoryId,
+        content: post.content,
+      };
+      // dispatch({ type: "WRITE_POST_REQUEST", data });
+    }
   };
 
   console.log("Wyzywig rendering");
@@ -112,7 +127,7 @@ const Wyzywig = () => {
         <FormControl>
           <select
             value={post.categoryId}
-            onChange={handleSelect}
+            onChange={handleCategoryId}
             style={{ width: 200 }}
           >
             <option value=''>카테고리 선택</option>
@@ -125,7 +140,7 @@ const Wyzywig = () => {
           <TextField
             id='title'
             label='title'
-            onChange={onChangeText}
+            onChange={handleTitle}
             value={post.title}
           />
           <br />

@@ -17,6 +17,11 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         unique: false,
       },
+      categoryName: {
+        type: DataTypes.STRING(30),
+        allowNull: false,
+        unique: false,
+      },
       content: {
         type: DataTypes.TEXT,
         allowNull: false,
