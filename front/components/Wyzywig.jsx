@@ -55,6 +55,10 @@ const Wyzywig = () => {
   const writeDone = useSelector((state) => state.post.writeDone);
   const writeError = useSelector((state) => state.post.writeError);
 
+  const updateLoading = useSelector((state) => state.post.updateLoading);
+  const updateDone = useSelector((state) => state.post.updateDone);
+  const updateError = useSelector((state) => state.post.updateError);
+
   const me = useSelector((state) => state.user.me);
   const orgPost = deepCopy(useSelector((state) => state.post.orgPost));
   const [post, setPost] = useState(orgPost);
@@ -122,7 +126,7 @@ const Wyzywig = () => {
         categoryId: post.categoryId,
         content: content,
       };
-      dispatch({ type: "EDIT_POST_REQUEST", data });
+      dispatch({ type: "UPDATE_POST_REQUEST", data });
     }
   };
 
@@ -142,6 +146,23 @@ const Wyzywig = () => {
       dispatch({ type: "WRITE_POST_RESET" });
     }
   }, [writeError]);
+
+  //수정 성공
+  useEffect(() => {
+    if (updateDone) {
+      dispatch({ type: "REMOVE_ORG_POST_ACTION" });
+      dispatch({ type: "UPDATE_POST_RESET" });
+      router.push("/postManage");
+    }
+  }, [updateDone]);
+
+  //수정 실패
+  useEffect(() => {
+    if (updateError) {
+      alert(updateError);
+      dispatch({ type: "UPDATE_POST_RESET" });
+    }
+  }, [updateError]);
 
   console.log("Wyzywig rendering");
 
