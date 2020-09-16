@@ -2,11 +2,7 @@
 import PostManage from "../components/PostManage";
 
 const postManage = () => {
-  return (
-    // <AppLayout>
-      <PostManage></PostManage>
-    {/* </AppLayout> */}
-  );
+  return <PostManage></PostManage>;
 };
 
 export default postManage;

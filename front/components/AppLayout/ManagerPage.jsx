@@ -33,21 +33,25 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { modalStyles, getModalStyle } from "../layout/LoginStyles";
 import { ToggleButton, menuStyles } from "../layout/styles";
-import { loginRequestAction, logoutRequestAction } from "../../reducers/user";
-import { resetIndexPathAction } from "../../reducers/category";
+// import { loginRequestAction, logoutRequestAction } from "../../reducers/user";
+// import { resetIndexPathAction } from "../../reducers/category";
 import useInput from "../../hooks/useInput";
 import Common from "./Common";
 
 const ManagerPage = () => {
   const classes = menuStyles();
+  const router = useRouter();
+  const dispatch = useDispatch();
 
-  const handleHandle = () => {
-    // if (me) {
-    //   dispatch(logoutRequestAction());
-    // } else {
-    //   handleOpen();
-    // }
+  const handleRouter = (e, path) => {
+    if (router.pathname === "/board") {
+      dispatch({ type: "REMOVE_ORG_POST_ACTION" });
+    }
+    // console.log(router.pathname);
+    router.push(path);
   };
+
+  console.log("ManagerPage rendering");
   return (
     <div>
       <div className={(classes.toolbar, classes.toolbarCustomising)}>
@@ -57,9 +61,7 @@ const ManagerPage = () => {
         <ListItem
           button
           style={{ color: "#dbdfe2" }}
-          onClick={() => {
-            router.push("/settings");
-          }}
+          onClick={(e) => handleRouter(e, "/settings")}
         >
           <ListItemIcon>
             <InboxIcon style={{ color: "#dbdfe2" }} />
@@ -70,9 +72,7 @@ const ManagerPage = () => {
         <ListItem
           button
           style={{ color: "#dbdfe2" }}
-          onClick={() => {
-            router.push("/postManage");
-          }}
+          onClick={(e) => handleRouter(e, "/postManage")}
         >
           <ListItemIcon>
             <InboxIcon style={{ color: "#dbdfe2" }} />
@@ -83,9 +83,7 @@ const ManagerPage = () => {
         <ListItem
           button
           style={{ color: "#dbdfe2" }}
-          onClick={() => {
-            router.push("/board");
-          }}
+          onClick={(e) => handleRouter(e, "/board")}
         >
           <ListItemIcon>
             <InboxIcon style={{ color: "#dbdfe2" }} />

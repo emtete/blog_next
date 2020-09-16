@@ -33,24 +33,24 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { modalStyles, getModalStyle } from "../layout/LoginStyles";
 import { ToggleButton, menuStyles } from "../layout/styles";
-import { loginRequestAction, logoutRequestAction } from "../../reducers/user";
-import { resetIndexPathAction } from "../../reducers/category";
+// import { loginRequestAction, logoutRequestAction } from "../../reducers/user";
+// import { resetIndexPathAction } from "../../reducers/category";
 import useInput from "../../hooks/useInput";
 import UserPage from "./UserPage";
 import ManagerPage from "./ManagerPage";
 import LoginModal from "./LoginModal";
 
 const AppLayout = ({ children, window }) => {
-  const classes = menuStyles();
   const theme = useTheme();
-
-  const dispatch = useDispatch();
-  const me = useSelector((state) => state.user.me);
-  const isAdminMode = useSelector((state) => state.user.isAdminMode);
-  const menu = useSelector((state) => state.menu.node.children);
-  const [menuList, setMenuList] = React.useState(menu);
-
   const router = useRouter();
+  const classes = menuStyles();
+  const dispatch = useDispatch();
+
+  const me = useSelector((state) => state.user.me);
+  const menu = useSelector((state) => state.menu.node.children);
+  const isAdminMode = useSelector((state) => state.user.isAdminMode);
+
+  const [menuList, setMenuList] = React.useState(menu);
 
   useEffect(() => {
     // dispatch(resetIndexPathAction());

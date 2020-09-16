@@ -63,19 +63,19 @@ const getTreeToFlatData = (treeData) => {
 const Wyzywig = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { me } = useSelector((state) => state.user);
-  const { orgPost } = useSelector((state) => state.post);
+  const me = useSelector((state) => state.user.me);
+  const orgPost = deepCopy(useSelector((state) => state.post.orgPost));
   const [post, setPost] = useState(orgPost);
 
   const [title, setTitle] = useState("");
-  const { treeData } = useSelector((state) => state.category);
+  const treeData = useSelector((state) => state.category.treeData);
   const flatDataArr = getTreeToFlatData(treeData);
   const [selectContents, setSelectContents] = useState(flatDataArr);
   const [categoryId, setCategoryId] = useState("");
 
   const editorContent =
     post.content !== null
-      ? EditorState.createWithContent(convertFromRaw(post.content))
+      ? EditorState.createWithContent(convertFromRaw(JSON.parse(post.content)))
       : EditorState.createEmpty();
 
   const [editorState, setEditorState] = useState(editorContent);
@@ -88,6 +88,11 @@ const Wyzywig = () => {
     setEditorState(editorState);
   };
 
+  const onChangeText = (e) => {
+    // setTitle(e.target.value);
+    setPost({ ...post, title: e.target.value });
+  };
+
   const onSubmitForm = (e) => {
     e.preventDefault();
     const content = JSON.stringify(
@@ -96,21 +101,9 @@ const Wyzywig = () => {
     const author = "victor_77";
     const categoryId = categoryId;
     const data = { UserId: me.id, author, title, categoryId, content };
-    dispatch({
-      type: "WRITE_POST_REQUEST",
-      data,
-    });
+    dispatch({ type: "WRITE_POST_REQUEST", data });
   };
 
-  const onChangeText = (e) => {
-    setTitle(e.target.value);
-  };
-
-  useEffect(() => {
-    if (orgPost.title != "") {
-      dispatch(removeOrgPostAction());
-    }
-  }, []);
   console.log("Wyzywig rendering");
 
   return (
@@ -120,7 +113,7 @@ const Wyzywig = () => {
           <select
             value={post.categoryId}
             onChange={handleSelect}
-            // style={{ width: 200 }}
+            style={{ width: 200 }}
           >
             <option value=''>카테고리 선택</option>
             {selectContents.map((content) => (

@@ -104,7 +104,6 @@ const reducer = (state = initialState, action) => {
       };
 
     case "GET_POST_LIST_SUCCESS":
-      console.log(action.data);
       jsonData = getData(action.data);
       return {
         ...state,

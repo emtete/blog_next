@@ -1,13 +1,20 @@
+import { useEffect } from "react";
 import { useRouter } from "next/router";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const Post = ({ item }) => {
   const router = useRouter();
   const dispatch = useDispatch();
+  const orgPost = useSelector((state) => state.post.orgPost);
+
   const onClickUpdate = () => {
-    dispatch(getPostOneAction({ id: item.id }));
-    router.push("/board");
+    dispatch({ type: "GET_POST_ONE_REQUEST", data: { id: item.id } });
   };
+
+  // 수정 버튼 클릭 후, dispatch를 통해 orgPost값이 호출된 후 수정페이지로 이동
+  useEffect(() => {
+    if (orgPost.title !== "") router.push("/board");
+  }, [orgPost]);
 
   return (
     <>

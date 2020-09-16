@@ -18,15 +18,14 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { modalStyles, getModalStyle } from "../layout/LoginStyles";
 import { ToggleButton, menuStyles } from "../layout/styles";
-import {
-  loginRequestAction,
-  logoutRequestAction,
-  startLogInModeAction,
-  endLogInModeAction,
-  startAdminModeAction,
-  endAdminModeAction,
-} from "../../reducers/user";
-import { resetIndexPathAction } from "../../reducers/category";
+// import // loginRequestAction,
+// logoutRequestAction,
+// startLogInModeAction,
+// endLogInModeAction,
+// startAdminModeAction,
+// endAdminModeAction,
+// "../../reducers/user";
+// import { resetIndexPathAction } from "../../reducers/category";
 import useInput from "../../hooks/useInput";
 import LoginModal from "./LoginModal";
 
@@ -57,7 +56,7 @@ const Common = () => {
       dispatch({ type: "START_ADMIN_MODE_ACTION" });
     }
   };
-  console.log("Common.jsx rendering");
+  console.log("Common rendering");
   return (
     <>
       <Divider style={{ backgroundColor: "#ffffff" }} />

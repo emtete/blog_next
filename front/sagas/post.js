@@ -59,7 +59,6 @@ function getPostOneAPI(data) {
 function* getPostOne(action) {
   try {
     const result = yield call(getPostOneAPI, action.data);
-    console.log(result);
     yield put({
       type: "GET_POST_ONE_SUCCESS",
       data: result.data, // 성공 결과

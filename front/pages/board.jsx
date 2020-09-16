@@ -6,16 +6,7 @@ import AppLayout from "../components/AppLayout";
 import Wyzywig from "../components/wyzywig";
 
 const Board = () => {
-  // const [Wyzysig, setWyzysig] = useState();
-  // useEffect(() => {
-  //   setWyzysig(import("../components/Wyzywig"));
-  // });
   return <Wyzywig />;
-  // {
-  //   Wyzywig ?  : <div>loading</div>;
-  // }
-  // <AppLayout>
-  // </AppLayout>
 };
 
 export default Board;
