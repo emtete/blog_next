@@ -1,6 +1,7 @@
 import React, { Component, useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
 import draftToHtml from "draftjs-to-html";
 import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
 import { makeStyles } from "@material-ui/core/styles";
@@ -48,6 +49,12 @@ const getTreeToFlatData = (treeData) => {
 const Wyzywig = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const router = useRouter();
+
+  const writeLoading = useSelector((state) => state.post.writeLoading);
+  const writeDone = useSelector((state) => state.post.writeDone);
+  const writeError = useSelector((state) => state.post.writeError);
+
   const me = useSelector((state) => state.user.me);
   const orgPost = deepCopy(useSelector((state) => state.post.orgPost));
   const [post, setPost] = useState(orgPost);
@@ -101,7 +108,7 @@ const Wyzywig = () => {
         title: post.title,
         categoryName: post.categoryName,
         categoryId: post.categoryId,
-        content: post.content,
+        content: content,
       };
       dispatch({ type: "WRITE_POST_REQUEST", data });
     } // 수정
@@ -113,11 +120,28 @@ const Wyzywig = () => {
         title: post.title,
         categoryName: post.categoryName,
         categoryId: post.categoryId,
-        content: post.content,
+        content: content,
       };
-      // dispatch({ type: "WRITE_POST_REQUEST", data });
+      dispatch({ type: "EDIT_POST_REQUEST", data });
     }
   };
+
+  //작성 성공
+  useEffect(() => {
+    if (writeDone) {
+      dispatch({ type: "REMOVE_ORG_POST_ACTION" });
+      dispatch({ type: "WRITE_POST_RESET" });
+      router.push("/postManage");
+    }
+  }, [writeDone]);
+
+  //작성 실패
+  useEffect(() => {
+    if (writeError) {
+      alert(writeError);
+      dispatch({ type: "WRITE_POST_RESET" });
+    }
+  }, [writeError]);
 
   console.log("Wyzywig rendering");
 

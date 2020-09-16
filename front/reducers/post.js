@@ -14,6 +14,13 @@ export const initialState = {
     totalCount: 0,
     items: [],
   },
+  writeLoading: false,
+  writeDone: false,
+  writeError: null,
+
+  updateLoading: false,
+  updateDone: false,
+  updateError: null,
 };
 
 const getData = (data) => {
@@ -86,16 +93,65 @@ const reducer = (state = initialState, action) => {
     case "WRITE_POST_REQUEST":
       return {
         ...state,
+        writeLoading: true,
+        writeDone: false,
+        writeError: null,
       };
 
     case "WRITE_POST_SUCCESS":
       return {
         ...state,
+        writeLoading: false,
+        writeDone: true,
+        writeError: null,
       };
 
     case "WRITE_POST_FAILURE":
       return {
         ...state,
+        writeLoading: false,
+        writeDone: false,
+        writeError: action.error,
+      };
+
+    case "WRITE_POST_RESET":
+      return {
+        ...state,
+        writeLoading: false,
+        writeDone: false,
+        writeError: null,
+      };
+
+    case "UPDATE_POST_REQUEST":
+      return {
+        ...state,
+        updateLoading: true,
+        updateDone: false,
+        updateError: null,
+      };
+
+    case "UPDATE_POST_SUCCESS":
+      return {
+        ...state,
+        updateLoading: false,
+        updateDone: true,
+        updateError: null,
+      };
+
+    case "UPDATE_POST_FAILURE":
+      return {
+        ...state,
+        updateLoading: false,
+        updateDone: false,
+        updateError: action.error,
+      };
+
+    case "UPDATE_POST_RESET":
+      return {
+        ...state,
+        updateLoading: false,
+        updateDone: false,
+        updateError: null,
       };
 
     case "GET_POST_LIST_REQUEST":
