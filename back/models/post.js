@@ -12,11 +12,6 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         unique: false,
       },
-      categoryId: {
-        type: DataTypes.STRING(30),
-        allowNull: false,
-        unique: false,
-      },
       categoryName: {
         type: DataTypes.STRING(30),
         allowNull: false,
@@ -34,6 +29,7 @@ module.exports = (sequelize, DataTypes) => {
   );
   Post.associate = (db) => {
     db.Post.belongsTo(db.User);
+    db.Post.belongsTo(db.Category);
   };
   return Post;
 };
