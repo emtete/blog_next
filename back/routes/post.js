@@ -34,6 +34,20 @@ router.post("/update", async (req, res, next) => {
   }
 });
 
+router.delete("/:postId", async (req, res, next) => {
+  try {
+    await Post.destroy({
+      where: { id: req.params.postId },
+    });
+
+    res.status(200).json({ PostId: parseInt(req.params.postId, 10) });
+    // res.status(201).json(post);
+  } catch (err) {
+    console.error(err);
+    next(err); // status 500
+  }
+});
+
 router.get("/getList", async (req, res, next) => {
   try {
     const post = await Post.findAll({

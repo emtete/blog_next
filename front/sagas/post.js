@@ -51,6 +51,27 @@ function* updatePost(action) {
   }
 }
 
+function deletePostAPI(data) {
+  return axios.delete(`/post/${data.id}`);
+}
+
+// 비동기 액션 크리에이터
+function* deletePost(action) {
+  try {
+    const result = yield call(deletePostAPI, action.data);
+    yield put({
+      type: "DELETE_POST_SUCCESS",
+      data: result.data, // 성공 결과
+    });
+  } catch (err) {
+    yield put({
+      // put은 dispatch와 같은 기능을 한다.
+      type: "DELETE_POST_FAILURE",
+      data: err.response.data, // 실패 결과
+    });
+  }
+}
+
 function getPostListAPI(data) {
   return axios.get("/post/getList", { data });
 }
@@ -102,6 +123,10 @@ function* watchUpdatePost() {
   yield takeLatest("UPDATE_POST_REQUEST", updatePost);
 }
 
+function* watchDeletePost() {
+  yield takeLatest("DELETE_POST_REQUEST", deletePost);
+}
+
 function* watchGetPostList() {
   yield takeLatest("GET_POST_LIST_REQUEST", getPostList);
 }
@@ -114,6 +139,7 @@ export default function* postSaga() {
   yield all([
     fork(watchWritePost),
     fork(watchUpdatePost),
+    fork(watchDeletePost),
     fork(watchGetPostList),
     fork(watchGetPostOne),
   ]);

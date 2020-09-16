@@ -4,7 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import Post from "./Post";
 
-import { getPostListAction } from "../../reducers/post";
+// import { getPostListAction } from "../../reducers/post";
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -17,13 +17,28 @@ const useStyles = makeStyles((theme) => ({
 const PostManage = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { items } = useSelector((state) => state.post.item);
+  const items = useSelector((state) => state.post.item.items);
 
+  const getListLoading = useSelector((state) => state.post.getListLoading);
+  const getListDone = useSelector((state) => state.post.getListDone);
+  const getListError = useSelector((state) => state.post.getListError);
+
+  // 글 목록 호출
   useEffect(() => {
-    //
-    dispatch(getPostListAction({}));
+    dispatch({ type: "GET_POST_LIST_REQUEST" });
   }, []);
 
+  // 글 목록 호출 성공
+  useEffect(() => {
+    if (getListDone) dispatch({ type: "GET_POST_LIST_RESET" });
+  }, [getListDone]);
+
+  // 글 목록 호출 실패
+  useEffect(() => {
+    if (getListError) alert(getListError);
+  }, [getListError]);
+
+  console.log("PostManage rendering");
   return (
     <main className={classes.content}>
       <div id='mArticle'>

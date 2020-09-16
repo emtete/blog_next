@@ -14,6 +14,10 @@ export const initialState = {
     totalCount: 0,
     items: [],
   },
+  getListLoading: false,
+  getListDone: false,
+  getListError: null,
+
   writeLoading: false,
   writeDone: false,
   writeError: null,
@@ -21,6 +25,10 @@ export const initialState = {
   updateLoading: false,
   updateDone: false,
   updateError: null,
+
+  deleteLoading: false,
+  deleteDone: false,
+  deleteError: null,
 };
 
 const getData = (data) => {
@@ -122,6 +130,38 @@ const reducer = (state = initialState, action) => {
         writeError: null,
       };
 
+    case "DELETE_POST_REQUEST":
+      return {
+        ...state,
+        deleteLoading: true,
+        deleteDone: false,
+        deleteError: null,
+      };
+
+    case "DELETE_POST_SUCCESS":
+      return {
+        ...state,
+        deleteLoading: false,
+        deleteDone: true,
+        deleteError: null,
+      };
+
+    case "DELETE_POST_FAILURE":
+      return {
+        ...state,
+        deleteLoading: false,
+        deleteDone: false,
+        deleteError: action.error,
+      };
+
+    case "DELETE_POST_RESET":
+      return {
+        ...state,
+        deleteLoading: false,
+        deleteDone: false,
+        deleteError: null,
+      };
+
     case "UPDATE_POST_REQUEST":
       return {
         ...state,
@@ -157,6 +197,9 @@ const reducer = (state = initialState, action) => {
     case "GET_POST_LIST_REQUEST":
       return {
         ...state,
+        getListLoading: true,
+        getListDone: false,
+        getListError: null,
       };
 
     case "GET_POST_LIST_SUCCESS":
@@ -167,16 +210,25 @@ const reducer = (state = initialState, action) => {
           totalCount: action.data.length,
           items: jsonData,
         },
+        getListLoading: false,
+        getListDone: true,
+        getListError: null,
       };
 
     case "GET_POST_LIST_FAILURE":
       return {
         ...state,
+        getListLoading: false,
+        getListDone: false,
+        getListError: action.error,
       };
 
     case "GET_POST_ONE_REQUEST":
       return {
         ...state,
+        getListLoading: false,
+        getListDone: false,
+        getListError: null,
       };
 
     case "GET_POST_ONE_SUCCESS":
