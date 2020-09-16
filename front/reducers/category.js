@@ -1,4 +1,8 @@
 export const initialState = {
+  applyLoading: false,
+  applyDone: false,
+  applyError: null,
+
   treeData: [
     // {
     //   title: "개발일지..",
@@ -125,13 +129,6 @@ export const setUpdateModeAction = (data) => {
     data,
   };
 };
-
-// export const createNewComponentAction = (data) => {
-//   return {
-//     type: "CREATE_NEW_COMPONENT_ACTION",
-//     data,
-//   };
-// };
 
 export const updateCategoryNameAction = (data) => {
   return {
@@ -351,6 +348,35 @@ const reducer = (state = initialState, action) => {
   let nodeCnt;
 
   switch (action.type) {
+    case "APPLY_CATEGORY_REQUEST":
+      return {
+        ...state,
+        applyLoading: true,
+        applyDone: false,
+        applyError: null,
+      };
+    case "APPLY_CATEGORY_SUCCESS":
+      return {
+        ...state,
+        applyLoading: false,
+        applyDone: true,
+        applyError: null,
+      };
+    case "APPLY_CATEGORY_FAILURE":
+      return {
+        ...state,
+        applyLoading: false,
+        applyDone: false,
+        applyError: action.error,
+      };
+    case "APPLY_CATEGORY_RESET":
+      return {
+        ...state,
+        applyLoading: false,
+        applyDone: false,
+        applyError: null,
+      };
+
     case "CREATE_NEW_COMPONENT_ACTION":
       // newId =
       //   state.treeData.length > 0

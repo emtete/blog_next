@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useState, useCallback } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 
 import CategoryAll from "./CategoryAll";
@@ -20,10 +20,18 @@ const useStyles = makeStyles((theme) => ({
 
 const SettingTabs = () => {
   const classes = useStyles();
-  const { treeData, newComponent, isMoveMode } = useSelector(
-    (state) => state.category
-  );
+  const dispatch = useDispatch();
 
+  const treeData = useSelector((state) => state.category.treeData);
+  const isMoveMode = useSelector((state) => state.category.isMoveMode);
+  const newComponent = useSelector((state) => state.category.newComponent);
+
+  const onClickSave = useCallback((e) => {
+    const data = { treeData };
+    dispatch({ type: "APPLY_CATEGORY_REQUEST", data });
+  }, []);
+
+  console.log("Category Index rendering");
   return (
     <main className={classes.content}>
       <div id='mArticle'>
@@ -55,7 +63,7 @@ const SettingTabs = () => {
               </div>
             </div>
             <div className='set_btn'>
-              <button type='button' className='btn_save'>
+              <button type='button' className='btn_save' onClick={onClickSave}>
                 변경사항 저장
               </button>
             </div>
