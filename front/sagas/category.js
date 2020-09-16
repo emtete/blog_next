@@ -10,7 +10,7 @@ import {
 import axios from "axios";
 
 function applyCategorisAPI(data) {
-  return axios.post("/category/apply", {data});
+  return axios.post("/category/apply", { data });
 }
 
 // 비동기 액션 크리에이터
@@ -31,14 +31,10 @@ function* applyCategoris(action) {
   }
 }
 
-
 function* watchApplyCategoris() {
   yield takeLatest("APPLY_CATEGORY_REQUEST", applyCategoris);
 }
 
-}
-
 export default function* userSaga() {
-  yield all([fork(watchApplyCategoris)//, fork(watchLogOut), fork(watchLoadMyInfo)
-  ]);
+  yield all([fork(watchApplyCategoris)]);
 }

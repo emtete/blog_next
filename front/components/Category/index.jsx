@@ -10,6 +10,35 @@ import CategoryAddComp from "./CategoryAddComp";
 import CategoryWrap from "./CategoryWrap";
 import CategoryModal from "./CategoryModal";
 
+const getIsArray = (e) => {
+  return Array.isArray(e) && e.length > 0;
+};
+
+const deepCopy = (obj) => JSON.parse(JSON.stringify(obj));
+
+const getNode = (treeData, indexPath, idArr) => {
+  // const clone = deepCopy(treeData);
+  const result = [];
+
+  idArr.map((id) => {
+    if (indexPath[id].length === 1) {
+      const path = indexPath[id][0];
+      const node = deepCopy(treeData[path]);
+      delete node.children;
+      result.push(node);
+    } //
+    else if (indexPath[id].length === 2) {
+      const path1 = indexPath[id][0];
+      const path2 = indexPath[id][1];
+      const node = deepCopy(treeData[path1].children[path2]);
+      // delete node.children;
+      result.push(node);
+    }
+  });
+
+  return result;
+};
+
 const useStyles = makeStyles((theme) => ({
   content: {
     flexGrow: 1,
@@ -22,14 +51,37 @@ const Category = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
 
+  const me = useSelector((state) => state.user.me);
   const treeData = useSelector((state) => state.category.treeData);
+  const treeHelper = useSelector((state) => state.category.treeHelper);
   const isMoveMode = useSelector((state) => state.category.isMoveMode);
   const newComponent = useSelector((state) => state.category.newComponent);
 
-  const onClickSave = useCallback((e) => {
-    const data = { treeData };
-    dispatch({ type: "APPLY_CATEGORY_REQUEST", data });
-  }, []);
+  const appended = useSelector((state) => state.category.appendedCategories);
+  const updated = useSelector((state) => state.category.updatedCategories);
+  const deleted = useSelector((state) => state.category.deletedCategories);
+
+  const onClickSave = useCallback(
+    (e) => {
+      const data = {};
+
+      const appendedNode = getNode(treeData, treeHelper.indexPath, appended);
+      const updatedNode = getNode(treeData, treeHelper.indexPath, updated);
+      const deletedNode = getNode(treeData, treeHelper.indexPath, deleted);
+
+      if (getIsArray(appended)) data["appended"] = appendedNode;
+      if (getIsArray(updated)) data["updated"] = updatedNode;
+      if (getIsArray(deleted)) data["deleted"] = deletedNode;
+      data["userId"] = me.id;
+
+      if (Object.keys(data).length > 0) {
+        dispatch({ type: "APPLY_CATEGORY_REQUEST", data });
+      } else {
+        alert("변경사항이 없습니다.");
+      }
+    },
+    [appended, updated, deleted]
+  );
 
   console.log("Category Index rendering");
   return (

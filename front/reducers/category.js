@@ -355,6 +355,7 @@ const reducer = (state = initialState, action) => {
         applyDone: false,
         applyError: null,
       };
+
     case "APPLY_CATEGORY_SUCCESS":
       return {
         ...state,
@@ -362,6 +363,7 @@ const reducer = (state = initialState, action) => {
         applyDone: true,
         applyError: null,
       };
+
     case "APPLY_CATEGORY_FAILURE":
       return {
         ...state,
@@ -369,6 +371,7 @@ const reducer = (state = initialState, action) => {
         applyDone: false,
         applyError: action.error,
       };
+
     case "APPLY_CATEGORY_RESET":
       return {
         ...state,
@@ -378,10 +381,6 @@ const reducer = (state = initialState, action) => {
       };
 
     case "CREATE_NEW_COMPONENT_ACTION":
-      // newId =
-      //   state.treeData.length > 0
-      //     ? -parseInt(state.treeData[state.treeData.length - 1].priority) - 1
-      //     : -1;
       newId = -parseInt(state.treeHelper.cnt) - 1;
 
       newObject = {
