@@ -7,6 +7,8 @@ const dotenv = require("dotenv");
 
 const postRouter = require("./routes/post");
 const userRouter = require("./routes/user");
+const categoryRouter = require("./routes/category");
+
 const db = require("./models");
 const passportConfig = require("./passport");
 const app = express();
@@ -49,6 +51,7 @@ app.get("/", (req, res) => {
 
 app.use("/post", postRouter);
 app.use("/user", userRouter);
+app.use("/category", categoryRouter);
 
 app.listen(3065, () => {
   console.log("서버 실행 중..");

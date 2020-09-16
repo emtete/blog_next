@@ -64,7 +64,7 @@ const ManagerPage = () => {
         <ListItem
           button
           style={{ color: "#dbdfe2" }}
-          onClick={(e) => handleRouter(e, "/settings")}
+          onClick={(e) => handleRouter(e, "/category")}
         >
           <ListItemIcon>
             <InboxIcon style={{ color: "#dbdfe2" }} />

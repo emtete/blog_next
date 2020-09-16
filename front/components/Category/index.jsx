@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SettingTabs = () => {
+const Category = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
 
@@ -76,4 +76,4 @@ const SettingTabs = () => {
   );
 };
 
-export default SettingTabs;
+export default Category;
