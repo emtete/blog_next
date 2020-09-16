@@ -1,90 +1,89 @@
 export const initialState = {
   treeData: [
-    {
-      title: "개발일지..",
-      entries: 4,
-      priority: 0,
-      depth: 1,
-      parent: 0,
-      id: 1,
-    },
-    {
-      title: "프로그래밍ABC",
-      entries: 9,
-      priority: 1,
-      depth: 1,
-      parent: 0,
-      id: 2,
-
-      children: [
-        {
-          title: "test1",
-          entries: 0,
-          priority: 0,
-          depth: 2,
-          parent: 2,
-          id: 3,
-        },
-        {
-          title: "test2",
-          entries: 0,
-          priority: 1,
-          depth: 2,
-          parent: 2,
-          id: 4,
-        },
-      ],
-    },
-    {
-      title: "test3",
-      entries: 4,
-      priority: 2,
-      depth: 1,
-      parent: 0,
-      id: 5,
-    },
-    {
-      title: "test4",
-      entries: 4,
-      priority: 3,
-      depth: 1,
-      parent: 0,
-      id: 6,
-      children: [
-        {
-          title: "test41",
-          entries: 0,
-          priority: 0,
-          depth: 2,
-          parent: 6,
-          id: 8,
-        },
-        {
-          title: "test42",
-          entries: 0,
-          priority: 1,
-          depth: 2,
-          parent: 6,
-          id: 9,
-        },
-        {
-          title: "test43",
-          entries: 0,
-          priority: 2,
-          depth: 2,
-          parent: 6,
-          id: 10,
-        },
-      ],
-    },
-    {
-      title: "test5",
-      entries: 4,
-      priority: 4,
-      depth: 1,
-      parent: 0,
-      id: 7,
-    },
+    // {
+    //   title: "개발일지..",
+    //   entries: 4,
+    //   priority: 0,
+    //   depth: 1,
+    //   parent: 0,
+    //   id: 1,
+    // },
+    // {
+    //   title: "프로그래밍ABC",
+    //   entries: 9,
+    //   priority: 1,
+    //   depth: 1,
+    //   parent: 0,
+    //   id: 2,
+    //   children: [
+    //     {
+    //       title: "test1",
+    //       entries: 0,
+    //       priority: 0,
+    //       depth: 2,
+    //       parent: 2,
+    //       id: 3,
+    //     },
+    //     {
+    //       title: "test2",
+    //       entries: 0,
+    //       priority: 1,
+    //       depth: 2,
+    //       parent: 2,
+    //       id: 4,
+    //     },
+    //   ],
+    // },
+    // {
+    //   title: "test3",
+    //   entries: 4,
+    //   priority: 2,
+    //   depth: 1,
+    //   parent: 0,
+    //   id: 5,
+    // },
+    // {
+    //   title: "test4",
+    //   entries: 4,
+    //   priority: 3,
+    //   depth: 1,
+    //   parent: 0,
+    //   id: 6,
+    //   children: [
+    //     {
+    //       title: "test41",
+    //       entries: 0,
+    //       priority: 0,
+    //       depth: 2,
+    //       parent: 6,
+    //       id: 8,
+    //     },
+    //     {
+    //       title: "test42",
+    //       entries: 0,
+    //       priority: 1,
+    //       depth: 2,
+    //       parent: 6,
+    //       id: 9,
+    //     },
+    //     {
+    //       title: "test43",
+    //       entries: 0,
+    //       priority: 2,
+    //       depth: 2,
+    //       parent: 6,
+    //       id: 10,
+    //     },
+    //   ],
+    // },
+    // {
+    //   title: "test5",
+    //   entries: 4,
+    //   priority: 4,
+    //   depth: 1,
+    //   parent: 0,
+    //   id: 7,
+    // },
   ],
   categoryInEditMode: [],
   newComponent: [],
@@ -94,7 +93,7 @@ export const initialState = {
   isMoveMode: false,
   selectedNode: null,
   treeHelper: {
-    // cnt: 0,
+    cnt: 0,
     // appendCnt: 0,
     // nodeCount: 0,
     indexPath: {
@@ -127,12 +126,12 @@ export const setUpdateModeAction = (data) => {
   };
 };
 
-export const createNewComponentAction = (data) => {
-  return {
-    type: "CREATE_NEW_COMPONENT_ACTION",
-    data,
-  };
-};
+// export const createNewComponentAction = (data) => {
+//   return {
+//     type: "CREATE_NEW_COMPONENT_ACTION",
+//     data,
+//   };
+// };
 
 export const updateCategoryNameAction = (data) => {
   return {
@@ -207,6 +206,21 @@ const resetIndexPath = (treeDataCopied) => {
     clonePath[node1.id] = [index1];
   });
   return clonePath;
+};
+
+const getNodeCtn = (treeDataCopied) => {
+  let cnt = 0;
+
+  treeDataCopied.map((node1, index1) => {
+    const children = node1.children;
+    if (Array.isArray(children) && children.length > 0) {
+      children.map((node2, index2) => {
+        cnt++;
+      });
+    }
+    cnt++;
+  });
+  return cnt;
 };
 
 const resetIndexPathAndPriority = (treeDataCopied, indexPath) => {
@@ -334,13 +348,15 @@ const reducer = (state = initialState, action) => {
   let isMoveInSameCategory;
   let isDown;
   let isChanged;
+  let nodeCnt;
 
   switch (action.type) {
     case "CREATE_NEW_COMPONENT_ACTION":
-      newId =
-        state.treeData.length > 0
-          ? -parseInt(state.treeData[state.treeData.length - 1].priority) - 1
-          : -1;
+      // newId =
+      //   state.treeData.length > 0
+      //     ? -parseInt(state.treeData[state.treeData.length - 1].priority) - 1
+      //     : -1;
+      newId = -parseInt(state.treeHelper.cnt) - 1;
 
       newObject = {
         title: "",
@@ -362,6 +378,7 @@ const reducer = (state = initialState, action) => {
             ...state.treeHelper.indexPath,
             [newObject.id]: [newObject.priority],
           },
+          cnt: state.treeHelper.cnt + 1,
         },
         categoryInEditMode: [...state.categoryInEditMode, newId],
       };
@@ -397,6 +414,7 @@ const reducer = (state = initialState, action) => {
     case "RESET_INDEX_PATH_ACTION":
       clone = deepCopy(state.treeData);
       clonePath = resetIndexPath(clone);
+      nodeCnt = getNodeCtn(clone);
 
       return {
         ...state,
@@ -405,6 +423,7 @@ const reducer = (state = initialState, action) => {
           indexPath: {
             ...clonePath,
           },
+          cnt: nodeCnt,
         },
       };
 

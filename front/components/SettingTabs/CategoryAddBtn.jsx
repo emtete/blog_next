@@ -1,13 +1,14 @@
 import { useDispatch } from "react-redux";
 import debounce from "lodash/debounce";
 
-import { createNewComponentAction } from "../../reducers/category";
+// import { createNewComponentAction } from "../../reducers/category";
 
 const CategoryAddBtn = () => {
   const dispatch = useDispatch();
 
   const onClickAddBtn = () => {
-    dispatch(createNewComponentAction());
+    // dispatch(createNewComponentAction());
+    dispatch({ type: "CREATE_NEW_COMPONENT_ACTION" });
   };
 
   const clickAddBtnThrottled = debounce(onClickAddBtn, 250);
