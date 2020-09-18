@@ -354,19 +354,23 @@ const getIsChanged = (clone, clonePath, modalNode) => {
 
 // 불러온 treeData를 계층구조로 변환한다.
 const flatToHierarchy = (flatData) => {
+  const clone = deepCopy(flatData);
   const treeData = [];
-  let parentNode;
 
-  flatData.map((node, index) => {
-    if (node.parent == 0) {
-      treeData.push(node);
-    } else {
-      parentNode = treeData.find((e) => e.id == node.parent);
-      if (parentNode["children"] == undefined) parentNode["children"] = [];
-      parentNode["children"].push(node);
-    }
+  flatData.map((node) => {
+    if (node.depth == 1) treeData.push(node);
   });
-  console.log(treeData);
+
+  const nextIndex = treeData.length;
+
+  for (let i = nextIndex; i < clone.length; i++) {
+    const parentId = clone[i].parent;
+    const parentIndex = treeData.findIndex((e) => e.id == parentId);
+    const parentNode = treeData[parentIndex];
+    if (parentNode["children"] === undefined) parentNode["children"] = [];
+    parentNode["children"].push(clone[i]);
+  }
+
   return treeData;
 };
 

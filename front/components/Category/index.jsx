@@ -75,11 +75,11 @@ const Category = () => {
 
       const appendedNode = getNode(treeData, treeHelper.indexPath, appended);
       const updatedNode = getNode(treeData, treeHelper.indexPath, updated);
-      const deletedNode = getNode(treeData, treeHelper.indexPath, deleted);
+      // const deletedNode = getNode(treeData, treeHelper.indexPath, deleted);
 
       if (getIsArray(appended)) data["appended"] = appendedNode;
       if (getIsArray(updated)) data["updated"] = updatedNode;
-      if (getIsArray(deleted)) data["deleted"] = deletedNode;
+      if (getIsArray(deleted)) data["deleted"] = deleted;
       data["userId"] = me.id;
 
       if (Object.keys(data).length > 0) {

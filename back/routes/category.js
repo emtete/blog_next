@@ -30,16 +30,19 @@ router.post("/apply", async (req, res, next) => {
     }
     for (let i in appended) {
       if (appended[i].depth == 2) {
-        appended[i].parent = parentIds[appended[i].parent];
+        const newParentId = parentIds[appended[i].parent];
+        if (newParentId) appended[i].parent = newParentId;
         await Category.create(getObj(appended[i], userId));
       }
     }
-    // for (let node in updated) {
-    //   await Category.create(getObj(node, userId));
-    // }
-    // for (let node in deleted) {
-    //   await Category.create(getObj(node, userId));
-    // }
+    for (let i in updated) {
+      const willUpdate = getObj(updated[i]);
+      delete willUpdate.UserId;
+      await Category.update(willUpdate, { where: { id: updated[i].id } });
+    }
+    for (let i in deleted) {
+      await Category.destroy({ where: { id: deleted[i] } });
+    }
     res.status(201).send("ok");
   } catch (err) {
     console.error(err);
@@ -50,9 +53,11 @@ router.post("/apply", async (req, res, next) => {
 router.get("/getList", async (req, res, next) => {
   try {
     const category = await Category.findAll({
-      // attributes: {
-      //   exclude: ["content"],
-      // },
+      order: [
+        ["depth", "ASC"],
+        ["parent", "ASC"],
+        ["priority", "ASC"],
+      ],
     });
     res.status(201).json(category);
   } catch (err) {
