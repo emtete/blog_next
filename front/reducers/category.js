@@ -314,6 +314,30 @@ const manageCategoryCrud = (state, updatedIdArr, deletedIdArr) => {
   return [appendedClone, updatedClone, deletedClone];
 };
 
+// isChanged의 목적은 modalNode의 위치변화를 체크하는것
+const getIsChanged = (clone, clonePath, modalNode) => {
+  let isChanged;
+
+  if (clonePath[modalNode.id].length === 1) {
+    const afterIndex = clone.findIndex((e) => e.id === modalNode.id);
+    isChanged = afterIndex !== clonePath[modalNode.id][0] ? 0 : -1;
+  } //
+  else if (clonePath[modalNode.id].length === 2) {
+    const afterIndex1 = clone.findIndex((e) => e.id === modalNode.parent);
+    const afterIndex2 = clone[afterIndex1].children.findIndex(
+      (e) => e.id === modalNode.id
+    );
+    isChanged =
+      afterIndex1 !== clonePath[modalNode.id][0]
+        ? 0
+        : afterIndex1 !== clonePath[modalNode.id][0]
+        ? 1
+        : -1;
+  }
+
+  return isChanged;
+};
+
 const reducer = (state = initialState, action) => {
   let newObject;
   let title;
@@ -463,11 +487,9 @@ const reducer = (state = initialState, action) => {
 
       // 아래로 이동하는 경우, 이동 전 노드가 삭제되면 그 이후의 노드들의 위치가 -1된다.
       // 위로 이동하는 경우, 노드를 위에 끼워넣으면 원본의 위치가 +1된다.
-      // if (isMoveInSameCategory && targetIndex.length === 1) {
       if (targetIndex.length === 1) {
         isDown = targetIndex[0] > modalIndex[0];
       } //
-      // else if (isMoveInSameCategory && targetIndex.length === 2) {
       else if (targetIndex.length === 2) {
         isDown = targetIndex[1] > modalIndex[1];
       }
@@ -475,50 +497,22 @@ const reducer = (state = initialState, action) => {
       // modalNode 끼워넣기
       // 끼워넣기 이후 이전에 저장된 indexPath와 실제 treeData의 index가
       // 서로 일치하지 않을 수 있다. (treeData의 순서가 바뀌기 때문에)
-      // 순서가 바꼈는지 확인.
       if (targetIndex.length === 1) {
         clone.splice(targetIndex[0], 0, modalNode);
-        // isChanged = targetIndex[0] != clonePath[modalNode.id][0] ? 1 : 0;
-        isChanged = targetIndex[0] != clonePath[modalNode.id][0] ? 0 : -1;
-        console.log(
-          "clonePath[modalNode.id][0] : ",
-          clonePath[modalNode.id][0]
-        );
-        console.log("targetIndex[0] : ", targetIndex[0]);
       } else if (targetIndex.length === 2) {
-        if (clone[targetIndex[0]].children) {
-          clone[targetIndex[0]].children.splice(targetIndex[1], 0, modalNode);
+        const target0 = clone[targetIndex[0]];
+        if (target0.children) {
+          target0.children.splice(targetIndex[1], 0, modalNode);
         } //
         else {
-          clone[targetIndex[0]]["children"] = [];
-          clone[targetIndex[0]]["children"].push(modalNode);
-        }
-        // isChanged =
-        //   targetIndex[0] != clonePath[modalNode.id][0]
-        //     ? 0
-        //     : targetIndex[1] != clonePath[modalNode.id][1]
-        //     ? 1
-        //     : -1;
-
-        if (clonePath[modalNode.id].length === 1) {
-          const afterIndex = clone.findIndex((e) => e.id === modalNode.id);
-          isChanged = afterIndex !== clonePath[modalNode.id][0] ? 0 : -1;
-        } //
-        else if (clonePath[modalNode.id].length === 2) {
-          const afterIndex1 = clone.findIndex((e) => e.id === modalNode.parent);
-          const afterIndex2 = clone[afterIndex1].children.findIndex(
-            (e) => e.id === modalNode.id
-          );
-          // isChanged의 목적은 modalNode의 위치변화를 체크하는것
-          isChanged =
-            afterIndex1 !== clonePath[modalNode.id][0]
-              ? 0
-              : afterIndex1 !== clonePath[modalNode.id][0]
-              ? 1
-              : -1;
+          target0["children"] = [];
+          target0["children"].push(modalNode);
         }
       }
-      console.log("isChanged : ", isChanged);
+
+      // 순서가 바꼈는지 확인.
+      isChanged = getIsChanged(clone, clonePath, modalNode);
+
       // path 변화가 있다면 modalIndex 수정
       if (isChanged != -1) {
         modalIndex[isChanged] = isDown
@@ -528,7 +522,6 @@ const reducer = (state = initialState, action) => {
 
       // 원본 지우기
       if (modalIndex.length === 1) {
-        console.log("111", modalIndex[0]);
         clone.splice(modalIndex[0], 1);
       } else if (modalIndex.length === 2) {
         clone[modalIndex[0]].children.splice(modalIndex[1], 1);
