@@ -237,11 +237,13 @@ const resetIndexPathAndPriority = (treeDataCopied, indexPath) => {
 
   treeDataCopied.map((node1, index1) => {
     const children = node1.children;
-    if (Array.isArray(children) && children.length > 0) {
+    // if (Array.isArray(children) && children.length > 0) {
+    if (getIsArray(children)) {
       children.map((node2, index2) => {
         // path의 값이 이전과 다르다면
         const indexPath2 = indexPath[node2.id];
-        if (indexPath2[0] != index1 || indexPath2[1] != index2) {
+        // if (indexPath2[0] != index1 || indexPath2[1] != index2) {
+        if (indexPath2[1] != index2) {
           updatedIdArr.push(node2.id);
         }
 
@@ -264,29 +266,29 @@ const resetIndexPathAndPriority = (treeDataCopied, indexPath) => {
 };
 
 // 매개변수로 주어진 depth의 priority를 다시 세팅, 해당 트리데이터를 리턴한다.
-const settingPriorityIn = (treeData, depth, state, id) => {
-  const updatedIdArr = [];
-  let index1;
+// const settingPriorityIn = (treeData, depth, state, id) => {
+//   const updatedIdArr = [];
+//   let index1;
 
-  if (depth === 1) {
-    treeData.map((n, i) => {
-      index1 = state.treeHelper.indexPath[n.id][0];
-      if (index1 != n.priority) {
-        n.priority = i;
-        updatedIdArr.push(n.id);
-      }
-    });
-  } //
-  else if (depth === 2) {
-    const parentIndex = state.treeHelper.indexPath[id][0];
-    treeData[parentIndex].children.map((n, i) => {
-      n.priority = i;
-      updatedIdArr.push(n.id);
-    });
-  }
+//   if (depth === 1) {
+//     treeData.map((n, i) => {
+//       index1 = state.treeHelper.indexPath[n.id][0];
+//       if (index1 != n.priority) {
+//         n.priority = i;
+//         updatedIdArr.push(n.id);
+//       }
+//     });
+//   } //
+//   else if (depth === 2) {
+//     const parentIndex = state.treeHelper.indexPath[id][0];
+//     treeData[parentIndex].children.map((n, i) => {
+//       n.priority = i;
+//       updatedIdArr.push(n.id);
+//     });
+//   }
 
-  return [treeData, updatedIdArr];
-};
+//   return [treeData, updatedIdArr];
+// };
 
 const manageCategoryCrud = (state, updatedIdArr, deletedIdArr) => {
   const appendedClone = deepCopy(state.appendedCategories);
@@ -623,18 +625,23 @@ const reducer = (state = initialState, action) => {
 
     case "DELETE_NODE_ACTION":
       id = action.data.id;
+      clonePath = deepCopy(state.treeHelper.indexPath);
 
       [treeDataCopied, targetDepth, deletedChildren] = getDeletedTargetTreeData(
         state,
         id
       );
-      [sortedData, updatedIdArr] = settingPriorityIn(
+      // [sortedData, updatedIdArr] = settingPriorityIn(
+      //   treeDataCopied,
+      //   targetDepth,
+      //   state,
+      //   id
+      // );
+      [clonePath, treeDataCopied, updatedIdArr] = resetIndexPathAndPriority(
         treeDataCopied,
-        targetDepth,
-        state,
-        id
+        clonePath
       );
-      clonePath = resetIndexPath(sortedData);
+      // clonePath = resetIndexPath(sortedData);
 
       [appendedClone, updatedClone, deletedClone] = manageCategoryCrud(
         state,
@@ -644,7 +651,7 @@ const reducer = (state = initialState, action) => {
 
       return {
         ...state,
-        treeData: [...sortedData],
+        treeData: [...treeDataCopied],
         appendedCategories: [...appendedClone],
         updatedCategories: [...updatedClone],
         deletedCategories: [...deletedClone],
