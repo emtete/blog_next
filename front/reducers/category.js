@@ -466,20 +466,10 @@ const reducer = (state = initialState, action) => {
       // if (isMoveInSameCategory && targetIndex.length === 1) {
       if (targetIndex.length === 1) {
         isDown = targetIndex[0] > modalIndex[0];
-        //   if (isDown) {
-        //     targetIndex[0] = targetIndex[0] - 1;
-        //   } else {
-        //     modalIndex[0] = modalIndex[0] + 1;
-        //   }
       } //
       // else if (isMoveInSameCategory && targetIndex.length === 2) {
       else if (targetIndex.length === 2) {
         isDown = targetIndex[1] > modalIndex[1];
-        //   if (isDown) {
-        //     targetIndex[1] = targetIndex[1] - 1;
-        //   } else {
-        //     modalIndex[1] = modalIndex[1] + 1;
-        //   }
       }
 
       // modalNode 끼워넣기
@@ -488,17 +478,47 @@ const reducer = (state = initialState, action) => {
       // 순서가 바꼈는지 확인.
       if (targetIndex.length === 1) {
         clone.splice(targetIndex[0], 0, modalNode);
-        isChanged = targetIndex[0] != clonePath[modalNode.id][0] ? 1 : 0;
+        // isChanged = targetIndex[0] != clonePath[modalNode.id][0] ? 1 : 0;
+        isChanged = targetIndex[0] != clonePath[modalNode.id][0] ? 0 : -1;
+        console.log(
+          "clonePath[modalNode.id][0] : ",
+          clonePath[modalNode.id][0]
+        );
+        console.log("targetIndex[0] : ", targetIndex[0]);
       } else if (targetIndex.length === 2) {
-        clone[targetIndex[0]].children.splice(targetIndex[1], 0, modalNode);
-        isChanged =
-          targetIndex[0] != clonePath[modalNode.id][0]
-            ? 0
-            : targetIndex[1] != clonePath[modalNode.id][1]
-            ? 1
-            : -1;
-      }
+        if (clone[targetIndex[0]].children) {
+          clone[targetIndex[0]].children.splice(targetIndex[1], 0, modalNode);
+        } //
+        else {
+          clone[targetIndex[0]]["children"] = [];
+          clone[targetIndex[0]]["children"].push(modalNode);
+        }
+        // isChanged =
+        //   targetIndex[0] != clonePath[modalNode.id][0]
+        //     ? 0
+        //     : targetIndex[1] != clonePath[modalNode.id][1]
+        //     ? 1
+        //     : -1;
 
+        if (clonePath[modalNode.id].length === 1) {
+          const afterIndex = clone.findIndex((e) => e.id === modalNode.id);
+          isChanged = afterIndex !== clonePath[modalNode.id][0] ? 0 : -1;
+        } //
+        else if (clonePath[modalNode.id].length === 2) {
+          const afterIndex1 = clone.findIndex((e) => e.id === modalNode.parent);
+          const afterIndex2 = clone[afterIndex1].children.findIndex(
+            (e) => e.id === modalNode.id
+          );
+          // isChanged의 목적은 modalNode의 위치변화를 체크하는것
+          isChanged =
+            afterIndex1 !== clonePath[modalNode.id][0]
+              ? 0
+              : afterIndex1 !== clonePath[modalNode.id][0]
+              ? 1
+              : -1;
+        }
+      }
+      console.log("isChanged : ", isChanged);
       // path 변화가 있다면 modalIndex 수정
       if (isChanged != -1) {
         modalIndex[isChanged] = isDown
@@ -508,6 +528,7 @@ const reducer = (state = initialState, action) => {
 
       // 원본 지우기
       if (modalIndex.length === 1) {
+        console.log("111", modalIndex[0]);
         clone.splice(modalIndex[0], 1);
       } else if (modalIndex.length === 2) {
         clone[modalIndex[0]].children.splice(modalIndex[1], 1);

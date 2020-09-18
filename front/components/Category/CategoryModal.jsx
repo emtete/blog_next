@@ -95,8 +95,8 @@ const CategoryModal = () => {
     const selectedPriority = parseInt(treeHelper.indexPath[id][0]);
     const modalNodePriority = parseInt(modalNode.priority);
     const isModalNodeDepth1 = 0 == modalNode.parent; // modalNode의 depth가 1인지의 여부
-    const isMoveInSameCategory =
-      getParent(id, treeDataCopied, treeHelper.indexPath) == modalNode.parent; // 같은 폴더에서의 이동인지 여부
+    const isMoveInSameCategory = id == modalNode.parent; // 같은 폴더에서의 이동인지 여부
+    // getParent(id, treeDataCopied, treeHelper.indexPath) == modalNode.parent; // 같은 폴더에서의 이동인지 여부
     setSelectValue1(id);
 
     // 선택되지 않음 선택시
@@ -245,7 +245,7 @@ const CategoryModal = () => {
         const children = treeDataCopied[selectedIndex].children;
         targetIndex = [
           selectedIndex[0],
-          children[children.length - 1].priority + 1,
+          children ? children[children.length - 1].priority + 1 : 0,
         ];
         break;
     }
