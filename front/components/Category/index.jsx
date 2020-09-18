@@ -80,9 +80,9 @@ const Category = () => {
       if (getIsArray(appended)) data["appended"] = appendedNode;
       if (getIsArray(updated)) data["updated"] = updatedNode;
       if (getIsArray(deleted)) data["deleted"] = deleted;
-      data["userId"] = me.id;
 
       if (Object.keys(data).length > 0) {
+        data["userId"] = me.id;
         dispatch({ type: "APPLY_CATEGORY_REQUEST", data });
       } else {
         alert("변경사항이 없습니다.");
