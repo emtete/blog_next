@@ -181,17 +181,24 @@ const deepCopy = (target) => {
 
 // 타겟을 삭제한 트리데이터를 리턴한다.
 const getDeletedTargetTreeData = (state, id) => {
-  const targetIndex = state.treeHelper.indexPath[id];
   const treeDataCopied = deepCopy(state.treeData);
+  const targetIndex = state.treeHelper.indexPath[id];
+  const targetNode1 = treeDataCopied[targetIndex[0]];
   const targetDepth = targetIndex.length;
+  const deletedChildren = [];
 
   if (targetDepth === 1) {
+    if (getIsArray(targetNode1.children)) {
+      targetNode1.children.map((node) => {
+        deletedChildren.push(node.id);
+      });
+    }
     treeDataCopied.splice(targetIndex[0], 1);
   } else if (targetDepth === 2) {
-    treeDataCopied[targetIndex[0]].children.splice(targetIndex[1], 1);
+    targetNode1.children.splice(targetIndex[1], 1);
   }
 
-  return [treeDataCopied, targetDepth];
+  return [treeDataCopied, targetDepth, deletedChildren];
 };
 
 const resetIndexPath = (treeDataCopied) => {
@@ -259,20 +266,25 @@ const resetIndexPathAndPriority = (treeDataCopied, indexPath) => {
 // 매개변수로 주어진 depth의 priority를 다시 세팅, 해당 트리데이터를 리턴한다.
 const settingPriorityIn = (treeData, depth, state, id) => {
   const updatedIdArr = [];
+  let index1;
+
   if (depth === 1) {
     treeData.map((n, i) => {
-      n.priority = i;
-      updatedIdArr.push(n.id);
+      index1 = state.treeHelper.indexPath[n.id][0];
+      if (index1 != n.priority) {
+        n.priority = i;
+        updatedIdArr.push(n.id);
+      }
     });
   } //
   else if (depth === 2) {
     const parentIndex = state.treeHelper.indexPath[id][0];
-
     treeData[parentIndex].children.map((n, i) => {
       n.priority = i;
       updatedIdArr.push(n.id);
     });
   }
+
   return [treeData, updatedIdArr];
 };
 
@@ -334,9 +346,6 @@ const getIsChanged = (clone, clonePath, modalNode) => {
     );
     isChanged =
       afterIndex1 != beforePath[0] ? 0 : afterIndex2 != beforePath[1] ? 1 : -1;
-    console.log("afterIndex1 : ", afterIndex1);
-    console.log("beforePath[0] : ", beforePath[0]);
-    console.log(isChanged);
   }
   return isChanged;
 };
@@ -359,6 +368,9 @@ const flatToHierarchy = (flatData) => {
   return treeData;
 };
 
+const getIsArray = (e) => {
+  return Array.isArray(e) && e.length > 0;
+};
 const reducer = (state = initialState, action) => {
   let newObject;
   let title;
@@ -392,6 +404,7 @@ const reducer = (state = initialState, action) => {
   let isDown;
   let isChanged;
   let nodeCnt;
+  let deletedChildren;
 
   switch (action.type) {
     case "APPLY_CATEGORY_REQUEST":
@@ -611,7 +624,10 @@ const reducer = (state = initialState, action) => {
     case "DELETE_NODE_ACTION":
       id = action.data.id;
 
-      [treeDataCopied, targetDepth] = getDeletedTargetTreeData(state, id);
+      [treeDataCopied, targetDepth, deletedChildren] = getDeletedTargetTreeData(
+        state,
+        id
+      );
       [sortedData, updatedIdArr] = settingPriorityIn(
         treeDataCopied,
         targetDepth,
@@ -623,7 +639,7 @@ const reducer = (state = initialState, action) => {
       [appendedClone, updatedClone, deletedClone] = manageCategoryCrud(
         state,
         updatedIdArr,
-        [id]
+        [id, ...deletedChildren]
       );
 
       return {
