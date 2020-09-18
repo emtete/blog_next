@@ -73,7 +73,8 @@ function* deletePost(action) {
 }
 
 function getPostListAPI(data) {
-  return axios.get("/post/getList", { data });
+  // return axios.get("/post/getList", { data });
+  return axios.get("/post/getList");
 }
 
 // 비동기 액션 크리에이터

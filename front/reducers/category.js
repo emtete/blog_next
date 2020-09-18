@@ -3,6 +3,10 @@ export const initialState = {
   applyDone: false,
   applyError: null,
 
+  getListLoading: false,
+  getListDone: false,
+  getListError: null,
+
   treeData: [
     // {
     //   title: "개발일지..",
@@ -316,26 +320,43 @@ const manageCategoryCrud = (state, updatedIdArr, deletedIdArr) => {
 
 // isChanged의 목적은 modalNode의 위치변화를 체크하는것
 const getIsChanged = (clone, clonePath, modalNode) => {
+  const beforePath = clonePath[modalNode.id];
   let isChanged;
 
-  if (clonePath[modalNode.id].length === 1) {
+  if (beforePath.length === 1) {
     const afterIndex = clone.findIndex((e) => e.id === modalNode.id);
-    isChanged = afterIndex !== clonePath[modalNode.id][0] ? 0 : -1;
+    isChanged = afterIndex !== beforePath[0] ? 0 : -1;
   } //
-  else if (clonePath[modalNode.id].length === 2) {
+  else if (beforePath.length === 2) {
     const afterIndex1 = clone.findIndex((e) => e.id === modalNode.parent);
     const afterIndex2 = clone[afterIndex1].children.findIndex(
       (e) => e.id === modalNode.id
     );
     isChanged =
-      afterIndex1 !== clonePath[modalNode.id][0]
-        ? 0
-        : afterIndex1 !== clonePath[modalNode.id][0]
-        ? 1
-        : -1;
+      afterIndex1 != beforePath[0] ? 0 : afterIndex2 != beforePath[1] ? 1 : -1;
+    console.log("afterIndex1 : ", afterIndex1);
+    console.log("beforePath[0] : ", beforePath[0]);
+    console.log(isChanged);
   }
-
   return isChanged;
+};
+
+// 불러온 treeData를 계층구조로 변환한다.
+const flatToHierarchy = (flatData) => {
+  const treeData = [];
+  let parentNode;
+
+  flatData.map((node, index) => {
+    if (node.parent == 0) {
+      treeData.push(node);
+    } else {
+      parentNode = treeData.find((e) => e.id == node.parent);
+      if (parentNode["children"] == undefined) parentNode["children"] = [];
+      parentNode["children"].push(node);
+    }
+  });
+  console.log(treeData);
+  return treeData;
 };
 
 const reducer = (state = initialState, action) => {
@@ -353,6 +374,7 @@ const reducer = (state = initialState, action) => {
   let newId;
   let node;
   let modalNode;
+  let modalNodeClone;
   let path;
   let id;
   let updatedNode;
@@ -402,6 +424,39 @@ const reducer = (state = initialState, action) => {
         applyLoading: false,
         applyDone: false,
         applyError: null,
+      };
+
+    case "GET_CATEGORY_LIST_REQUEST":
+      return {
+        ...state,
+        getListLoading: true,
+        getListDone: false,
+        getListError: null,
+      };
+
+    case "GET_CATEGORY_LIST_SUCCESS":
+      return {
+        ...state,
+        getListLoading: false,
+        getListDone: true,
+        getListError: null,
+        treeData: [...flatToHierarchy(action.data)],
+      };
+
+    case "GET_CATEGORY_LIST_FAILURE":
+      return {
+        ...state,
+        getListLoading: false,
+        getListDone: false,
+        getListError: action.error,
+      };
+
+    case "GET_CATEGORY_LIST_RESET":
+      return {
+        ...state,
+        getListLoading: false,
+        getListDone: false,
+        getListError: null,
       };
 
     case "CREATE_NEW_COMPONENT_ACTION":
@@ -478,6 +533,7 @@ const reducer = (state = initialState, action) => {
 
     case "SPLICE_NODE_ACTION":
       modalNode = state.selectedNode;
+      modalNodeClone = deepCopy(modalNode);
       clone = deepCopy(state.treeData);
       targetIndex = action.data.targetIndex;
       isMoveInSameCategory = action.data.isMoveInSameCategory;
@@ -498,19 +554,23 @@ const reducer = (state = initialState, action) => {
       // 끼워넣기 이후 이전에 저장된 indexPath와 실제 treeData의 index가
       // 서로 일치하지 않을 수 있다. (treeData의 순서가 바뀌기 때문에)
       if (targetIndex.length === 1) {
-        clone.splice(targetIndex[0], 0, modalNode);
+        clone.splice(targetIndex[0], 0, modalNodeClone);
+        modalNodeClone.parent = 0;
+        modalNodeClone.depth = 1;
       } else if (targetIndex.length === 2) {
         const target0 = clone[targetIndex[0]];
         if (target0.children) {
-          target0.children.splice(targetIndex[1], 0, modalNode);
+          target0.children.splice(targetIndex[1], 0, modalNodeClone);
         } //
         else {
           target0["children"] = [];
-          target0["children"].push(modalNode);
+          target0["children"].push(modalNodeClone);
         }
+        modalNodeClone.parent = target0.id;
+        modalNodeClone.depth = 2;
       }
 
-      // 순서가 바꼈는지 확인.
+      // modalNode의 위치가 바꼈는지 확인.
       isChanged = getIsChanged(clone, clonePath, modalNode);
 
       // path 변화가 있다면 modalIndex 수정

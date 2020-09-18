@@ -31,10 +31,37 @@ function* applyCategoris(action) {
   }
 }
 
+function getCategoryListAPI() {
+  // return axios.get("/category/getList", { data });
+  return axios.get("/category/getList");
+}
+
+// 비동기 액션 크리에이터
+function* getCategoryList(action) {
+  try {
+    const result = yield call(getCategoryListAPI);
+    yield put({
+      type: "GET_CATEGORY_LIST_SUCCESS",
+      data: result.data, // 성공 결과
+    });
+  } catch (err) {
+    console.error("error : ", err);
+    yield put({
+      // put은 dispatch와 같은 기능을 한다.
+      type: "GET_CATEGORY_LIST_FAILURE",
+      error: err.response.data, // 실패 결과
+    });
+  }
+}
+
 function* watchApplyCategoris() {
   yield takeLatest("APPLY_CATEGORY_REQUEST", applyCategoris);
 }
 
+function* watchGetCategoryList() {
+  yield takeLatest("GET_CATEGORY_LIST_REQUEST", getCategoryList);
+}
+
 export default function* userSaga() {
-  yield all([fork(watchApplyCategoris)]);
+  yield all([fork(watchApplyCategoris), fork(watchGetCategoryList)]);
 }

@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -61,6 +61,14 @@ const Category = () => {
   const updated = useSelector((state) => state.category.updatedCategories);
   const deleted = useSelector((state) => state.category.deletedCategories);
 
+  const applyLoading = useSelector((state) => state.category.applyLoading);
+  const applyDone = useSelector((state) => state.category.applyDone);
+  const applyError = useSelector((state) => state.category.applyError);
+
+  const getListLoading = useSelector((state) => state.category.getListLoading);
+  const getListDone = useSelector((state) => state.category.getListDone);
+  const getListError = useSelector((state) => state.category.getListError);
+
   const onClickSave = useCallback(
     (e) => {
       const data = {};
@@ -82,6 +90,44 @@ const Category = () => {
     },
     [appended, updated, deleted]
   );
+
+  //
+  useEffect(() => {
+    dispatch({ type: "GET_CATEGORY_LIST_REQUEST" });
+  }, []);
+
+  // 변경사항 적용 성공.
+  useEffect(() => {
+    if (applyDone) {
+      alert("적용되었습니다.");
+      dispatch({ type: "APPLY_CATEGORY_RESET" });
+      dispatch({ type: "GET_CATEGORY_LIST_REQUEST" });
+    }
+  }, [applyDone]);
+
+  // 변경사항 적용 중 에러
+  useEffect(() => {
+    if (applyError) {
+      alert(applyError);
+      dispatch({ type: "APPLY_CATEGORY_RESET" });
+    }
+  }, [applyError]);
+
+  // 카테고리 리스트 호출 성공.
+  useEffect(() => {
+    if (getListDone) {
+      dispatch({ type: "GET_CATEGORY_LIST_RESET" });
+      dispatch({ type: "RESET_INDEX_PATH_ACTION" });
+    }
+  }, [getListDone]);
+
+  // 카테고리 리스트 호출 중 에러.
+  useEffect(() => {
+    if (getListError) {
+      alert(getListError);
+      dispatch({ type: "GET_CATEGORY_LIST_RESET" });
+    }
+  }, [getListError]);
 
   console.log("Category Index rendering");
   return (
