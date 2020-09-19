@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useRouter } from "next/router";
 import { makeStyles } from "@material-ui/core/styles";
 
 import Post from "./Post";
@@ -15,16 +16,30 @@ const useStyles = makeStyles((theme) => ({
 const PostManage = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const router = useRouter();
   const items = useSelector((state) => state.post.item.items);
+
+  const me = useSelector((state) => state.user.me);
 
   const getListLoading = useSelector((state) => state.post.getListLoading);
   const getListDone = useSelector((state) => state.post.getListDone);
   const getListError = useSelector((state) => state.post.getListError);
 
+  const loadMyInfoLoading = useSelector(
+    (state) => state.user.loadMyInfoLoading
+  );
+  const loadMyInfoDone = useSelector((state) => state.user.loadMyInfoDone);
+  const loadMyInfoError = useSelector((state) => state.user.loadMyInfoError);
+
   // 글 목록 호출
   useEffect(() => {
-    dispatch({ type: "GET_POST_LIST_REQUEST" });
-  }, []);
+    if (loadMyInfoDone && me) {
+      dispatch({ type: "GET_POST_LIST_REQUEST" });
+    } else if (loadMyInfoDone && !me) {
+      router.push("/");
+    }
+    dispatch({ type: "LOAD_MY_INFO_RESET" });
+  }, [loadMyInfoDone]);
 
   // 글 목록 호출 성공
   useEffect(() => {

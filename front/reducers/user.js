@@ -104,6 +104,7 @@ const reducer = (state = initialState, action) => {
         loadMyInfoDone: false,
         loadMyInfoError: null,
       };
+
     case "LOAD_MY_INFO_SUCCESS":
       return {
         ...state,
@@ -112,12 +113,21 @@ const reducer = (state = initialState, action) => {
         loadMyInfoError: null,
         me: action.data,
       };
+
     case "LOAD_MY_INFO_FAILURE":
       return {
         ...state,
         loadMyInfoLoading: false,
         loadMyInfoDone: false,
         loadMyInfoError: action.error,
+      };
+
+    case "LOAD_MY_INFO_RESET":
+      return {
+        ...state,
+        loadMyInfoLoading: false,
+        loadMyInfoDone: false,
+        loadMyInfoError: null,
       };
     default:
       return state;

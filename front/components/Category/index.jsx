@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useRouter } from "next/router";
 import { makeStyles } from "@material-ui/core/styles";
 
 import CategoryAll from "./CategoryAll";
@@ -50,6 +51,7 @@ const useStyles = makeStyles((theme) => ({
 const Category = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const router = useRouter();
 
   const me = useSelector((state) => state.user.me);
   const treeData = useSelector((state) => state.category.treeData);
@@ -64,6 +66,12 @@ const Category = () => {
   const applyLoading = useSelector((state) => state.category.applyLoading);
   const applyDone = useSelector((state) => state.category.applyDone);
   const applyError = useSelector((state) => state.category.applyError);
+
+  const loadMyInfoLoading = useSelector(
+    (state) => state.user.loadMyInfoLoading
+  );
+  const loadMyInfoDone = useSelector((state) => state.user.loadMyInfoDone);
+  const loadMyInfoError = useSelector((state) => state.user.loadMyInfoError);
 
   const getListLoading = useSelector((state) => state.category.getListLoading);
   const getListDone = useSelector((state) => state.category.getListDone);
@@ -91,10 +99,29 @@ const Category = () => {
     [appended, updated, deleted]
   );
 
+  const onClickOpen = useCallback(
+    (e) => {
+      dispatch({ type: "OPEN_ALL_CATEGORY_ACTION" });
+    },
+    [treeData]
+  );
+
+  const onClickClose = useCallback(
+    (e) => {
+      dispatch({ type: "CLOSE_ALL_CATEGORY_ACTION" });
+    },
+    [treeData]
+  );
+
   //
   useEffect(() => {
-    if (me) dispatch({ type: "GET_CATEGORY_LIST_REQUEST" });
-  }, []);
+    if (loadMyInfoDone && me) {
+      dispatch({ type: "GET_CATEGORY_LIST_REQUEST" });
+    } else if (loadMyInfoDone && !me) {
+      router.push("/");
+    }
+    dispatch({ type: "LOAD_MY_INFO_RESET" });
+  }, [loadMyInfoDone]);
 
   // 변경사항 적용 성공.
   useEffect(() => {
@@ -144,8 +171,12 @@ const Category = () => {
             </p>
             <div className='bundle_group'>
               <span className='count_total'>3 / 500</span>
-              <label className='lab_btn btn_group'>전체 펼치기</label>
-              <label className='lab_btn btn_group'>전체 접기</label>
+              <label className='lab_btn btn_group' onClick={onClickOpen}>
+                전체 펼치기
+              </label>
+              <label className='lab_btn btn_group' onClick={onClickClose}>
+                전체 접기
+              </label>
             </div>
             <div className='set_order' id='category-app'>
               <div className='wrap_order'>

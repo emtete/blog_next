@@ -11,6 +11,7 @@ const CategoryInclude = ({ data }) => {
   const entries = data.entries;
   const children = data.children;
   const id = data.id;
+  const isOpened = data.isOpened;
 
   const dispatch = useDispatch();
   const bundelRef = useRef();
@@ -53,11 +54,25 @@ const CategoryInclude = ({ data }) => {
   };
 
   const onClickArrow = () => {
-    bundelRef.current.classList.toggle("open_subcate");
+    if (isOpened) {
+      dispatch({
+        type: "CLOSE_ONE_CATEGORY_ACTION",
+        data: { id },
+      });
+    } else {
+      dispatch({
+        type: "OPEN_ONE_CATEGORY_ACTION",
+        data: { id },
+      });
+    }
   };
 
+  console.log("CategoryInclude Rendering");
   return (
-    <div className='bundle_item' ref={bundelRef}>
+    <div
+      className={`bundle_item ${isOpened && "open_subcate"}`}
+      ref={bundelRef}
+    >
       <div className='item_order' ref={itemOrderRef}>
         <label className={`lab_btn lab_cate ${isChildren && "lab_fold"}`}>
           <span className='wrap_arr'>

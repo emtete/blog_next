@@ -78,10 +78,15 @@ const Wyzywig = () => {
   const updateDone = useSelector((state) => state.post.updateDone);
   const updateError = useSelector((state) => state.post.updateError);
 
+  const loadMyInfoLoading = useSelector(
+    (state) => state.user.loadMyInfoLoading
+  );
+  const loadMyInfoDone = useSelector((state) => state.user.loadMyInfoDone);
+  const loadMyInfoError = useSelector((state) => state.user.loadMyInfoError);
+
   const me = useSelector((state) => state.user.me);
   const orgPost = deepCopy(useSelector((state) => state.post.orgPost));
   const [post, setPost] = useState(orgPost);
-  // console.log(post);
   const [title, setTitle] = useState("");
   const treeData = useSelector((state) => state.category.treeData);
   const flatDataArr = getTreeToFlatData(treeData);
@@ -182,6 +187,14 @@ const Wyzywig = () => {
       dispatch({ type: "UPDATE_POST_RESET" });
     }
   }, [updateError]);
+
+  //
+  useEffect(() => {
+    if (loadMyInfoDone && !me) {
+      router.push("/");
+    }
+    dispatch({ type: "LOAD_MY_INFO_RESET" });
+  }, [loadMyInfoDone]);
 
   console.log("Wyzywig rendering");
 

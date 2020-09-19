@@ -42,14 +42,22 @@ const UserPage = () => {
   const getListDone = useSelector((state) => state.category.getListDone);
   const getListError = useSelector((state) => state.category.getListError);
 
+  const loadMyInfoLoading = useSelector(
+    (state) => state.user.loadMyInfoLoading
+  );
+  const loadMyInfoDone = useSelector((state) => state.user.loadMyInfoDone);
+  const loadMyInfoError = useSelector((state) => state.user.loadMyInfoError);
+
   const onToggleMenu = (e) => {
     e.isOpend = !e.isOpend;
     setMenuList([...menuList]);
   };
 
   useEffect(() => {
-    dispatch({ type: "GET_CATEGORY_LIST_REQUEST" });
-  }, []);
+    if (loadMyInfoDone) {
+      dispatch({ type: "GET_CATEGORY_LIST_REQUEST" });
+    }
+  }, [loadMyInfoDone]);
 
   // 카테고리 리스트 호출 성공.
   useEffect(() => {

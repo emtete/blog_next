@@ -273,7 +273,7 @@ const flatToHierarchy = (flatData) => {
   flatData.map((node) => {
     if (node.depth == 1) {
       treeData.push(node);
-      node["isOpend"] = false;
+      node["isOpened"] = false;
     }
   });
 
@@ -293,6 +293,29 @@ const flatToHierarchy = (flatData) => {
 const getIsArray = (e) => {
   return Array.isArray(e) && e.length > 0;
 };
+
+const openAllCategory = (treeData) => {
+  treeData.map((node) => {
+    node.isOpened = true;
+  });
+};
+
+const closeAllCategory = (treeData) => {
+  treeData.map((node) => {
+    node.isOpened = false;
+  });
+};
+
+const openOneCategory = (treeData, id) => {
+  const targetNode = treeData.find((e) => e.id == id);
+  targetNode.isOpened = true;
+};
+
+const closeOneCategory = (treeData, id) => {
+  const targetNode = treeData.find((e) => e.id == id);
+  targetNode.isOpened = false;
+};
+
 const reducer = (state = initialState, action) => {
   let newObject;
   let title;
@@ -329,6 +352,34 @@ const reducer = (state = initialState, action) => {
   let deletedChildren;
 
   switch (action.type) {
+    case "OPEN_ALL_CATEGORY_ACTION":
+      openAllCategory(state.treeData);
+      return {
+        ...state,
+        treeData: [...state.treeData],
+      };
+
+    case "CLOSE_ALL_CATEGORY_ACTION":
+      closeAllCategory(state.treeData);
+      return {
+        ...state,
+        treeData: [...state.treeData],
+      };
+
+    case "OPEN_ONE_CATEGORY_ACTION":
+      openOneCategory(state.treeData, action.data.id);
+      return {
+        ...state,
+        treeData: [...state.treeData],
+      };
+
+    case "CLOSE_ONE_CATEGORY_ACTION":
+      closeOneCategory(state.treeData, action.data.id);
+      return {
+        ...state,
+        treeData: [...state.treeData],
+      };
+
     case "APPLY_CATEGORY_REQUEST":
       return {
         ...state,
