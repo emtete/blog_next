@@ -20,8 +20,6 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { modalStyles, getModalStyle } from "../layout/LoginStyles";
 import { ToggleButton, menuStyles } from "../layout/styles";
-// import { loginRequestAction, logoutRequestAction } from "../../reducers/user";
-// import { resetIndexPathAction } from "../../reducers/category";
 import useInput from "../../hooks/useInput";
 import Common from "./Common";
 

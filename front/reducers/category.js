@@ -113,13 +113,6 @@ export const initialState = {
   },
 };
 
-export const resetIndexPathAction = (data) => {
-  return {
-    type: "RESET_INDEX_PATH_ACTION",
-    data,
-  };
-};
-
 export const deleteNodeAction = (data) => {
   return {
     type: "DELETE_NODE_ACTION",

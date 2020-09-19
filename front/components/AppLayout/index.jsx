@@ -33,8 +33,6 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { modalStyles, getModalStyle } from "../layout/LoginStyles";
 import { ToggleButton, menuStyles } from "../layout/styles";
-// import { loginRequestAction, logoutRequestAction } from "../../reducers/user";
-// import { resetIndexPathAction } from "../../reducers/category";
 import useInput from "../../hooks/useInput";
 import UserPage from "./UserPage";
 import ManagerPage from "./ManagerPage";
@@ -53,7 +51,6 @@ const AppLayout = ({ children, window }) => {
   const [menuList, setMenuList] = React.useState(menu);
 
   useEffect(() => {
-    // dispatch(resetIndexPathAction());
     dispatch({ type: "RESET_INDEX_PATH_ACTION" });
     dispatch({ type: "LOAD_MY_INFO_REQUEST" });
   }, []);

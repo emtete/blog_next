@@ -47,20 +47,6 @@ export const endAdminModeAction = (data) => {
   };
 };
 
-export const loginRequestAction = (data) => {
-  return {
-    type: "LOG_IN_REQUEST",
-    data,
-  };
-};
-
-export const logoutRequestAction = (data) => {
-  return {
-    type: "LOG_OUT_REQUEST",
-    data,
-  };
-};
-
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case "START_LOG_IN_MODE_ACTION":
