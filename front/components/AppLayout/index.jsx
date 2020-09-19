@@ -47,9 +47,6 @@ const AppLayout = ({ children, window }) => {
   const me = useSelector((state) => state.user.me);
   const isAdminMode = useSelector((state) => state.user.isAdminMode);
 
-  const menu = useSelector((state) => state.menu.node.children);
-  const treeData = useSelector((state) => state.category.treeData);
-
   useEffect(() => {
     dispatch({ type: "LOAD_MY_INFO_REQUEST" });
   }, []);

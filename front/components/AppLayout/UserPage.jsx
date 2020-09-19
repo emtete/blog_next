@@ -36,7 +36,7 @@ const UserPage = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const treeData = useSelector((state) => state.category.treeData);
-  const [menuList, setMenuList] = useState(deepCopy(treeData));
+  const [menuList, setMenuList] = useState([]);
 
   const getListLoading = useSelector((state) => state.category.getListLoading);
   const getListDone = useSelector((state) => state.category.getListDone);
@@ -54,6 +54,7 @@ const UserPage = () => {
   // 카테고리 리스트 호출 성공.
   useEffect(() => {
     if (getListDone) {
+      setMenuList(deepCopy(treeData));
       dispatch({ type: "GET_CATEGORY_LIST_RESET" });
     }
   }, [getListDone]);
