@@ -56,7 +56,7 @@ const Post = ({ item }) => {
         </strong>
         <a //href='/manage/posts?category=758257'
         >
-          <span className='txt_cate txt_ellip'>{item.category}</span>
+          <span className='txt_cate txt_ellip'>{item.categoryName}</span>
         </a>
         <span className='txt_info txt_ellip'>{item.author}</span>
         <span className='txt_info'>{item.published}</span>

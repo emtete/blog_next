@@ -39,8 +39,8 @@ const getData = (data) => {
       author: element.author,
       title: element.title,
       content: element.content,
-      category: "임시값",
-      categoryId: element.categoryId,
+      categoryName: element.categoryName,
+      categoryId: element.CategoryId,
       published: element.createdAt,
     });
   });

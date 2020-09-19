@@ -135,7 +135,7 @@ const Wyzywig = () => {
         author: author,
         title: post.title,
         categoryName: post.categoryName,
-        categoryId: post.categoryId,
+        CategoryId: post.categoryId,
         content: content,
       };
       dispatch({ type: "WRITE_POST_REQUEST", data });
