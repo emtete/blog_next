@@ -4,8 +4,6 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import Post from "./Post";
 
-// import { getPostListAction } from "../../reducers/post";
-
 const useStyles = makeStyles((theme) => ({
   content: {
     flexGrow: 1,

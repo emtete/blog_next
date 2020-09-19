@@ -19,34 +19,6 @@ export const initialState = {
   loginData: {},
 };
 
-export const startLogInModeAction = (data) => {
-  return {
-    type: "START_LOG_IN_MODE_ACTION",
-    data,
-  };
-};
-
-export const endLogInModeAction = (data) => {
-  return {
-    type: "END_LOG_IN_MODE_ACTION",
-    data,
-  };
-};
-
-export const startAdminModeAction = (data) => {
-  return {
-    type: "START_ADMIN_MODE_ACTION",
-    data,
-  };
-};
-
-export const endAdminModeAction = (data) => {
-  return {
-    type: "END_ADMIN_MODE_ACTION",
-    data,
-  };
-};
-
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case "START_LOG_IN_MODE_ACTION":

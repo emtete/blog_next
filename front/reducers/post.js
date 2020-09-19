@@ -48,27 +48,6 @@ const getData = (data) => {
   return arr;
 };
 
-export const getPostListAction = (data) => {
-  return {
-    type: "GET_POST_LIST_REQUEST",
-    data,
-  };
-};
-
-export const getPostOneAction = (data) => {
-  return {
-    type: "GET_POST_ONE_REQUEST",
-    data,
-  };
-};
-
-export const removeOrgPostAction = (data) => {
-  return {
-    type: "REMOVE_ORG_POST_ACTION",
-    data,
-  };
-};
-
 const reducer = (state = initialState, action) => {
   let jsonData;
 

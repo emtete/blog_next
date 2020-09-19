@@ -113,61 +113,6 @@ export const initialState = {
   },
 };
 
-export const deleteNodeAction = (data) => {
-  return {
-    type: "DELETE_NODE_ACTION",
-    data,
-  };
-};
-
-export const setUpdateModeAction = (data) => {
-  return {
-    type: "SET_UPDATE_MODE_ACTION",
-    data,
-  };
-};
-
-export const updateCategoryNameAction = (data) => {
-  return {
-    type: "UPDATE_CATEGORY_NAME_ACTION",
-    data,
-  };
-};
-
-export const toggleIsMoveModeAction = (data) => {
-  return {
-    type: "TOGGLE_IS_MOVE_MODE_ACTION",
-    data,
-  };
-};
-
-export const setSelectedNodeAction = (data) => {
-  return {
-    type: "SET_SELECTED_NODE_ACTION",
-    data,
-  };
-};
-
-export const spliceNodeAction = (data) => {
-  return {
-    type: "SPLICE_NODE_ACTION",
-    data,
-  };
-};
-
-// const getNode = (state, action) => {
-//   const clone = deepCopy(state.treeData);
-//   const id = action.data.id;
-//   const targetPath = state.treeHelper.indexPath[id];
-
-//   if (targetPath.length === 1) {
-//     return clone[targetPath[0]];
-//   } else if (targetPath.length === 2) {
-//     return clone[targetPath[0]].children[targetPath[1]];
-//   }
-//   return undefined;
-// };
-
 const deepCopy = (target) => {
   return JSON.parse(JSON.stringify(target));
 };
@@ -257,31 +202,6 @@ const resetIndexPathAndPriority = (treeDataCopied, indexPath) => {
 
   return [clonePath, treeDataCopied, updatedIdArr];
 };
-
-// 매개변수로 주어진 depth의 priority를 다시 세팅, 해당 트리데이터를 리턴한다.
-// const settingPriorityIn = (treeData, depth, state, id) => {
-//   const updatedIdArr = [];
-//   let index1;
-
-//   if (depth === 1) {
-//     treeData.map((n, i) => {
-//       index1 = state.treeHelper.indexPath[n.id][0];
-//       if (index1 != n.priority) {
-//         n.priority = i;
-//         updatedIdArr.push(n.id);
-//       }
-//     });
-//   } //
-//   else if (depth === 2) {
-//     const parentIndex = state.treeHelper.indexPath[id][0];
-//     treeData[parentIndex].children.map((n, i) => {
-//       n.priority = i;
-//       updatedIdArr.push(n.id);
-//     });
-//   }
-
-//   return [treeData, updatedIdArr];
-// };
 
 const manageCategoryCrud = (state, updatedIdArr, deletedIdArr) => {
   const appendedClone = deepCopy(state.appendedCategories);
@@ -548,7 +468,6 @@ const reducer = (state = initialState, action) => {
       modalNodeClone = deepCopy(modalNode);
       clone = deepCopy(state.treeData);
       targetIndex = action.data.targetIndex;
-      isMoveInSameCategory = action.data.isMoveInSameCategory;
       clonePath = deepCopy(state.treeHelper.indexPath);
       modalIndex = clonePath[modalNode.id];
       isDown = false;
@@ -628,17 +547,11 @@ const reducer = (state = initialState, action) => {
         state,
         id
       );
-      // [sortedData, updatedIdArr] = settingPriorityIn(
-      //   treeDataCopied,
-      //   targetDepth,
-      //   state,
-      //   id
-      // );
+
       [clonePath, treeDataCopied, updatedIdArr] = resetIndexPathAndPriority(
         treeDataCopied,
         clonePath
       );
-      // clonePath = resetIndexPath(sortedData);
 
       [appendedClone, updatedClone, deletedClone] = manageCategoryCrud(
         state,

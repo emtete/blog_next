@@ -3,12 +3,6 @@ import { useSelector, useDispatch } from "react-redux";
 
 import CategorySub from "./CategorySub";
 import CategoryAddComp from "./CategoryAddComp";
-import {
-  toggleIsMoveModeAction,
-  setSelectedNodeAction,
-  deleteNodeAction,
-  setUpdateModeAction,
-} from "../../reducers/category";
 
 const inline = { display: "inline" };
 
@@ -37,16 +31,25 @@ const CategoryInclude = ({ data }) => {
   }, [categoryInEditMode]);
 
   const onClickDel = () => {
-    dispatch(deleteNodeAction({ id }));
+    dispatch({ type: "DELETE_NODE_ACTION", data: { id } });
   };
 
   const onClickUpdate = () => {
-    dispatch(setUpdateModeAction({ id, isEditMode: true }));
+    dispatch({
+      type: "SET_UPDATE_MODE_ACTION",
+      data: { id, isEditMode: true },
+    });
   };
 
   const onClickMove = () => {
-    dispatch(toggleIsMoveModeAction({ isMoveMode: true }));
-    dispatch(setSelectedNodeAction({ selectedNode: data }));
+    dispatch({
+      type: "TOGGLE_IS_MOVE_MODE_ACTION",
+      data: { isMoveMode: true },
+    });
+    dispatch({
+      type: "SET_SELECTED_NODE_ACTION",
+      data: { selectedNode: data },
+    });
   };
 
   const onClickArrow = () => {

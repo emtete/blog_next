@@ -2,11 +2,6 @@ import { useRef, useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import CategoryAddComp from "./CategoryAddComp";
-import {
-  toggleIsMoveModeAction,
-  setSelectedNodeAction,
-  setUpdateModeAction,
-} from "../../reducers/category";
 
 const CategorySub = ({ data }) => {
   const id = data.id;
@@ -29,12 +24,21 @@ const CategorySub = ({ data }) => {
   }, [categoryInEditMode]);
 
   const onClickUpdate = () => {
-    dispatch(setUpdateModeAction({ id, isEditMode: true }));
+    dispatch({
+      type: "SET_UPDATE_MODE_ACTION",
+      data: { id, isEditMode: true },
+    });
   };
 
   const onClickMove = () => {
-    dispatch(toggleIsMoveModeAction({ isMoveMode: true }));
-    dispatch(setSelectedNodeAction({ selectedNode: data }));
+    dispatch({
+      type: "TOGGLE_IS_MOVE_MODE_ACTION",
+      data: { isMoveMode: true },
+    });
+    dispatch({
+      type: "SET_SELECTED_NODE_ACTION",
+      data: { selectedNode: data },
+    });
   };
 
   return (

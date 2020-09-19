@@ -19,10 +19,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { modalStyles, getModalStyle } from "../layout/LoginStyles";
 import { ToggleButton, menuStyles } from "../layout/styles";
 // import
-// startLogInModeAction,
-// endLogInModeAction,
-// startAdminModeAction,
-// endAdminModeAction,
 // "../../reducers/user";
 import useInput from "../../hooks/useInput";
 import LoginModal from "./LoginModal";
@@ -40,17 +36,14 @@ const Common = () => {
     if (me) {
       dispatch({ type: "LOG_OUT_REQUEST" });
     } else {
-      // dispatch(startLogInModeAction());
       dispatch({ type: "START_LOG_IN_MODE_ACTION" });
     }
   };
 
   const handleAdminMode = () => {
     if (isAdminMode) {
-      // dispatch(endAdminModeAction());
       dispatch({ type: "END_ADMIN_MODE_ACTION" });
     } else {
-      // dispatch(startAdminModeAction());
       dispatch({ type: "START_ADMIN_MODE_ACTION" });
     }
   };

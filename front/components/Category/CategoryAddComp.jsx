@@ -1,12 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import {
-  updateCategoryNameAction,
-  setUpdateModeAction,
-  deleteNodeAction,
-} from "../../reducers/category";
-
 const CategoryAddComp = ({ data }) => {
   const id = data.id;
 
@@ -28,9 +22,12 @@ const CategoryAddComp = ({ data }) => {
 
   const onClickCancel = () => {
     if (data.title === "") {
-      dispatch(deleteNodeAction({ id }));
+      dispatch({ type: "DELETE_NODE_ACTION", data: { id } });
     } else {
-      dispatch(setUpdateModeAction({ id, isEditMode: false }));
+      dispatch({
+        type: "SET_UPDATE_MODE_ACTION",
+        data: { id, isEditMode: false },
+      });
     }
   };
 
@@ -47,13 +44,17 @@ const CategoryAddComp = ({ data }) => {
 
   const onSubmitForm = (e) => {
     e.preventDefault();
-    dispatch(
-      updateCategoryNameAction({
+    dispatch({
+      type: "UPDATE_CATEGORY_NAME_ACTION",
+      data: {
         id,
         title,
-      })
-    );
-    dispatch(setUpdateModeAction({ id, isEditMode: false }));
+      },
+    });
+    dispatch({
+      type: "SET_UPDATE_MODE_ACTION",
+      data: { id, isEditMode: false },
+    });
   };
 
   return (

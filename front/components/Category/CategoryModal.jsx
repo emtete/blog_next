@@ -1,11 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import {
-  toggleIsMoveModeAction,
-  setSelectedNodeAction,
-  spliceNodeAction,
-} from "../../reducers/category";
 import CategorySelect from "./CategorySelect";
 
 // 두번째 셀렉트 박스의 컨텐츠를 가져온다.
@@ -207,8 +202,14 @@ const CategoryModal = () => {
   };
 
   const onClickCancel = () => {
-    dispatch(toggleIsMoveModeAction({ isMoveMode: false }));
-    dispatch(setSelectedNodeAction({ selectedNode: null }));
+    dispatch({
+      type: "TOGGLE_IS_MOVE_MODE_ACTION",
+      data: { isMoveMode: false },
+    });
+    dispatch({
+      type: "SET_SELECTED_NODE_ACTION",
+      data: { selectedNode: null },
+    });
   };
 
   const onSubmitForm = (e) => {
@@ -249,7 +250,10 @@ const CategoryModal = () => {
         ];
         break;
     }
-    dispatch(spliceNodeAction({ targetIndex, isMoveInSameCategory }));
+    dispatch({
+      type: "SPLICE_NODE_ACTION",
+      data: { targetIndex },
+    });
     onClickCancel();
   };
 
