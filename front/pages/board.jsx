@@ -1,11 +1,18 @@
-import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { useRouter } from "next/router";
 
-// Dependency Component
-import AppLayout from "../components/AppLayout";
 import Wyzywig from "../components/wyzywig";
 
 const Board = () => {
+  const me = useSelector((state) => state.user.me);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!me) {
+      router.push("/");
+    }
+  }, [me]);
   return <Wyzywig />;
 };
 

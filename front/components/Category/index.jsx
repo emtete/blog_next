@@ -93,7 +93,7 @@ const Category = () => {
 
   //
   useEffect(() => {
-    dispatch({ type: "GET_CATEGORY_LIST_REQUEST" });
+    if (me) dispatch({ type: "GET_CATEGORY_LIST_REQUEST" });
   }, []);
 
   // 변경사항 적용 성공.
