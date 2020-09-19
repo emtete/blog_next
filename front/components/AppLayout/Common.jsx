@@ -15,6 +15,7 @@ import PersonIcon from "@material-ui/icons/Person";
 import SettingsIcon from "@material-ui/icons/Settings";
 import { FormControl, TextField, Button } from "@material-ui/core";
 import { useSelector, useDispatch } from "react-redux";
+import { useState, useMemo, useCallback, useEffect } from "react";
 
 import { modalStyles, getModalStyle } from "../layout/LoginStyles";
 import { ToggleButton, menuStyles } from "../layout/styles";
@@ -49,6 +50,11 @@ const Common = () => {
       dispatch({ type: "START_ADMIN_MODE_ACTION" });
     }
   };
+
+  useEffect(() => {
+    dispatch({ type: "LOAD_MY_INFO_REQUEST" });
+  }, []);
+
   console.log("Common rendering");
   return (
     <>

@@ -5,8 +5,11 @@ import { ThemeProvider } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import theme from "../src/theme";
 import withReduxSaga from "next-redux-saga";
+import { useSelector } from "react-redux";
 
-import AppLayout from "../components/AppLayout";
+// import AppLayout from "../components/AppLayout";
+import UserPage from "../components/AppLayout/UserPage";
+import ManagerPage from "../components/AppLayout/ManagerPage";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import "./temp.scss";
 
@@ -14,6 +17,7 @@ import wrapper from "../store/configureStore";
 
 const MyApp = (props) => {
   const { Component, pageProps } = props;
+  const isAdminMode = useSelector((state) => state.user.isAdminMode);
 
   React.useEffect(() => {
     // Remove the server-side injected CSS.
@@ -35,9 +39,15 @@ const MyApp = (props) => {
       <ThemeProvider theme={theme}>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
-        <AppLayout>
-          <Component {...pageProps} />
-        </AppLayout>
+        {isAdminMode ? (
+          <ManagerPage>
+            <Component {...pageProps} />
+          </ManagerPage>
+        ) : (
+          <UserPage>
+            <Component {...pageProps} />
+          </UserPage>
+        )}
       </ThemeProvider>
     </React.Fragment>
   );

@@ -58,38 +58,15 @@ const AppLayout = ({ children, window }) => {
       <CssBaseline />
 
       <nav className={classes.drawer} aria-label='mailbox folders'>
-        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
-        {/* <Hidden smUp implementation='css'>
-          <ToggleButton onClick={handleDrawerToggle}>
-            {mobileOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-          </ToggleButton>
-          <Drawer
-            container={container}
-            variant='temporary'
-            anchor={theme.direction === "rtl" ? "right" : "top"} // 메뉴가 위에서 나오도록..
-            open={mobileOpen}
-            onClose={handleDrawerToggle}
-            classes={{
-              paper: classes.drawerPaperMobile,
-            }}
-            ModalProps={{
-              keepMounted: true, // Better open performance on mobile.
-            }}
-          >
-            {me ? <ManagerPage /> : <UserPage menuList={menuList} />}
-          </Drawer>
-        </Hidden> */}
-        <Hidden xsDown implementation='css'>
-          <Drawer
-            classes={{
-              paper: classes.drawerPaper,
-            }}
-            variant='permanent'
-            open
-          >
-            {isAdminMode ? <ManagerPage /> : <UserPage />}
-          </Drawer>
-        </Hidden>
+        <Drawer
+          classes={{
+            paper: classes.drawerPaper,
+          }}
+          variant='permanent'
+          open
+        >
+          {isAdminMode ? <ManagerPage /> : <UserPage />}
+        </Drawer>
       </nav>
       {children}
     </div>

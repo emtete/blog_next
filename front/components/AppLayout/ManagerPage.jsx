@@ -36,7 +36,7 @@ import { ToggleButton, menuStyles } from "../layout/styles";
 import useInput from "../../hooks/useInput";
 import Common from "./Common";
 
-const ManagerPage = () => {
+const ManagerPage = ({ children }) => {
   const classes = menuStyles();
   const router = useRouter();
   const dispatch = useDispatch();
@@ -54,45 +54,61 @@ const ManagerPage = () => {
 
   console.log("ManagerPage rendering");
   return (
-    <div>
-      <div className={(classes.toolbar, classes.toolbarCustomising)}>
-        DEV LIFE
-      </div>
-      <List>
-        <ListItem
-          button
-          style={{ color: "#dbdfe2" }}
-          onClick={(e) => handleRouter(e, "/category")}
-        >
-          <ListItemIcon>
-            <InboxIcon style={{ color: "#dbdfe2" }} />
-          </ListItemIcon>
-          <ListItemText primary='메뉴관리' style={{ color: "#dbdfe2" }} />
-        </ListItem>
+    <div className={classes.root}>
+      <CssBaseline />
 
-        <ListItem
-          button
-          style={{ color: "#dbdfe2" }}
-          onClick={(e) => handleRouter(e, "/postManage")}
+      <nav className={classes.drawer} aria-label='mailbox folders'>
+        <Drawer
+          classes={{
+            paper: classes.drawerPaper,
+          }}
+          variant='permanent'
+          open
         >
-          <ListItemIcon>
-            <InboxIcon style={{ color: "#dbdfe2" }} />
-          </ListItemIcon>
-          <ListItemText primary='글관리' style={{ color: "#dbdfe2" }} />
-        </ListItem>
+          {/* {isAdminMode ? <ManagerPage /> : <UserPage />} */}
+          <div>
+            <div className={(classes.toolbar, classes.toolbarCustomising)}>
+              DEV LIFE
+            </div>
+            <List>
+              <ListItem
+                button
+                style={{ color: "#dbdfe2" }}
+                onClick={(e) => handleRouter(e, "/category")}
+              >
+                <ListItemIcon>
+                  <InboxIcon style={{ color: "#dbdfe2" }} />
+                </ListItemIcon>
+                <ListItemText primary='메뉴관리' style={{ color: "#dbdfe2" }} />
+              </ListItem>
 
-        <ListItem
-          button
-          style={{ color: "#dbdfe2" }}
-          onClick={(e) => handleRouter(e, "/board")}
-        >
-          <ListItemIcon>
-            <InboxIcon style={{ color: "#dbdfe2" }} />
-          </ListItemIcon>
-          <ListItemText primary='글쓰기' style={{ color: "#dbdfe2" }} />
-        </ListItem>
-        <Common />
-      </List>
+              <ListItem
+                button
+                style={{ color: "#dbdfe2" }}
+                onClick={(e) => handleRouter(e, "/postManage")}
+              >
+                <ListItemIcon>
+                  <InboxIcon style={{ color: "#dbdfe2" }} />
+                </ListItemIcon>
+                <ListItemText primary='글관리' style={{ color: "#dbdfe2" }} />
+              </ListItem>
+
+              <ListItem
+                button
+                style={{ color: "#dbdfe2" }}
+                onClick={(e) => handleRouter(e, "/board")}
+              >
+                <ListItemIcon>
+                  <InboxIcon style={{ color: "#dbdfe2" }} />
+                </ListItemIcon>
+                <ListItemText primary='글쓰기' style={{ color: "#dbdfe2" }} />
+              </ListItem>
+              <Common />
+            </List>
+          </div>
+        </Drawer>
+      </nav>
+      {children}
     </div>
   );
 };
