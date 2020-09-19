@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
@@ -25,15 +25,46 @@ import Common from "./Common";
 
 import Modal from "@material-ui/core/Modal";
 
-const UserPage = ({ menuList }) => {
+const getIsArray = (element) => {
+  return Array.isArray(element) && element.length > 0;
+};
+
+const deepCopy = (obj) => JSON.parse(JSON.stringify(obj));
+
+const UserPage = () => {
   const classes = menuStyles();
   const router = useRouter();
-  const [menuListS, setMenuListS] = useState(menuList);
+  const dispatch = useDispatch();
+  const treeData = useSelector((state) => state.category.treeData);
+  const [menuList, setMenuList] = useState(deepCopy(treeData));
+
+  const getListLoading = useSelector((state) => state.category.getListLoading);
+  const getListDone = useSelector((state) => state.category.getListDone);
+  const getListError = useSelector((state) => state.category.getListError);
 
   const onToggleMenu = (e) => {
-    e.isExpand = !e.isExpand;
-    setMenuListS([...menuListS]);
+    e.isOpend = !e.isOpend;
+    setMenuList([...menuList]);
   };
+
+  useEffect(() => {
+    dispatch({ type: "GET_CATEGORY_LIST_REQUEST" });
+  }, []);
+
+  // 카테고리 리스트 호출 성공.
+  useEffect(() => {
+    if (getListDone) {
+      dispatch({ type: "GET_CATEGORY_LIST_RESET" });
+    }
+  }, [getListDone]);
+
+  // 카테고리 리스트 호출 중 에러.
+  useEffect(() => {
+    if (getListError) {
+      alert(getListError);
+      dispatch({ type: "GET_CATEGORY_LIST_RESET" });
+    }
+  }, [getListError]);
 
   console.log("UserPage rendering");
   return (
@@ -49,7 +80,7 @@ const UserPage = ({ menuList }) => {
               key={e.id}
               style={{ color: "#dbdfe2" }}
               onClick={() => {
-                e.href ? router.push(e.href) : onToggleMenu(e);
+                e.href ? router.push("/") : onToggleMenu(e);
               }}
             >
               <ListItemIcon>
@@ -59,9 +90,9 @@ const UserPage = ({ menuList }) => {
                   <MailIcon style={{ color: "#dbdfe2" }} />
                 )}
               </ListItemIcon>
-              <ListItemText primary={e.name} style={{ color: "#dbdfe2" }} />
+              <ListItemText primary={e.title} style={{ color: "#dbdfe2" }} />
               {Array.isArray(e.children) && e.children.length > 0 ? (
-                e.isExpand ? (
+                e.isOpend ? (
                   <ExpandLess />
                 ) : (
                   <ExpandMore />
@@ -69,7 +100,7 @@ const UserPage = ({ menuList }) => {
               ) : null}
             </ListItem>
             {Array.isArray(e.children) && e.children.length > 0 && (
-              <Collapse in={e.isExpand} timeout='auto' unmountOnExit>
+              <Collapse in={e.isOpend} timeout='auto' unmountOnExit>
                 <List component='div' disablePadding>
                   {e.children.map((ee, iindex) => (
                     <ListItem
@@ -77,14 +108,14 @@ const UserPage = ({ menuList }) => {
                       button
                       className={classes.nested}
                       style={{ color: "#dbdfe2" }}
-                      onClick={() => {
-                        ee.href ? router.push(ee.href) : console.log(2);
-                      }}
+                      // onClick={() => {
+                      //   ee.href ? router.push("") : console.log(2);
+                      // }}
                     >
                       <ListItemIcon>
                         <MailIcon style={{ color: "#dbdfe2" }} />
                       </ListItemIcon>
-                      <ListItemText primary={ee.name} />
+                      <ListItemText primary={ee.title} />
                     </ListItem>
                   ))}
                 </List>

@@ -271,7 +271,10 @@ const flatToHierarchy = (flatData) => {
   const treeData = [];
 
   flatData.map((node) => {
-    if (node.depth == 1) treeData.push(node);
+    if (node.depth == 1) {
+      treeData.push(node);
+      node["isOpend"] = true;
+    }
   });
 
   const nextIndex = treeData.length;

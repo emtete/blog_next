@@ -45,13 +45,12 @@ const AppLayout = ({ children, window }) => {
   const dispatch = useDispatch();
 
   const me = useSelector((state) => state.user.me);
-  const menu = useSelector((state) => state.menu.node.children);
   const isAdminMode = useSelector((state) => state.user.isAdminMode);
 
-  const [menuList, setMenuList] = React.useState(menu);
+  const menu = useSelector((state) => state.menu.node.children);
+  const treeData = useSelector((state) => state.category.treeData);
 
   useEffect(() => {
-    dispatch({ type: "RESET_INDEX_PATH_ACTION" });
     dispatch({ type: "LOAD_MY_INFO_REQUEST" });
   }, []);
 
@@ -91,7 +90,7 @@ const AppLayout = ({ children, window }) => {
             variant='permanent'
             open
           >
-            {isAdminMode ? <ManagerPage /> : <UserPage menuList={menuList} />}
+            {isAdminMode ? <ManagerPage /> : <UserPage />}
           </Drawer>
         </Hidden>
       </nav>
