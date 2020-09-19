@@ -89,12 +89,21 @@ const reducer = (state = initialState, action) => {
         me: null,
         isAdminMode: false,
       };
+
     case "LOG_OUT_FAILURE":
       return {
         ...state,
         logOutLoading: false,
         logOutDone: false,
-        logOutError: true,
+        logOutError: action.error,
+      };
+
+    case "LOG_OUT_RESET":
+      return {
+        ...state,
+        logOutLoading: false,
+        logOutDone: false,
+        logOutError: null,
       };
 
     case "LOAD_MY_INFO_REQUEST":

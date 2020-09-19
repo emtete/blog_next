@@ -48,6 +48,8 @@ const UserPage = () => {
   const loadMyInfoDone = useSelector((state) => state.user.loadMyInfoDone);
   const loadMyInfoError = useSelector((state) => state.user.loadMyInfoError);
 
+  const logOutDone = useSelector((state) => state.user.logOutDone);
+
   const onToggleMenu = (e) => {
     e.isOpend = !e.isOpend;
     setMenuList([...menuList]);
@@ -57,7 +59,11 @@ const UserPage = () => {
     if (loadMyInfoDone) {
       dispatch({ type: "GET_CATEGORY_LIST_REQUEST" });
     }
-  }, [loadMyInfoDone]);
+    if (logOutDone) {
+      dispatch({ type: "GET_CATEGORY_LIST_REQUEST" });
+      dispatch({ type: "LOG_OUT_RESET" });
+    }
+  }, [loadMyInfoDone, logOutDone]);
 
   // 카테고리 리스트 호출 성공.
   useEffect(() => {

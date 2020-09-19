@@ -18,14 +18,15 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { modalStyles, getModalStyle } from "../layout/LoginStyles";
 import { ToggleButton, menuStyles } from "../layout/styles";
-// import
-// "../../reducers/user";
+
 import useInput from "../../hooks/useInput";
 import LoginModal from "./LoginModal";
 
 import Modal from "@material-ui/core/Modal";
+import { useRouter } from "next/router";
 
 const Common = () => {
+  const router = useRouter();
   const dispatch = useDispatch();
 
   const me = useSelector((state) => state.user.me);
@@ -35,6 +36,7 @@ const Common = () => {
   const handleLogin = () => {
     if (me) {
       dispatch({ type: "LOG_OUT_REQUEST" });
+      router.push("/");
     } else {
       dispatch({ type: "START_LOG_IN_MODE_ACTION" });
     }
