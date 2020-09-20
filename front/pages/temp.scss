@@ -257,6 +257,10 @@ li {
   left: -100px;
   opacity: 0.01;
 }
+.inp_check:checked + .ico_checkbox,
+.inp_check:checked + .lab_check .ico_checkbox {
+  background-position: -0px -280px;
+}
 
 // ---------------------------------------------------------------------
 // --------------------------------.inner_blog_layer5-------------------
@@ -1364,7 +1368,12 @@ select {
     float: right;
     z-index: 30;
     // margin-top: 14px;
+    width: 150px;
     margin: 14px 29px 0 0;
+  }
+
+  & .search_blog + .opt_blog {
+    float: left;
   }
 
   &:after {

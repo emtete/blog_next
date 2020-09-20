@@ -13,6 +13,30 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const initCheckboxGroup = (items) => {
+  const object = {};
+
+  object["all"] = false;
+  items.map((item) => {
+    object[item.id] = false;
+  });
+
+  return object;
+};
+
+const checkAll = (items, check) => {
+  const object = {};
+
+  object["all"] = check;
+  items.map((item) => {
+    object[item.id] = check;
+  });
+
+  return object;
+};
+
+const deepCopy = (obj) => JSON.parse(JSON.stringify(obj));
+
 const PostManage = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -20,6 +44,9 @@ const PostManage = () => {
   const items = useSelector((state) => state.post.item.items);
 
   const [searchCategoryId, setSearchCategoryId] = useState("");
+  const [changeCategoryId, setChangeCategoryId] = useState("");
+  const [checkboxGroup, setCheckboxGroup] = useState({ all: false });
+  const [posts, setPosts] = useState([]);
 
   const me = useSelector((state) => state.user.me);
   const flatTreeData = useSelector((state) => state.category.flatTreeData);
@@ -57,7 +84,11 @@ const PostManage = () => {
 
   // 글 목록 호출 성공
   useEffect(() => {
-    if (getListDone) dispatch({ type: "GET_POST_LIST_RESET" });
+    if (getListDone) {
+      setPosts(items);
+      setCheckboxGroup(initCheckboxGroup(items));
+      dispatch({ type: "GET_POST_LIST_RESET" });
+    }
   }, [getListDone]);
 
   // 글 목록 호출 실패
@@ -85,11 +116,32 @@ const PostManage = () => {
     (e) => {
       setSearchCategoryId(e.target.value);
       const data = { CategoryId: e.target.value };
+      // dispatch({ type: "GET_POST_LIST_REQUEST", data });
+    },
+    [changeCategoryId]
+  );
+
+  const onChangeSelect2 = useCallback(
+    (e) => {
+      setSearchCategoryId(e.target.value);
+      const data = { CategoryId: e.target.value };
       dispatch({ type: "GET_POST_LIST_REQUEST", data });
     },
     [searchCategoryId]
   );
 
+  const handleCheckbox = useCallback(
+    (e) => {
+      if (e.target.value == "all") {
+        setCheckboxGroup(checkAll(items, e.target.checked));
+      } else {
+        let clone = deepCopy(checkboxGroup);
+        clone[e.target.value] = e.target.checked; // true
+        setCheckboxGroup(clone);
+      }
+    },
+    [checkboxGroup]
+  );
   console.log("PostManage rendering");
   return (
     <main className={classes.content}>
@@ -101,16 +153,40 @@ const PostManage = () => {
           </h3>
           <div className='wrap_search'>
             <div className='check_blog'>
-              <input type='checkbox' id='inpAllCheck' className='inp_check' />
+              <input
+                type='checkbox'
+                id='inpAllCheck'
+                className='inp_check'
+                onChange={handleCheckbox}
+                checked={checkboxGroup["all"]}
+                value='all'
+              />
+
               <label htmlFor='inpAllCheck' className='ico_blog ico_checkbox'>
                 선택 됨
               </label>
+            </div>
+            <form className='search_blog' />
+            <div className='opt_blog'>
+              <select
+                name='abc2'
+                className='opt_category'
+                onChange={onChangeSelect1}
+                value={changeCategoryId}
+              >
+                <option value=''>카테고리 바꾸기</option>
+                {flatTreeData.map((node) => (
+                  <option key={node.id + node.title} value={node.id}>
+                    {node.title}
+                  </option>
+                ))}
+              </select>
             </div>
             <div className='opt_blog'>
               <select
                 name='abc1'
                 className='opt_category'
-                onChange={onChangeSelect1}
+                onChange={onChangeSelect2}
                 value={searchCategoryId}
               >
                 <option value=''>모든 카테고리</option>
@@ -124,9 +200,13 @@ const PostManage = () => {
           </div>
           <div className='wrap_list'>
             <ul className='list_post list_post_type2'>
-              {items.map((item) => (
-                <li key={item.id + item.published}>
-                  <Post item={item} />
+              {posts.map((post) => (
+                <li key={post.id + post.published}>
+                  <Post
+                    post={post}
+                    handleCheckbox={handleCheckbox}
+                    checkboxGroup={checkboxGroup}
+                  />
                 </li>
               ))}
             </ul>
