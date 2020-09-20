@@ -6,7 +6,7 @@ export const initialState = {
   getListLoading: false,
   getListDone: false,
   getListError: null,
-
+  flatTreeData: [],
   treeData: [
     // {
     //   title: "개발일지..",
@@ -427,6 +427,7 @@ const reducer = (state = initialState, action) => {
         getListDone: true,
         getListError: null,
         treeData: [...flatToHierarchy(action.data)],
+        flatTreeData: [...action.data],
       };
 
     case "GET_CATEGORY_LIST_FAILURE":

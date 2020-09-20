@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import { makeStyles } from "@material-ui/core/styles";
@@ -19,7 +19,10 @@ const PostManage = () => {
   const router = useRouter();
   const items = useSelector((state) => state.post.item.items);
 
+  const [searchCategoryId, setSearchCategoryId] = useState("");
+
   const me = useSelector((state) => state.user.me);
+  const flatTreeData = useSelector((state) => state.category.flatTreeData);
 
   const getListLoading = useSelector((state) => state.post.getListLoading);
   const getListDone = useSelector((state) => state.post.getListDone);
@@ -31,10 +34,21 @@ const PostManage = () => {
   const loadMyInfoDone = useSelector((state) => state.user.loadMyInfoDone);
   const loadMyInfoError = useSelector((state) => state.user.loadMyInfoError);
 
+  const getCategoryListLoading = useSelector(
+    (state) => state.category.getListLoading
+  );
+  const getCategoryListDone = useSelector(
+    (state) => state.category.getListDone
+  );
+  const getCategoryListError = useSelector(
+    (state) => state.category.getListError
+  );
+
   // 글 목록 호출
   useEffect(() => {
     if (loadMyInfoDone && me) {
       dispatch({ type: "GET_POST_LIST_REQUEST" });
+      dispatch({ type: "GET_CATEGORY_LIST_REQUEST" });
     } else if (loadMyInfoDone && !me) {
       router.push("/");
     }
@@ -50,6 +64,31 @@ const PostManage = () => {
   useEffect(() => {
     if (getListError) alert(getListError);
   }, [getListError]);
+
+  // 카테고리 리스트 호출 성공.
+  useEffect(() => {
+    if (getCategoryListDone) {
+      dispatch({ type: "GET_CATEGORY_LIST_RESET" });
+      dispatch({ type: "RESET_INDEX_PATH_ACTION" });
+    }
+  }, [getCategoryListDone]);
+
+  // 카테고리 리스트 호출 중 에러.
+  useEffect(() => {
+    if (getCategoryListError) {
+      alert(getCategoryListError);
+      dispatch({ type: "GET_CATEGORY_LIST_RESET" });
+    }
+  }, [getCategoryListError]);
+
+  const onChangeSelect1 = useCallback(
+    (e) => {
+      setSearchCategoryId(e.target.value);
+      const data = { CategoryId: e.target.value };
+      dispatch({ type: "GET_POST_LIST_REQUEST", data });
+    },
+    [searchCategoryId]
+  );
 
   console.log("PostManage rendering");
   return (
@@ -71,17 +110,15 @@ const PostManage = () => {
               <select
                 name='abc1'
                 className='opt_category'
-                // onChange={onChangeSelect1}
-                // ref={selectRef1}
-                // value={selectValue1}
+                onChange={onChangeSelect1}
+                value={searchCategoryId}
               >
-                <option value=''>선택되지 않음</option>
-                <option value='1'>선택되지 않음1</option>
-                {/* {treeDataCopied.map((node) => (
+                <option value=''>모든 카테고리</option>
+                {flatTreeData.map((node) => (
                   <option key={node.id + node.title} value={node.id}>
                     {node.title}
                   </option>
-                ))} */}
+                ))}
               </select>
             </div>
           </div>

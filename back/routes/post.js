@@ -1,6 +1,7 @@
 const express = require("express");
 
 const { Post } = require("../models");
+const { search } = require("./category");
 
 const router = express.Router();
 
@@ -50,11 +51,15 @@ router.delete("/:postId", async (req, res, next) => {
 
 router.get("/getList", async (req, res, next) => {
   try {
-    const post = await Post.findAll({
+    const query = req.query;
+    const searchCondition = {
       attributes: {
         exclude: ["content"],
       },
-    });
+    };
+    if (query && query.CategoryId !== undefined)
+      searchCondition["where"] = { CategoryId: query.CategoryId };
+    const post = await Post.findAll(searchCondition);
     res.status(201).json(post);
   } catch (err) {
     console.error(err);
