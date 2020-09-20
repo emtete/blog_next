@@ -39,7 +39,7 @@ const getChecked = (checkboxGroup) => {
   const checked = [];
 
   for (let id in checkboxGroup) {
-    if (checkboxGroup[id]) checked.push(id);
+    if (checkboxGroup[id] && id != "all") checked.push(id);
   }
 
   return checked;
@@ -165,6 +165,7 @@ const PostManage = () => {
       } else {
         let clone = deepCopy(checkboxGroup);
         clone[e.target.value] = e.target.checked; // true
+        console.log(e.target.value);
         setCheckboxGroup(clone);
       }
     },

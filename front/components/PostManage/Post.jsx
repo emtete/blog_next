@@ -40,13 +40,13 @@ const Post = ({ post, handleCheckbox, checkboxGroup }) => {
       <div className='check_blog'>
         <input
           type='checkbox'
-          id='inpCheck36'
+          id={`inpCheck${post.id}`}
           className='inp_check'
           onChange={handleCheckbox}
           checked={checkboxGroup[post.id]}
           value={post.id}
         />
-        <label htmlFor='inpCheck36' className='ico_blog ico_checkbox'>
+        <label htmlFor={`inpCheck${post.id}`} className='ico_blog ico_checkbox'>
           선택 안됨
         </label>
       </div>

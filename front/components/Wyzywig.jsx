@@ -159,6 +159,7 @@ const Wyzywig = () => {
     if (writeDone) {
       dispatch({ type: "REMOVE_ORG_POST_ACTION" });
       dispatch({ type: "WRITE_POST_RESET" });
+      dispatch({ type: "GET_POST_LIST_REQUEST" });
       router.push("/postManage");
     }
   }, [writeDone]);
