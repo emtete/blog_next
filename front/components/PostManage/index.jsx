@@ -139,10 +139,13 @@ const PostManage = () => {
 
   const onChangeSelect1 = useCallback(
     (e) => {
-      // setChangeCategoryId(e.target.value);
       const selectedIndex = e.target.selectedIndex;
       const categoryName = e.target[selectedIndex].text;
       const postIdArr = getChecked(checkboxGroup);
+      if (postIdArr.length === 0) {
+        alert("선택된 글이 없습니다.");
+        return;
+      }
       const data = { CategoryId: e.target.value, categoryName, postIdArr };
       dispatch({ type: "CHANGE_CATEGORY_IN_POST_REQUEST", data });
     },
