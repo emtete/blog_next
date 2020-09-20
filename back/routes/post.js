@@ -49,6 +49,29 @@ router.delete("/:postId", async (req, res, next) => {
   }
 });
 
+router.post("/changeCategory", async (req, res, next) => {
+  const data = req.body.data;
+  const CategoryId = data.CategoryId;
+  const categoryName = data.categoryName;
+  const postIdArr = data.postIdArr;
+  try {
+    for (let i in postIdArr) {
+      await Post.update(
+        {
+          CategoryId,
+          categoryName,
+        },
+        { where: { id: postIdArr[i] } }
+      );
+    }
+
+    res.status(201).send("ok");
+  } catch (err) {
+    console.error(err);
+    next(err); // status 500
+  }
+});
+
 router.get("/getList", async (req, res, next) => {
   try {
     const query = req.query;

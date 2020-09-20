@@ -29,6 +29,10 @@ export const initialState = {
   deleteLoading: false,
   deleteDone: false,
   deleteError: null,
+
+  changeCategoryLoading: false,
+  changeCategoryDone: false,
+  changeCategoryError: null,
 };
 
 const getData = (data) => {
@@ -171,6 +175,38 @@ const reducer = (state = initialState, action) => {
         updateLoading: false,
         updateDone: false,
         updateError: null,
+      };
+
+    case "CHANGE_CATEGORY_IN_POST_REQUEST":
+      return {
+        ...state,
+        changeCategoryLoading: true,
+        changeCategoryDone: false,
+        changeCategoryError: null,
+      };
+
+    case "CHANGE_CATEGORY_IN_POST_SUCCESS":
+      return {
+        ...state,
+        changeCategoryLoading: false,
+        changeCategoryDone: true,
+        changeCategoryError: null,
+      };
+
+    case "CHANGE_CATEGORY_IN_POST_FAILURE":
+      return {
+        ...state,
+        changeCategoryLoading: false,
+        changeCategoryDone: false,
+        changeCategoryError: action.error,
+      };
+
+    case "CHANGE_CATEGORY_IN_POST_RESET":
+      return {
+        ...state,
+        changeCategoryLoading: false,
+        changeCategoryDone: false,
+        changeCategoryError: null,
       };
 
     case "GET_POST_LIST_REQUEST":

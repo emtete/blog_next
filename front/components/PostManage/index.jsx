@@ -35,6 +35,16 @@ const checkAll = (items, check) => {
   return object;
 };
 
+const getChecked = (checkboxGroup) => {
+  const checked = [];
+
+  for (let id in checkboxGroup) {
+    if (checkboxGroup[id]) checked.push(id);
+  }
+
+  return checked;
+};
+
 const deepCopy = (obj) => JSON.parse(JSON.stringify(obj));
 
 const PostManage = () => {
@@ -71,6 +81,13 @@ const PostManage = () => {
     (state) => state.category.getListError
   );
 
+  const changeCategoryDone = useSelector(
+    (state) => state.post.changeCategoryDone
+  );
+  const changeCategoryError = useSelector(
+    (state) => state.post.changeCategoryError
+  );
+
   // 글 목록 호출
   useEffect(() => {
     if (loadMyInfoDone && me) {
@@ -81,6 +98,14 @@ const PostManage = () => {
     }
     dispatch({ type: "LOAD_MY_INFO_RESET" });
   }, [loadMyInfoDone]);
+
+  // 글 목록 호출
+  useEffect(() => {
+    if (changeCategoryDone) {
+      dispatch({ type: "GET_POST_LIST_REQUEST" });
+    }
+    dispatch({ type: "CHANGE_CATEGORY_IN_POST_RESET" });
+  }, [changeCategoryDone]);
 
   // 글 목록 호출 성공
   useEffect(() => {
@@ -98,7 +123,7 @@ const PostManage = () => {
 
   // 카테고리 리스트 호출 성공.
   useEffect(() => {
-    if (getCategoryListDone) {
+    if (changeCategoryDone) {
       dispatch({ type: "GET_CATEGORY_LIST_RESET" });
       dispatch({ type: "RESET_INDEX_PATH_ACTION" });
     }
@@ -114,11 +139,14 @@ const PostManage = () => {
 
   const onChangeSelect1 = useCallback(
     (e) => {
-      setSearchCategoryId(e.target.value);
-      const data = { CategoryId: e.target.value };
-      // dispatch({ type: "GET_POST_LIST_REQUEST", data });
+      // setChangeCategoryId(e.target.value);
+      const selectedIndex = e.target.selectedIndex;
+      const categoryName = e.target[selectedIndex].text;
+      const postIdArr = getChecked(checkboxGroup);
+      const data = { CategoryId: e.target.value, categoryName, postIdArr };
+      dispatch({ type: "CHANGE_CATEGORY_IN_POST_REQUEST", data });
     },
-    [changeCategoryId]
+    [changeCategoryId, checkboxGroup]
   );
 
   const onChangeSelect2 = useCallback(

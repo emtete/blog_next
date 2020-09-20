@@ -72,6 +72,29 @@ function* deletePost(action) {
   }
 }
 
+function changeCategoryInPostAPI(data) {
+  console.log("request url: ", "/post/changeCategory");
+  console.log("data", data);
+  return axios.post("/post/changeCategory", { data });
+}
+
+// 비동기 액션 크리에이터
+function* changeCategoryInPost(action) {
+  try {
+    const result = yield call(changeCategoryInPostAPI, action.data);
+    yield put({
+      type: "CHANGE_CATEGORY_IN_POST_SUCCESS",
+      data: result.data, // 성공 결과
+    });
+  } catch (err) {
+    yield put({
+      // put은 dispatch와 같은 기능을 한다.
+      type: "CHANGE_CATEGORY_IN_POST_FAILURE",
+      data: err.response.data, // 실패 결과
+    });
+  }
+}
+
 function getPostListAPI(data) {
   let request = "/post/getList";
 
@@ -99,7 +122,6 @@ function* getPostList(action) {
 }
 
 function getPostOneAPI(data) {
-  // return axios.get("/post/getOne", { id: data.id });
   return axios.get(`/post/getOne?id=${data.id}`);
 }
 
@@ -132,6 +154,11 @@ function* watchDeletePost() {
   yield takeLatest("DELETE_POST_REQUEST", deletePost);
 }
 
+function* watchChangeCategoryInPost() {
+  console.log(11);
+  yield takeLatest("CHANGE_CATEGORY_IN_POST_REQUEST", changeCategoryInPost);
+}
+
 function* watchGetPostList() {
   yield takeLatest("GET_POST_LIST_REQUEST", getPostList);
 }
@@ -145,6 +172,7 @@ export default function* postSaga() {
     fork(watchWritePost),
     fork(watchUpdatePost),
     fork(watchDeletePost),
+    fork(watchChangeCategoryInPost),
     fork(watchGetPostList),
     fork(watchGetPostOne),
   ]);
