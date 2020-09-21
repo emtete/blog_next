@@ -238,6 +238,14 @@ const reducer = (state = initialState, action) => {
         getListError: action.error,
       };
 
+    case "GET_POST_LIST_RESET":
+      return {
+        ...state,
+        getListLoading: false,
+        getListDone: false,
+        getListError: null,
+      };
+
     case "GET_POST_ONE_REQUEST":
       return {
         ...state,

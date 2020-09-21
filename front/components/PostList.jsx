@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 
@@ -67,6 +67,23 @@ export default function PostList() {
   const query = router.query;
   const [expanded, setExpanded] = React.useState("");
   const items = useSelector((state) => state.post.item.items);
+
+  const getListDone = useSelector((state) => state.post.getListDone);
+  const getListError = useSelector((state) => state.post.getListError);
+
+  // 글 목록 호출
+  useEffect(() => {
+    const data = { CategoryId: query.categoryId };
+    dispatch({ type: "GET_POST_LIST_REQUEST", data });
+  }, [query]);
+
+  useEffect(() => {
+    if (getListDone) dispatch({ type: "GET_POST_LIST_RESET" });
+  }, [getListDone]);
+
+  useEffect(() => {
+    if (getListError) alert(getListError);
+  }, [getListError]);
 
   const handleChange = (panel) => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : false);
