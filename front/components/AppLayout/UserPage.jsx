@@ -114,6 +114,7 @@ const UserPage = ({ children }) => {
               DEV LIFE
             </div>
             <List>
+              <Common />
               <ListItem
                 button
                 key='card'
@@ -176,7 +177,6 @@ const UserPage = ({ children }) => {
                   )}
                 </div>
               ))}
-              <Common />
             </List>
           </div>
         </Drawer>

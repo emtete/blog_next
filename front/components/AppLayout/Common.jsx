@@ -69,7 +69,6 @@ const Common = () => {
   console.log("Common rendering");
   return (
     <>
-      <Divider style={{ backgroundColor: "#ffffff" }} />
       <ListItem
         style={{ color: "#dbdfe2", justifyContent: "center" }}
         key='login'

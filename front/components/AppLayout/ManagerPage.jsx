@@ -66,14 +66,12 @@ const ManagerPage = ({ children }) => {
               DEV LIFE
             </div>
             <List>
+              <Common />
               <ListItem
                 button
                 style={{ color: "#dbdfe2" }}
                 onClick={(e) => handleRouter(e, "/category")}
               >
-                {/* <ListItemIcon>
-                  <InboxIcon style={{ color: "#dbdfe2" }} />
-                </ListItemIcon> */}
                 <ListItemText
                   primary='카테고리 관리'
                   style={{ paddingLeft: "20px", color: "#dbdfe2" }}
@@ -85,9 +83,6 @@ const ManagerPage = ({ children }) => {
                 style={{ color: "#dbdfe2" }}
                 onClick={(e) => handleRouter(e, "/postManage")}
               >
-                {/* <ListItemIcon>
-                  <InboxIcon style={{ color: "#dbdfe2" }} />
-                </ListItemIcon> */}
                 <ListItemText
                   primary='글관리'
                   style={{ paddingLeft: "20px", color: "#dbdfe2" }}
@@ -99,15 +94,11 @@ const ManagerPage = ({ children }) => {
                 style={{ color: "#dbdfe2" }}
                 onClick={(e) => handleRouter(e, "/board")}
               >
-                {/* <ListItemIcon>
-                  <InboxIcon style={{ color: "#dbdfe2" }} />
-                </ListItemIcon> */}
                 <ListItemText
                   primary='글쓰기'
                   style={{ paddingLeft: "20px", color: "#dbdfe2" }}
                 />
               </ListItem>
-              <Common />
             </List>
           </div>
         </Drawer>
