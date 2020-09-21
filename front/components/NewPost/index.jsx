@@ -1,11 +1,16 @@
 import React, { Component, useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
+
 import draftToHtml from "draftjs-to-html";
 import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
+
 import { makeStyles } from "@material-ui/core/styles";
 import { TextField, FormControl, Button } from "@material-ui/core";
+
+import ImageRegister from "./ImageRegister";
 
 const Editor = dynamic(
   () => import("react-draft-wysiwyg").then((mod) => mod.Editor),
@@ -65,7 +70,7 @@ function uploadImageCallBack(file) {
   });
 }
 
-const Wyzywig = () => {
+const NewPost = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const router = useRouter();
@@ -206,7 +211,7 @@ const Wyzywig = () => {
           <select
             value={post.categoryId}
             onChange={handleCategoryId}
-            style={{ width: 200 }}
+            style={{ width: 200, marginBottom: "10px" }}
           >
             <option value=''>카테고리 선택</option>
             {selectContents.map((content) => (
@@ -215,6 +220,7 @@ const Wyzywig = () => {
               </option>
             ))}
           </select>
+          <ImageRegister />
           <TextField
             id='title'
             label='title'
@@ -279,4 +285,4 @@ const Wyzywig = () => {
   );
 };
 
-export default Wyzywig;
+export default NewPost;
