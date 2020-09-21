@@ -316,6 +316,14 @@ const closeOneCategory = (treeData, id) => {
   targetNode.isOpened = false;
 };
 
+const exceptHaveChildren = (flatTreeData) => {
+  const excepted = [];
+  flatTreeData.map((node) => {
+    if (!getIsArray(node.children)) excepted.push(node);
+  });
+
+  return excepted;
+};
 const reducer = (state = initialState, action) => {
   let newObject;
   let title;
@@ -427,7 +435,7 @@ const reducer = (state = initialState, action) => {
         getListDone: true,
         getListError: null,
         treeData: [...flatToHierarchy(action.data)],
-        flatTreeData: [...action.data],
+        flatTreeData: [...exceptHaveChildren(action.data)],
       };
 
     case "GET_CATEGORY_LIST_FAILURE":
