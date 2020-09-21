@@ -125,10 +125,8 @@ const Category = () => {
   useEffect(() => {
     if (me) {
       dispatch({ type: "GET_CATEGORY_LIST_REQUEST" });
-    } else {
-      router.push("/");
     }
-  }, []);
+  }, [me]);
 
   // 변경사항 적용 성공.
   useEffect(() => {

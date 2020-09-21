@@ -101,10 +101,8 @@ const PostManage = () => {
     if (me) {
       dispatch({ type: "GET_POST_LIST_REQUEST" });
       dispatch({ type: "GET_CATEGORY_LIST_REQUEST" });
-    } else {
-      router.push("/");
     }
-  }, []);
+  }, [me]);
 
   // 글 목록 호출
   useEffect(() => {
