@@ -75,7 +75,7 @@ const CardModal = () => {
               borderStyle: "solid",
               borderColor: "rgb(241, 241, 241)",
               borderImage: "initial",
-              padding: "0px",
+              padding: "10px",
               borderRadius: "0px",
             }}
             toolbarStyle={{ display: "none" }}
