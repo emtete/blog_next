@@ -11,6 +11,7 @@ const getObj = (node, userId) => {
     priority: node.priority,
     depth: node.depth,
     parent: node.parent,
+    isCard: node.isCard,
     UserId: userId,
   };
 };
