@@ -12,6 +12,7 @@ import UserPage from "../components/AppLayout/UserPage";
 import ManagerPage from "../components/AppLayout/ManagerPage";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import "./temp.scss";
+import "./card.scss";
 
 import wrapper from "../store/configureStore";
 

@@ -114,6 +114,20 @@ const UserPage = ({ children }) => {
               DEV LIFE
             </div>
             <List>
+              <ListItem
+                button
+                key='card'
+                style={{ color: "#dbdfe2" }}
+                onClick={() => {
+                  router.push(`/card`);
+                }}
+              >
+                <ListItemText
+                  primary='Card'
+                  style={{ paddingLeft: "20px", color: "#dbdfe2" }}
+                />
+              </ListItem>
+
               {menuList.map((e, index) => (
                 <div key={e.id}>
                   <ListItem
@@ -126,13 +140,6 @@ const UserPage = ({ children }) => {
                         : onToggleMenu(e);
                     }}
                   >
-                    {/* <ListItemIcon>
-                      {index % 2 === 0 ? (
-                        <InboxIcon style={{ color: "#dbdfe2" }} />
-                      ) : (
-                        <MailIcon style={{ color: "#dbdfe2" }} />
-                      )}
-                    </ListItemIcon> */}
                     <ListItemText
                       primary={e.title}
                       style={{ paddingLeft: "20px", color: "#dbdfe2" }}
@@ -158,9 +165,6 @@ const UserPage = ({ children }) => {
                               router.push(`/post?categoryId=${ee.id}`);
                             }}
                           >
-                            {/* <ListItemIcon>
-                              <MailIcon style={{ color: "#dbdfe2" }} />
-                            </ListItemIcon> */}
                             <ListItemText
                               primary={ee.title}
                               style={{ paddingLeft: "30px", color: "#dbdfe2" }}

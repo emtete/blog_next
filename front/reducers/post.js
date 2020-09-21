@@ -14,6 +14,9 @@ export const initialState = {
     totalCount: 0,
     items: [],
   },
+
+  isViewMode: false,
+
   getListLoading: false,
   getListDone: false,
   getListError: null,
@@ -271,6 +274,18 @@ const reducer = (state = initialState, action) => {
     case "GET_POST_ONE_FAILURE":
       return {
         ...state,
+      };
+
+    case "START_IS_VIEW_MODE_ACTION":
+      return {
+        ...state,
+        isViewMode: true,
+      };
+
+    case "END_IS_VIEW_MODE_ACTION":
+      return {
+        ...state,
+        isViewMode: false,
       };
 
     default:
