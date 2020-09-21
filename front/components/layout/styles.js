@@ -58,6 +58,7 @@ export const menuStyles = makeStyles((theme) => ({
   drawerPaper: {
     width: drawerWidth,
     backgroundColor: "#0c2a40",
+    borderRight: "3px solid #04c2c9",
   },
   drawerPaperMobile: {
     width: "100%",
