@@ -45,10 +45,6 @@ const ManagerPage = ({ children }) => {
     if (router.pathname === "/board") {
       dispatch({ type: "REMOVE_ORG_POST_ACTION" });
     }
-    // console.log(router.pathname);
-    // if (path === "/postManage") {
-    //   dispatch({ type: "GET_POST_LIST_REQUEST" });
-    // }
     router.push(path);
   };
 

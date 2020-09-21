@@ -3,8 +3,8 @@ import PostList from "../components/PostList";
 
 const Post = () => {
   return (
-      <div style={{ marginBottom: 50 }}></div>
-      <PostList />
+    // <div style={{ marginBottom: 50 }}></div>
+    <PostList />
   );
 };
 

@@ -88,16 +88,23 @@ const PostManage = () => {
     (state) => state.post.changeCategoryError
   );
 
-  // 글 목록 호출
+  // 새로고침 혹은 주소로 접근한 경우의 처리.
   useEffect(() => {
-    if (loadMyInfoDone && me) {
-      dispatch({ type: "GET_POST_LIST_REQUEST" });
-      dispatch({ type: "GET_CATEGORY_LIST_REQUEST" });
-    } else if (loadMyInfoDone && !me) {
+    if (loadMyInfoDone && !me) {
       router.push("/");
     }
     dispatch({ type: "LOAD_MY_INFO_RESET" });
   }, [loadMyInfoDone]);
+
+  // 글 목록 호출
+  useEffect(() => {
+    if (me) {
+      dispatch({ type: "GET_POST_LIST_REQUEST" });
+      dispatch({ type: "GET_CATEGORY_LIST_REQUEST" });
+    } else {
+      router.push("/");
+    }
+  }, []);
 
   // 글 목록 호출
   useEffect(() => {

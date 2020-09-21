@@ -1,10 +1,12 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useRouter } from "next/router";
+
 import { withStyles, makeStyles } from "@material-ui/core/styles";
 import MuiAccordion from "@material-ui/core/Accordion";
 import MuiAccordionSummary from "@material-ui/core/AccordionSummary";
 import MuiAccordionDetails from "@material-ui/core/AccordionDetails";
 import Typography from "@material-ui/core/Typography";
-import { useDispatch, useSelector } from "react-redux";
 
 import PostDetail from "./PostDetail";
 
@@ -59,9 +61,12 @@ const AccordionDetails = withStyles((theme) => ({
 
 export default function PostList() {
   const classes = useStyles();
-  const [expanded, setExpanded] = React.useState("");
   const dispatch = useDispatch();
-  const mainPosts = useSelector((state) => state.post.mainPosts);
+  const router = useRouter();
+
+  const query = router.query;
+  const [expanded, setExpanded] = React.useState("");
+  const items = useSelector((state) => state.post.item.items);
 
   const handleChange = (panel) => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : false);
@@ -70,7 +75,7 @@ export default function PostList() {
   return (
     <main className={classes.content}>
       <div>
-        {mainPosts.map((v, i) => (
+        {items.map((v, i) => (
           <Accordion
             square
             expanded={expanded === `panel1${i}`}

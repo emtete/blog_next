@@ -34,6 +34,9 @@ const Common = () => {
   const isLoginMode = useSelector((state) => state.user.isLoginMode);
   const isAdminMode = useSelector((state) => state.user.isAdminMode);
 
+  const loadMyInfoDone = useSelector((state) => state.user.loadMyInfoDone);
+  const loadMyInfoError = useSelector((state) => state.user.loadMyInfoError);
+
   const handleLogin = () => {
     if (me) {
       dispatch({ type: "LOG_OUT_REQUEST" });
@@ -54,6 +57,14 @@ const Common = () => {
   useEffect(() => {
     dispatch({ type: "LOAD_MY_INFO_REQUEST" });
   }, []);
+
+  useEffect(() => {
+    if (loadMyInfoDone) dispatch({ type: "LOAD_MY_INFO_RESET" });
+  }, [loadMyInfoDone]);
+
+  useEffect(() => {
+    if (loadMyInfoError) alert(loadMyInfoError);
+  }, [loadMyInfoError]);
 
   console.log("Common rendering");
   return (

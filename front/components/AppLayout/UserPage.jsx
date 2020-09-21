@@ -109,7 +109,6 @@ const UserPage = ({ children }) => {
           variant='permanent'
           open
         >
-          {/* {isAdminMode ? <ManagerPage /> : <UserPage />} */}
           <div>
             <div className={(classes.toolbar, classes.toolbarCustomising)}>
               DEV LIFE
@@ -122,7 +121,9 @@ const UserPage = ({ children }) => {
                     key={e.id}
                     style={{ color: "#dbdfe2" }}
                     onClick={() => {
-                      e.href ? router.push("/") : onToggleMenu(e);
+                      !getIsArray(e.children)
+                        ? router.push(`/post?categoryId=${e.id}`)
+                        : onToggleMenu(e);
                     }}
                   >
                     <ListItemIcon>
@@ -153,9 +154,9 @@ const UserPage = ({ children }) => {
                             button
                             className={classes.nested}
                             style={{ color: "#dbdfe2" }}
-                            // onClick={() => {
-                            //   ee.href ? router.push("") : console.log(2);
-                            // }}
+                            onClick={() => {
+                              router.push(`/post?categoryId=${ee.id}`);
+                            }}
                           >
                             <ListItemIcon>
                               <MailIcon style={{ color: "#dbdfe2" }} />

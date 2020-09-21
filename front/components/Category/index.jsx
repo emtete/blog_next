@@ -113,15 +113,22 @@ const Category = () => {
     [treeData]
   );
 
-  //
+  // 새로고침 혹은 주소로 접근시 처리.
   useEffect(() => {
-    if (loadMyInfoDone && me) {
-      dispatch({ type: "GET_CATEGORY_LIST_REQUEST" });
-    } else if (loadMyInfoDone && !me) {
+    if (loadMyInfoDone && !me) {
       router.push("/");
     }
     dispatch({ type: "LOAD_MY_INFO_RESET" });
   }, [loadMyInfoDone]);
+
+  // 카테고리 목록 호출
+  useEffect(() => {
+    if (me) {
+      dispatch({ type: "GET_CATEGORY_LIST_REQUEST" });
+    } else {
+      router.push("/");
+    }
+  }, []);
 
   // 변경사항 적용 성공.
   useEffect(() => {
