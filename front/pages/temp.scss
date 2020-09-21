@@ -1092,11 +1092,11 @@ select {
   box-sizing: border-box;
   vertical-align: top;
 
-  & .disabled {
+  &.disabled {
     border-color: #e0e5ee;
     color: #959595;
     box-shadow: none;
-    cursor: no-drop;
+    // cursor: no-drop;
   }
 
   &:hover {

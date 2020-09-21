@@ -324,6 +324,22 @@ const exceptHaveChildren = (flatTreeData) => {
 
   return excepted;
 };
+
+const toggleIsCard = (state, id, isCard) => {
+  const clone = deepCopy(state.treeData);
+  const targetPath = state.treeHelper.indexPath[id];
+  let targetNode;
+
+  if (targetPath.length === 1) {
+    targetNode = clone[targetPath[0]];
+  } else if (targetPath.length === 2) {
+    targetNode = clone[targetPath[0]].children[targetPath[1]];
+  }
+
+  targetNode.isCard = isCard;
+  return clone;
+};
+
 const reducer = (state = initialState, action) => {
   let newObject;
   let title;
@@ -465,6 +481,7 @@ const reducer = (state = initialState, action) => {
         parent: 0,
         id: newId,
         isNew: true,
+        isCard: false,
       };
 
       return {
@@ -486,6 +503,13 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         isMoveMode: action.data.isMoveMode,
+      };
+
+    case "TOGGLE_IS_CARD_ACTION":
+      clone = toggleIsCard(state, action.data.id, action.data.isCard);
+      return {
+        ...state,
+        treeData: [...clone],
       };
 
     case "SET_UPDATE_MODE_ACTION":

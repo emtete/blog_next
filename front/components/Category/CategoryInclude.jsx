@@ -31,6 +31,11 @@ const CategoryInclude = ({ data }) => {
     }
   }, [categoryInEditMode]);
 
+  const onClickCard = (e) => {
+    const isCard = !e.target.classList.toggle("disabled");
+    dispatch({ type: "TOGGLE_IS_CARD_ACTION", data: { id, isCard } });
+  };
+
   const onClickDel = () => {
     dispatch({ type: "DELETE_NODE_ACTION", data: { id } });
   };
@@ -96,14 +101,16 @@ const CategoryInclude = ({ data }) => {
                 <div className='txt_count'>({entries})</div>
               </div>
               <div className='info_btn'>
-                {/* <span className='btn_post'>추가</span> */}
+                <span className='btn_post' onClick={onClickCard}>
+                  카드
+                </span>
                 <span className='btn_post' onClick={onClickUpdate}>
                   수정
                 </span>
                 <span className='btn_post' onClick={onClickMove}>
                   이동
                 </span>
-                <span className='btn_post disabled' onClick={onClickDel}>
+                <span className='btn_post' onClick={onClickDel}>
                   삭제
                 </span>
               </div>
