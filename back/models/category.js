@@ -27,6 +27,11 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         unique: false,
       },
+      isCard: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        unique: false,
+      },
     },
     {
       charset: "utf8mb4", // mb4는 이모티콘까지 담을 수 있도록..
