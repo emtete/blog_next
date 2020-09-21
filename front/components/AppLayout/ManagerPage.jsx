@@ -61,7 +61,6 @@ const ManagerPage = ({ children }) => {
           variant='permanent'
           open
         >
-          {/* {isAdminMode ? <ManagerPage /> : <UserPage />} */}
           <div>
             <div className={(classes.toolbar, classes.toolbarCustomising)}>
               DEV LIFE
@@ -72,10 +71,13 @@ const ManagerPage = ({ children }) => {
                 style={{ color: "#dbdfe2" }}
                 onClick={(e) => handleRouter(e, "/category")}
               >
-                <ListItemIcon>
+                {/* <ListItemIcon>
                   <InboxIcon style={{ color: "#dbdfe2" }} />
-                </ListItemIcon>
-                <ListItemText primary='메뉴관리' style={{ color: "#dbdfe2" }} />
+                </ListItemIcon> */}
+                <ListItemText
+                  primary='카테고리 관리'
+                  style={{ paddingLeft: "20px", color: "#dbdfe2" }}
+                />
               </ListItem>
 
               <ListItem
@@ -83,10 +85,13 @@ const ManagerPage = ({ children }) => {
                 style={{ color: "#dbdfe2" }}
                 onClick={(e) => handleRouter(e, "/postManage")}
               >
-                <ListItemIcon>
+                {/* <ListItemIcon>
                   <InboxIcon style={{ color: "#dbdfe2" }} />
-                </ListItemIcon>
-                <ListItemText primary='글관리' style={{ color: "#dbdfe2" }} />
+                </ListItemIcon> */}
+                <ListItemText
+                  primary='글관리'
+                  style={{ paddingLeft: "20px", color: "#dbdfe2" }}
+                />
               </ListItem>
 
               <ListItem
@@ -94,10 +99,13 @@ const ManagerPage = ({ children }) => {
                 style={{ color: "#dbdfe2" }}
                 onClick={(e) => handleRouter(e, "/board")}
               >
-                <ListItemIcon>
+                {/* <ListItemIcon>
                   <InboxIcon style={{ color: "#dbdfe2" }} />
-                </ListItemIcon>
-                <ListItemText primary='글쓰기' style={{ color: "#dbdfe2" }} />
+                </ListItemIcon> */}
+                <ListItemText
+                  primary='글쓰기'
+                  style={{ paddingLeft: "20px", color: "#dbdfe2" }}
+                />
               </ListItem>
               <Common />
             </List>

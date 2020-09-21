@@ -96,11 +96,15 @@ function* changeCategoryInPost(action) {
 }
 
 function getPostListAPI(data) {
-  let request = "/post/getList";
+  let request = "/post/getList?";
 
   if (data && data.CategoryId !== undefined)
-    request = request + `?CategoryId=${data.CategoryId}`;
+    request = request + `CategoryId=${data.CategoryId}&`;
 
+  if (data && data.includeContent)
+    request = request + `includeContent=${data.includeContent}`;
+
+  console.log("request : ", request);
   return axios.get(request);
 }
 
@@ -155,7 +159,6 @@ function* watchDeletePost() {
 }
 
 function* watchChangeCategoryInPost() {
-  console.log(11);
   yield takeLatest("CHANGE_CATEGORY_IN_POST_REQUEST", changeCategoryInPost);
 }
 

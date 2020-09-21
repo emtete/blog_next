@@ -65,7 +65,7 @@ export default function PostList() {
   const router = useRouter();
 
   const query = router.query;
-  const [expanded, setExpanded] = React.useState("");
+  // const [expanded, setExpanded] = React.useState("");
   const items = useSelector((state) => state.post.item.items);
 
   const getListDone = useSelector((state) => state.post.getListDone);
@@ -73,7 +73,7 @@ export default function PostList() {
 
   // 글 목록 호출
   useEffect(() => {
-    const data = { CategoryId: query.categoryId };
+    const data = { CategoryId: query.categoryId, includeContent: true };
     dispatch({ type: "GET_POST_LIST_REQUEST", data });
   }, [query]);
 
@@ -85,18 +85,18 @@ export default function PostList() {
     if (getListError) alert(getListError);
   }, [getListError]);
 
-  const handleChange = (panel) => (event, newExpanded) => {
-    setExpanded(newExpanded ? panel : false);
-  };
+  // const handleChange = (panel) => (event, newExpanded) => {
+  //   setExpanded(newExpanded ? panel : false);
+  // };
 
   return (
     <main className={classes.content}>
       <div>
         {items.map((v, i) => (
           <Accordion
-            square
-            expanded={expanded === `panel1${i}`}
-            onChange={handleChange(`panel1${i}`)}
+            // square
+            // expanded={expanded === `panel1${i}`}
+            // onChange={handleChange(`panel1${i}`)}
             key={v.id}
           >
             <AccordionSummary
@@ -108,7 +108,7 @@ export default function PostList() {
               <Typography>{v.date}</Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <PostDetail postContent={v.content} />
+              <PostDetail postContent={JSON.parse(v.content)} />
             </AccordionDetails>
           </Accordion>
         ))}

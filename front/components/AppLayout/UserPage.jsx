@@ -126,16 +126,16 @@ const UserPage = ({ children }) => {
                         : onToggleMenu(e);
                     }}
                   >
-                    <ListItemIcon>
+                    {/* <ListItemIcon>
                       {index % 2 === 0 ? (
                         <InboxIcon style={{ color: "#dbdfe2" }} />
                       ) : (
                         <MailIcon style={{ color: "#dbdfe2" }} />
                       )}
-                    </ListItemIcon>
+                    </ListItemIcon> */}
                     <ListItemText
                       primary={e.title}
-                      style={{ color: "#dbdfe2" }}
+                      style={{ paddingLeft: "20px", color: "#dbdfe2" }}
                     />
                     {Array.isArray(e.children) && e.children.length > 0 ? (
                       e.isOpend ? (
@@ -158,10 +158,13 @@ const UserPage = ({ children }) => {
                               router.push(`/post?categoryId=${ee.id}`);
                             }}
                           >
-                            <ListItemIcon>
+                            {/* <ListItemIcon>
                               <MailIcon style={{ color: "#dbdfe2" }} />
-                            </ListItemIcon>
-                            <ListItemText primary={ee.title} />
+                            </ListItemIcon> */}
+                            <ListItemText
+                              primary={ee.title}
+                              style={{ paddingLeft: "30px", color: "#dbdfe2" }}
+                            />
                           </ListItem>
                         ))}
                       </List>

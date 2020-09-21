@@ -75,13 +75,16 @@ router.post("/changeCategory", async (req, res, next) => {
 router.get("/getList", async (req, res, next) => {
   try {
     const query = req.query;
-    const searchCondition = {
-      attributes: {
+    const searchCondition = {};
+
+    if (query && !query.includeContent) {
+      searchCondition["attributes"] = {
         exclude: ["content"],
-      },
-    };
-    if (query && query.CategoryId !== undefined)
+      };
+    }
+    if (query && query.CategoryId !== undefined) {
       searchCondition["where"] = { CategoryId: query.CategoryId };
+    }
     const post = await Post.findAll(searchCondition);
     res.status(201).json(post);
   } catch (err) {
