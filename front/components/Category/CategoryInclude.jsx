@@ -12,6 +12,7 @@ const CategoryInclude = ({ data }) => {
   const children = data.children;
   const id = data.id;
   const isOpened = data.isOpened;
+  const isCard = data.isCard;
 
   const dispatch = useDispatch();
   const bundelRef = useRef();
@@ -101,7 +102,10 @@ const CategoryInclude = ({ data }) => {
                 <div className='txt_count'>({entries})</div>
               </div>
               <div className='info_btn'>
-                <span className='btn_post' onClick={onClickCard}>
+                <span
+                  className={`btn_post ${!isCard && "disabled"}`}
+                  onClick={onClickCard}
+                >
                   카드
                 </span>
                 <span className='btn_post' onClick={onClickUpdate}>

@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import CategoryAddComp from "./CategoryAddComp";
@@ -7,6 +7,7 @@ const CategorySub = ({ data }) => {
   const id = data.id;
   const title = data.title;
   const entries = data.entries;
+  const isCard = data.isCard;
 
   const dispatch = useDispatch();
   const itemOrderRef = useRef();
@@ -22,6 +23,14 @@ const CategorySub = ({ data }) => {
       itemOrderRef.current.classList.remove("item_edit");
     }
   }, [categoryInEditMode]);
+
+  const onClickCard = useCallback(
+    (e) => {
+      const isCard = !e.target.classList.toggle("disabled");
+      dispatch({ type: "TOGGLE_IS_CARD_ACTION", data: { id, isCard } });
+    },
+    [id]
+  );
 
   const onClickUpdate = () => {
     dispatch({
@@ -55,6 +64,12 @@ const CategorySub = ({ data }) => {
                 <div className='txt_count'>({entries})</div>
               </div>
               <div className='info_btn'>
+                <span
+                  className={`btn_post ${!isCard && "disabled"}`}
+                  onClick={onClickCard}
+                >
+                  카드
+                </span>
                 <span className='btn_post' onClick={onClickUpdate}>
                   수정
                 </span>

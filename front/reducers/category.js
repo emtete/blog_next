@@ -507,9 +507,12 @@ const reducer = (state = initialState, action) => {
 
     case "TOGGLE_IS_CARD_ACTION":
       clone = toggleIsCard(state, action.data.id, action.data.isCard);
+      [_, updatedClone, _] = manageCategoryCrud(state, [action.data.id]);
+
       return {
         ...state,
         treeData: [...clone],
+        updatedCategories: [...updatedClone],
       };
 
     case "SET_UPDATE_MODE_ACTION":
