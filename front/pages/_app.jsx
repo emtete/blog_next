@@ -13,6 +13,9 @@ import ManagerPage from "../components/AppLayout/ManagerPage";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import "./temp.scss";
 import "./card.scss";
+import "codemirror/lib/codemirror.css";
+import "@toast-ui/editor/dist/toastui-editor.css";
+import "highlight.js/styles/github.css";
 
 import wrapper from "../store/configureStore";
 
