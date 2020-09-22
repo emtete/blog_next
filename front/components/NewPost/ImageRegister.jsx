@@ -51,8 +51,9 @@ const ImageRegister = () => {
             대표 이미지 등록하기
           </Typography>
         </CardContent>
-        <div className={classes.controls}>
-          <Button color='primary'>이미지 등록</Button>
+        <div className={`${classes.controls} upload_btn_layer`}>
+          <label htmlFor='image_upload'>업로드</label>
+          <input type='file' id='image_upload' />
         </div>
       </div>
       <CardMedia
