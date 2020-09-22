@@ -15,6 +15,7 @@ const TestPost = () => {
   useEffect(() => {
     hljs.registerLanguage("javascript", javascript);
   });
+
   return (
     <Editor
       initialValue='hello react editor world!'

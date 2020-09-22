@@ -14,8 +14,10 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import "./temp.scss";
 import "./card.scss";
 import "codemirror/lib/codemirror.css";
-import "@toast-ui/editor/dist/toastui-editor.css";
 import "highlight.js/styles/github.css";
+import "@toast-ui/editor/dist/toastui-editor.css";
+import "tui-editor/dist/tui-editor.min.css";
+import "tui-editor/dist/tui-editor-contents.min.css";
 
 import wrapper from "../store/configureStore";
 
