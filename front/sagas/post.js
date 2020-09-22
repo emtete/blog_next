@@ -146,6 +146,28 @@ function* getPostOne(action) {
   }
 }
 
+function uploadImagesAPI(data) {
+  console.log("request : ", `/post/images`);
+  return axios.post(`/post/images`, data);
+}
+
+// 비동기 액션 크리에이터
+function* uploadImages(action) {
+  try {
+    const result = yield call(uploadImagesAPI, action.data);
+    yield put({
+      type: "UPLOAD_IMAGES_SUCCESS",
+      data: result.data, // 성공 결과
+    });
+  } catch (err) {
+    yield put({
+      // put은 dispatch와 같은 기능을 한다.
+      type: "UPLOAD_IMAGES_FAILURE",
+      data: err.response.data, // 실패 결과
+    });
+  }
+}
+
 function* watchWritePost() {
   yield takeLatest("WRITE_POST_REQUEST", writePost);
 }
@@ -170,6 +192,10 @@ function* watchGetPostOne() {
   yield takeLatest("GET_POST_ONE_REQUEST", getPostOne);
 }
 
+function* watchUploadImages() {
+  yield takeLatest("UPLOAD_IMAGES_REQUEST", uploadImages);
+}
+
 export default function* postSaga() {
   yield all([
     fork(watchWritePost),
@@ -178,5 +204,6 @@ export default function* postSaga() {
     fork(watchChangeCategoryInPost),
     fork(watchGetPostList),
     fork(watchGetPostOne),
+    fork(watchUploadImages),
   ]);
 }

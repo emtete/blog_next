@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useRef, useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
@@ -41,7 +43,26 @@ const useStyles = makeStyles((theme) => ({
 
 const ImageRegister = () => {
   const classes = useStyles();
+  const dispatch = useDispatch();
   const theme = useTheme();
+  const imageRef = useRef();
+
+  const imagePaths = useSelector((state) => state.post.imagePaths);
+
+  const onClickImage = useCallback(
+    (e) => {
+      imageRef.current.click();
+    },
+    [imageRef.current]
+  );
+
+  const onChangeImage = useCallback((e) => {
+    const imageFormData = new FormData();
+    [].forEach.call(e.target.files, (f) => {
+      imageFormData.append("image", f);
+    });
+    dispatch({ type: "UPLOAD_IMAGES_REQUEST", data: imageFormData });
+  });
 
   return (
     <Card className={classes.root}>
@@ -52,13 +73,15 @@ const ImageRegister = () => {
           </Typography>
         </CardContent>
         <div className={`${classes.controls} upload_btn_layer`}>
-          <label htmlFor='image_upload'>업로드</label>
-          <input type='file' id='image_upload' />
+          <Button color='primary' onClick={onClickImage}>
+            이미지 등록
+          </Button>
+          <input type='file' ref={imageRef} onChange={onChangeImage} />
         </div>
       </div>
       <CardMedia
         className={classes.cover}
-        image='https://pds.joins.com/news/component/htmlphoto_mmdata/201911/10/htm_2019111016135789072.jpg'
+        image={`http://localhost:3065/${imagePaths[0]}`}
         title='Live from space album cover'
       />
     </Card>

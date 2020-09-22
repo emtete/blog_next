@@ -14,7 +14,9 @@ export const initialState = {
     totalCount: 0,
     items: [],
   },
-
+  imagePaths: [
+    "https://pds.joins.com/news/component/htmlphoto_mmdata/201911/10/htm_2019111016135789072.jpg",
+  ],
   isViewMode: false,
 
   getListLoading: false,
@@ -36,6 +38,10 @@ export const initialState = {
   changeCategoryLoading: false,
   changeCategoryDone: false,
   changeCategoryError: null,
+
+  saveImagesLoading: true,
+  saveImagesDone: false,
+  saveImagesError: null,
 };
 
 const getData = (data) => {
@@ -247,6 +253,40 @@ const reducer = (state = initialState, action) => {
         getListLoading: false,
         getListDone: false,
         getListError: null,
+      };
+
+    case "UPLOAD_IMAGES_REQUEST":
+      return {
+        ...state,
+        uploadImagesLoading: true,
+        uploadImagesDone: false,
+        uploadImagesError: null,
+      };
+
+    case "UPLOAD_IMAGES_SUCCESS":
+      return {
+        ...state,
+        uploadImagesLoading: false,
+        uploadImagesDone: true,
+        uploadImagesError: null,
+
+        imagePaths: action.data,
+      };
+
+    case "UPLOAD_IMAGES_FAILURE":
+      return {
+        ...state,
+        uploadImagesLoading: false,
+        uploadImagesDone: false,
+        uploadImagesError: action.error,
+      };
+
+    case "UPLOAD_IMAGES_RESET":
+      return {
+        ...state,
+        uploadImagesLoading: false,
+        uploadImagesDone: false,
+        uploadImagesError: null,
       };
 
     case "GET_POST_ONE_REQUEST":
