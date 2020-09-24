@@ -7,18 +7,16 @@ import javascript from "highlight.js/lib/languages/javascript";
 import css from "highlight.js/lib/languages/css";
 
 const Editor = dynamic(() => import("./EditorWrap"), { ssr: false });
+const Viewer = dynamic(() => import("./ViewerWrap"), { ssr: false });
+
 const EditorWrap = React.forwardRef((props, ref) => (
   <Editor {...props} forwardedRef={ref} />
 ));
+const ViewerWrap = React.forwardRef((props, ref) => (
+  <Viewer {...props} forwardedRef={ref} />
+));
 
-const Viewer = dynamic(
-  () => import("@toast-ui/react-editor").then((mod) => mod.Viewer),
-  {
-    ssr: false,
-  }
-);
-
-const TuiEditor = ({ tuiRef, initialContent }) => {
+const TuiEditor = ({ isEditorMode, tuiRef, initialContent }) => {
   useEffect(() => {
     hljs.registerLanguage("javascript", javascript);
     hljs.registerLanguage("css", css);
@@ -29,24 +27,30 @@ const TuiEditor = ({ tuiRef, initialContent }) => {
   // };
 
   return (
-    <EditorWrap
-      initialValue={initialContent || ""}
-      previewStyle='vertical'
-      height='600px'
-      initialEditType='markdown'
-      useCommandShortcut={true}
-      plugins={[[codeSyntaxHightlight, { hljs }]]}
-      ref={tuiRef}
-      // onChange={onChangeContent}
-    />
-    // <Viewer
-    //   initialValue='hello react editor world!'
-    //   previewStyle='vertical'
-    //   height='600px'
-    //   initialEditType='markdown'
-    //   useCommandShortcut={true}
-    //   plugins={[[codeSyntaxHightlight, { hljs }]]}
-    // />
+    <>
+      {isEditorMode ? (
+        <EditorWrap
+          initialValue={initialContent || ""}
+          previewStyle='vertical'
+          height='600px'
+          initialEditType='markdown'
+          useCommandShortcut={true}
+          plugins={[[codeSyntaxHightlight, { hljs }]]}
+          ref={tuiRef}
+          // onChange={onChangeContent}
+        />
+      ) : (
+        <ViewerWrap
+          initialValue={initialContent || ""}
+          previewStyle='vertical'
+          height='600px'
+          initialEditType='markdown'
+          useCommandShortcut={true}
+          plugins={[[codeSyntaxHightlight, { hljs }]]}
+          ref={tuiRef}
+        />
+      )}
+    </>
   );
 };
 

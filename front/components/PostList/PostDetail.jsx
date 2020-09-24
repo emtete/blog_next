@@ -4,38 +4,41 @@ import dynamic from "next/dynamic";
 import draftToHtml from "draftjs-to-html";
 import PropTypes from "prop-types";
 
-const Editor = dynamic(
-  () => import("react-draft-wysiwyg").then((mod) => mod.Editor),
-  { ssr: false }
-);
+import TuiEditor from "./TuiEditor";
 
-const htmlToDraft = dynamic(
-  () => import("html-to-draftjs").then((mod) => mod.htmlToDraft),
-  { ssr: false }
-);
+// const Editor = dynamic(
+//   () => import("react-draft-wysiwyg").then((mod) => mod.Editor),
+//   { ssr: false }
+// );
 
-class PostDetail extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      editorState: EditorState.createWithContent(
-        convertFromRaw(this.props.postContent)
-      ),
-    };
-  }
+// const htmlToDraft = dynamic(
+//   () => import("html-to-draftjs").then((mod) => mod.htmlToDraft),
+//   { ssr: false }
+// );
 
-  onEditorStateChange = (editorState) => {
-    this.setState({
-      editorState,
-    });
-    // console.log(JSON.stringify(convertToRaw(editorState.getCurrentContent())));
-  };
+// class PostDetail extends Component {
+//   constructor(props) {
+//     super(props);
+//     this.state = {
+//       editorState: EditorState.createWithContent(
+//         convertFromRaw(this.props.postContent)
+//       ),
+//     };
+//   }
 
-  render() {
-    const { editorState } = this.state;
-    return (
-      <div>
-        <Editor
+//   onEditorStateChange = (editorState) => {
+//     this.setState({
+//       editorState,
+//     });
+//     // console.log(JSON.stringify(convertToRaw(editorState.getCurrentContent())));
+//   };
+
+//   render() {
+//     const { editorState } = this.state;
+//     return (
+//       <div>
+{
+  /* <Editor
           readOnly={true}
           defaultEditorState={editorState}
           wrapperClassName='demo-wrapper'
@@ -58,14 +61,22 @@ class PostDetail extends Component {
           toolbar={{
             options: [],
           }}
-        />
+        /> */
+}
+{
+  /* <TuiEditor tuiRef={tuiRef} initialContent={post.content} />
       </div>
     );
   }
+} */
 }
 
-PostDetail.propTypes = {
-  postContent: PropTypes.object.isRequired,
+// PostDetail.propTypes = {
+//   postContent: PropTypes.object.isRequired,
+// };
+
+const PostDetail = () => {
+  return <TuiEditor tuiRef={tuiRef} initialContent={post.content} />;
 };
 
 export default PostDetail;

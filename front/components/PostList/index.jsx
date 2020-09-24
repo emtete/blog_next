@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 
@@ -8,7 +8,8 @@ import MuiAccordionSummary from "@material-ui/core/AccordionSummary";
 import MuiAccordionDetails from "@material-ui/core/AccordionDetails";
 import Typography from "@material-ui/core/Typography";
 
-import PostDetail from "./PostDetail";
+// import PostDetail from "./PostDetail";
+import TuiEditor from "../NewPost/TuiEditor";
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -63,6 +64,7 @@ export default function PostList() {
   const classes = useStyles();
   const dispatch = useDispatch();
   const router = useRouter();
+  const tuiRef = useRef();
 
   const query = router.query;
   // const [expanded, setExpanded] = React.useState("");
@@ -108,7 +110,12 @@ export default function PostList() {
               <Typography>{v.date}</Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <PostDetail postContent={JSON.parse(v.content)} />
+              {/* <PostDetail postContent={JSON.parse(v.content)} /> */}
+              <TuiEditor
+                isEditorMode={false}
+                tuiRef={tuiRef}
+                initialContent={v.content}
+              />
             </AccordionDetails>
           </Accordion>
         ))}

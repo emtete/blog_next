@@ -173,7 +173,11 @@ const NewPost = () => {
             value={post.title}
           />
           <br />
-          <TuiEditor tuiRef={tuiRef} initialContent={post.content} />
+          <TuiEditor
+            isEditorMode={true}
+            tuiRef={tuiRef}
+            initialContent={post.content}
+          />
           <div
             style={{
               display: "flex",
