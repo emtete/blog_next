@@ -1,23 +1,8 @@
-import React, {
-  Component,
-  useState,
-  useEffect,
-  useRef,
-  forwardRef,
-  useCallback,
-} from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-
-// import draftToHtml from "draftjs-to-html";
-// import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
-
-// import hljs from "highlight.js";
-// import codeSyntaxHightlight from "@toast-ui/editor-plugin-code-syntax-highlight";
-// import javascript from "highlight.js/lib/languages/javascript";
-// import css from "highlight.js/lib/languages/css";
 
 import { makeStyles } from "@material-ui/core/styles";
 import { TextField, FormControl, Button } from "@material-ui/core";
@@ -25,40 +10,12 @@ import { TextField, FormControl, Button } from "@material-ui/core";
 import ImageRegister from "./ImageRegister";
 import TuiEditor from "./TuiEditor";
 
-// const TuiEditorWithRef = forwardRef((props, ref) => {
-//   <TuiEditor ref={ref} />;
-// });
-
-// const Editor = dynamic(
-//   () => import("react-draft-wysiwyg").then((mod) => mod.Editor),
-//   { ssr: false }
-// );
-
-// const htmlToDraft = dynamic(
-//   () => import("html-to-draftjs").then((mod) => mod.htmlToDraft),
-//   { ssr: false }
-// );
-
 const useStyles = makeStyles((theme) => ({
   content: {
     flexGrow: 1,
     padding: theme.spacing(3),
   },
 }));
-
-// const Editor = dynamic(
-//   () => import("@toast-ui/react-editor").then((mod) => mod.Editor),
-//   {
-//     ssr: false,
-//   }
-// );
-
-// const Viewer = dynamic(
-//   () => import("@toast-ui/react-editor").then((mod) => mod.Viewer),
-//   {
-//     ssr: false,
-//   }
-// );
 
 const getIsArray = (element) => {
   return Array.isArray(element) && element.length > 0;
@@ -81,25 +38,6 @@ const getTreeToFlatData = (treeData) => {
 
   return clone;
 };
-
-// function uploadImageCallBack(file) {
-//   return new Promise((resolve, reject) => {
-//     const xhr = new XMLHttpRequest();
-//     xhr.open("POST", "https://api.imgur.com/3/image");
-//     xhr.setRequestHeader("Authorization", "Client-ID XXXXX");
-//     const data = new FormData();
-//     data.append("image", file);
-//     xhr.send(data);
-//     xhr.addEventListener("load", () => {
-//       const response = JSON.parse(xhr.responseText);
-//       resolve(response);
-//     });
-//     xhr.addEventListener("error", () => {
-//       const error = JSON.parse(xhr.responseText);
-//       reject(error);
-//     });
-//   });
-// }
 
 const NewPost = () => {
   const classes = useStyles();
@@ -135,7 +73,7 @@ const NewPost = () => {
   //     ? EditorState.createWithContent(convertFromRaw(JSON.parse(post.content)))
   //     : EditorState.createEmpty();
 
-  const [editorState, setEditorState] = useState("");
+  // const [editorState, setEditorState] = useState("");
   // const [content, setContent] = useState("");
 
   // const handleTuiChange = useCallback(() => {
@@ -163,49 +101,45 @@ const NewPost = () => {
     setPost({ ...post, categoryId: e.target.value, categoryName: selectText });
   };
 
-  const onEditorStateChange = (editorState) => {
-    setEditorState(editorState);
-    console.log(editorState);
-  };
-
-  // const onSubmitForm = (e) => {
-  //   e.preventDefault();
-  //   const content = JSON.stringify(
-  //     convertToRaw(editorState.getCurrentContent())
-  //   );
-
-  //   // 새로 작성
-  //   if (orgPost.title === "") {
-  //     const author = "victor_77";
-  //     const data = {
-  //       id: post.id,
-  //       UserId: me.id,
-  //       author: author,
-  //       title: post.title,
-  //       categoryName: post.categoryName,
-  //       CategoryId: post.categoryId,
-  //       content: content,
-  //     };
-  //     dispatch({ type: "WRITE_POST_REQUEST", data });
-  //   } // 수정
-  //   else {
-  //     const data = {
-  //       id: post.id,
-  //       UserId: me.id,
-  //       author: post.author,
-  //       title: post.title,
-  //       categoryName: post.categoryName,
-  //       categoryId: post.categoryId,
-  //       content: content,
-  //     };
-  //     dispatch({ type: "UPDATE_POST_REQUEST", data });
-  //   }
+  // const onEditorStateChange = (editorState) => {
+  //   setEditorState(editorState);
+  //   console.log(editorState);
   // };
 
-  // useEffect(() => {
-  //   hljs.registerLanguage("javascript", javascript);
-  //   hljs.registerLanguage("css", css);
-  // });
+  const onSubmitForm = (e) => {
+    e.preventDefault();
+    // const content = JSON.stringify(
+    //   convertToRaw(editorState.getCurrentContent())
+    // );
+    const content = tuiRef.current.getInstance().getMarkdown();
+
+    // 새로 작성
+    if (orgPost.title === "") {
+      const author = "victor_77";
+      const data = {
+        id: post.id,
+        UserId: me.id,
+        author: author,
+        title: post.title,
+        categoryName: post.categoryName,
+        CategoryId: post.categoryId,
+        content: content,
+      };
+      // dispatch({ type: "WRITE_POST_REQUEST", data });
+    } // 수정
+    else {
+      const data = {
+        id: post.id,
+        UserId: me.id,
+        author: post.author,
+        title: post.title,
+        categoryName: post.categoryName,
+        categoryId: post.categoryId,
+        content: content,
+      };
+      // dispatch({ type: "UPDATE_POST_REQUEST", data });
+    }
+  };
 
   //작성 성공
   useEffect(() => {
@@ -254,9 +188,7 @@ const NewPost = () => {
 
   return (
     <main className={classes.content}>
-      <form
-      // onSubmit={onSubmitForm}
-      >
+      <form onSubmit={onSubmitForm}>
         <FormControl>
           <select
             value={post.categoryId}
@@ -278,52 +210,7 @@ const NewPost = () => {
             value={post.title}
           />
           <br />
-          {/* <Editor
-            editorState={editorState}
-            wrapperClassName='demo-wrapper'
-            editorClassName='demo-editor'
-            editorStyle={{
-              height: "275px",
-              borderWidth: "1px",
-              borderStyle: "solid",
-              borderColor: "rgb(241, 241, 241)",
-              borderImage: "initial",
-              padding: "5px",
-              borderRadius: "2px",
-            }}
-            onEditorStateChange={onEditorStateChange}
-            localization={{
-              locale: "ko",
-            }}
-            toolbar={{
-              inline: { inDropdown: true },
-              list: { inDropdown: true },
-              textAlign: { inDropdown: true },
-              link: { inDropdown: true },
-              history: { inDropdown: true },
-              image: {
-                uploadCallback: uploadImageCallBack,
-                alt: { present: true, mandatory: true },
-                // previewImage: true,
-              },
-            }}
-          /> */}
-          {/* <textarea
-            disabled
-            value={draftToHtml(convertToRaw(editorState.getCurrentContent()))}
-          /> */}
-          {/* <Editor
-            initialValue={content}
-            onChange={handleTuiChange}
-            previewStyle='vertical'
-            height='600px'
-            initialEditType='markdown'
-            useCommandShortcut={true}
-            plugins={[[codeSyntaxHightlight, { hljs }]]}
-            ref={tuiRef}
-          /> */}
-          {/* <TuiEditor /> */}
-          <TuiEditor />
+          <TuiEditor tuiRef={tuiRef} initialContent={post.content} />
           <div
             style={{
               display: "flex",
