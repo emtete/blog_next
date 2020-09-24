@@ -2,7 +2,7 @@ import NewPost from "../components/NewPost";
 import TestPost from "../components/TestPost";
 
 const newPost = () => {
-  return <TestPost />;
+  return <NewPost />;
 };
 
 export default newPost;

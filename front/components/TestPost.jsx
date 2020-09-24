@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
 import hljs from "highlight.js";
 import codeSyntaxHightlight from "@toast-ui/editor-plugin-code-syntax-highlight";
@@ -20,10 +20,16 @@ const Viewer = dynamic(
 );
 
 const TestPost = () => {
+  const tuiRef = useRef();
+
   useEffect(() => {
     hljs.registerLanguage("javascript", javascript);
     hljs.registerLanguage("css", css);
   });
+
+  const onChangeContent = () => {
+    console.log(tuiRef.current.getInstance());
+  };
 
   return (
     <Editor
@@ -33,6 +39,8 @@ const TestPost = () => {
       initialEditType='markdown'
       useCommandShortcut={true}
       plugins={[[codeSyntaxHightlight, { hljs }]]}
+      ref={tuiRef}
+      onChange={onChangeContent}
     />
     // <Viewer
     //   initialValue='hello react editor world!'

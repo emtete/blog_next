@@ -1,26 +1,43 @@
-import React, { Component, useState, useEffect } from "react";
+import React, {
+  Component,
+  useState,
+  useEffect,
+  useRef,
+  forwardRef,
+  useCallback,
+} from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 
-import draftToHtml from "draftjs-to-html";
-import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
+// import draftToHtml from "draftjs-to-html";
+// import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
+
+// import hljs from "highlight.js";
+// import codeSyntaxHightlight from "@toast-ui/editor-plugin-code-syntax-highlight";
+// import javascript from "highlight.js/lib/languages/javascript";
+// import css from "highlight.js/lib/languages/css";
 
 import { makeStyles } from "@material-ui/core/styles";
 import { TextField, FormControl, Button } from "@material-ui/core";
 
 import ImageRegister from "./ImageRegister";
+import TuiEditor from "./TuiEditor";
 
-const Editor = dynamic(
-  () => import("react-draft-wysiwyg").then((mod) => mod.Editor),
-  { ssr: false }
-);
+// const TuiEditorWithRef = forwardRef((props, ref) => {
+//   <TuiEditor ref={ref} />;
+// });
 
-const htmlToDraft = dynamic(
-  () => import("html-to-draftjs").then((mod) => mod.htmlToDraft),
-  { ssr: false }
-);
+// const Editor = dynamic(
+//   () => import("react-draft-wysiwyg").then((mod) => mod.Editor),
+//   { ssr: false }
+// );
+
+// const htmlToDraft = dynamic(
+//   () => import("html-to-draftjs").then((mod) => mod.htmlToDraft),
+//   { ssr: false }
+// );
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -28,6 +45,20 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(3),
   },
 }));
+
+// const Editor = dynamic(
+//   () => import("@toast-ui/react-editor").then((mod) => mod.Editor),
+//   {
+//     ssr: false,
+//   }
+// );
+
+// const Viewer = dynamic(
+//   () => import("@toast-ui/react-editor").then((mod) => mod.Viewer),
+//   {
+//     ssr: false,
+//   }
+// );
 
 const getIsArray = (element) => {
   return Array.isArray(element) && element.length > 0;
@@ -51,29 +82,30 @@ const getTreeToFlatData = (treeData) => {
   return clone;
 };
 
-function uploadImageCallBack(file) {
-  return new Promise((resolve, reject) => {
-    const xhr = new XMLHttpRequest();
-    xhr.open("POST", "https://api.imgur.com/3/image");
-    xhr.setRequestHeader("Authorization", "Client-ID XXXXX");
-    const data = new FormData();
-    data.append("image", file);
-    xhr.send(data);
-    xhr.addEventListener("load", () => {
-      const response = JSON.parse(xhr.responseText);
-      resolve(response);
-    });
-    xhr.addEventListener("error", () => {
-      const error = JSON.parse(xhr.responseText);
-      reject(error);
-    });
-  });
-}
+// function uploadImageCallBack(file) {
+//   return new Promise((resolve, reject) => {
+//     const xhr = new XMLHttpRequest();
+//     xhr.open("POST", "https://api.imgur.com/3/image");
+//     xhr.setRequestHeader("Authorization", "Client-ID XXXXX");
+//     const data = new FormData();
+//     data.append("image", file);
+//     xhr.send(data);
+//     xhr.addEventListener("load", () => {
+//       const response = JSON.parse(xhr.responseText);
+//       resolve(response);
+//     });
+//     xhr.addEventListener("error", () => {
+//       const error = JSON.parse(xhr.responseText);
+//       reject(error);
+//     });
+//   });
+// }
 
 const NewPost = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const router = useRouter();
+  const tuiRef = useRef();
 
   const writeLoading = useSelector((state) => state.post.writeLoading);
   const writeDone = useSelector((state) => state.post.writeDone);
@@ -98,12 +130,22 @@ const NewPost = () => {
   const [selectContents, setSelectContents] = useState(flatDataArr);
   const [categoryId, setCategoryId] = useState("");
 
-  const editorContent =
-    post.content !== null
-      ? EditorState.createWithContent(convertFromRaw(JSON.parse(post.content)))
-      : EditorState.createEmpty();
+  // const editorContent =
+  //   post.content !== null
+  //     ? EditorState.createWithContent(convertFromRaw(JSON.parse(post.content)))
+  //     : EditorState.createEmpty();
 
-  const [editorState, setEditorState] = useState(editorContent);
+  const [editorState, setEditorState] = useState("");
+  // const [content, setContent] = useState("");
+
+  // const handleTuiChange = useCallback(() => {
+  //   // if (tuiRef.current.getInstance) {
+  //   console.log("tuiRef.current : ", tuiRef.current);
+  //   console.log(tuiRef.current.textContent);
+  //   const value = tuiRef.current.getInstance().getValue();
+  //   // setContent(value);
+  //   // }
+  // }, [tuiRef.current]);
 
   const handleTitle = (e) => {
     setPost({ ...post, title: e.target.value });
@@ -123,41 +165,47 @@ const NewPost = () => {
 
   const onEditorStateChange = (editorState) => {
     setEditorState(editorState);
+    console.log(editorState);
   };
 
-  const onSubmitForm = (e) => {
-    e.preventDefault();
-    const content = JSON.stringify(
-      convertToRaw(editorState.getCurrentContent())
-    );
+  // const onSubmitForm = (e) => {
+  //   e.preventDefault();
+  //   const content = JSON.stringify(
+  //     convertToRaw(editorState.getCurrentContent())
+  //   );
 
-    // 새로 작성
-    if (orgPost.title === "") {
-      const author = "victor_77";
-      const data = {
-        id: post.id,
-        UserId: me.id,
-        author: author,
-        title: post.title,
-        categoryName: post.categoryName,
-        CategoryId: post.categoryId,
-        content: content,
-      };
-      dispatch({ type: "WRITE_POST_REQUEST", data });
-    } // 수정
-    else {
-      const data = {
-        id: post.id,
-        UserId: me.id,
-        author: post.author,
-        title: post.title,
-        categoryName: post.categoryName,
-        categoryId: post.categoryId,
-        content: content,
-      };
-      dispatch({ type: "UPDATE_POST_REQUEST", data });
-    }
-  };
+  //   // 새로 작성
+  //   if (orgPost.title === "") {
+  //     const author = "victor_77";
+  //     const data = {
+  //       id: post.id,
+  //       UserId: me.id,
+  //       author: author,
+  //       title: post.title,
+  //       categoryName: post.categoryName,
+  //       CategoryId: post.categoryId,
+  //       content: content,
+  //     };
+  //     dispatch({ type: "WRITE_POST_REQUEST", data });
+  //   } // 수정
+  //   else {
+  //     const data = {
+  //       id: post.id,
+  //       UserId: me.id,
+  //       author: post.author,
+  //       title: post.title,
+  //       categoryName: post.categoryName,
+  //       categoryId: post.categoryId,
+  //       content: content,
+  //     };
+  //     dispatch({ type: "UPDATE_POST_REQUEST", data });
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   hljs.registerLanguage("javascript", javascript);
+  //   hljs.registerLanguage("css", css);
+  // });
 
   //작성 성공
   useEffect(() => {
@@ -206,7 +254,9 @@ const NewPost = () => {
 
   return (
     <main className={classes.content}>
-      <form onSubmit={onSubmitForm}>
+      <form
+      // onSubmit={onSubmitForm}
+      >
         <FormControl>
           <select
             value={post.categoryId}
@@ -228,7 +278,7 @@ const NewPost = () => {
             value={post.title}
           />
           <br />
-          <Editor
+          {/* <Editor
             editorState={editorState}
             wrapperClassName='demo-wrapper'
             editorClassName='demo-editor'
@@ -257,11 +307,23 @@ const NewPost = () => {
                 // previewImage: true,
               },
             }}
-          />
+          /> */}
           {/* <textarea
             disabled
             value={draftToHtml(convertToRaw(editorState.getCurrentContent()))}
           /> */}
+          {/* <Editor
+            initialValue={content}
+            onChange={handleTuiChange}
+            previewStyle='vertical'
+            height='600px'
+            initialEditType='markdown'
+            useCommandShortcut={true}
+            plugins={[[codeSyntaxHightlight, { hljs }]]}
+            ref={tuiRef}
+          /> */}
+          {/* <TuiEditor /> */}
+          <TuiEditor />
           <div
             style={{
               display: "flex",
