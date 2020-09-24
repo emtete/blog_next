@@ -10,37 +10,43 @@ import Typography from "@material-ui/core/Typography";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: 245,
+    // maxWidth: 345,
   },
   media: {
-    height: 200,
+    width: 300,
+    height: 150,
   },
 }));
 
-const CardNode = () => {
+const CardNode = ({ post }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
 
   const onClickCard = () => {
     dispatch({ type: "START_IS_VIEW_MODE_ACTION" });
+    dispatch({ type: "SET_SELECTED_POST_ACTION", data: { post } });
   };
 
   return (
-    <Card className={classes.root} onClick={onClickCard}>
+    <Card
+      style={{ height: "300px" }}
+      className={classes.root}
+      onClick={onClickCard}
+    >
       <CardActionArea>
         <CardMedia
           className={classes.media}
-          image='https://pds.joins.com/news/component/htmlphoto_mmdata/201911/10/htm_2019111016135789072.jpg'
+          image={`http://localhost:3065/${post.imagePath}`}
           title='Contemplative Reptile'
         />
         <CardContent>
-          <Typography gutterBottom variant='h5' component='h2'>
-            Lizard
+          <Typography gutterBottom variant='h6' component='p'>
+            {post.title}
           </Typography>
-          <Typography variant='body2' color='textSecondary' component='p'>
+          {/* <Typography variant='body2' color='textSecondary' component='p'>
             Lizards are a widespread group of squamate reptiles, with over 6,000
             species, ranging across all continents except Antarctica
-          </Typography>
+          </Typography> */}
         </CardContent>
       </CardActionArea>
     </Card>

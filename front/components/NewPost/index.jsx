@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector, shallowEqual } from "react-redux";
 
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
@@ -29,26 +29,50 @@ const NewPost = () => {
   const router = useRouter();
   const tuiRef = useRef();
 
-  const writeLoading = useSelector((state) => state.post.writeLoading);
-  const writeDone = useSelector((state) => state.post.writeDone);
-  const writeError = useSelector((state) => state.post.writeError);
-
-  const updateLoading = useSelector((state) => state.post.updateLoading);
-  const updateDone = useSelector((state) => state.post.updateDone);
-  const updateError = useSelector((state) => state.post.updateError);
-
-  const loadMyInfoLoading = useSelector(
-    (state) => state.user.loadMyInfoLoading
+  const { writeLoading, writeDone, writeError } = useSelector(
+    (state) => ({
+      writeLoading: state.post.writeLoading,
+      writeDone: state.post.writeDone,
+      writeError: state.post.writeError,
+    }),
+    shallowEqual
   );
-  const loadMyInfoDone = useSelector((state) => state.user.loadMyInfoDone);
-  const loadMyInfoError = useSelector((state) => state.user.loadMyInfoError);
 
-  const me = useSelector((state) => state.user.me);
-  const orgPost = deepCopy(useSelector((state) => state.post.orgPost));
+  const { updateLoading, updateDone, updateError } = useSelector(
+    (state) => ({
+      updateLoading: state.post.updateLoading,
+      updateDone: state.post.updateDone,
+      updateError: state.post.updateError,
+    }),
+    shallowEqual
+  );
+
+  const { loadMyInfoLoading, loadMyInfoDone, loadMyInfoError } = useSelector(
+    (state) => ({
+      loadMyInfoLoading: state.user.loadMyInfoLoading,
+      loadMyInfoDone: state.user.loadMyInfoDone,
+      loadMyInfoError: state.user.loadMyInfoError,
+    }),
+    shallowEqual
+  );
+
+  const { me, orgPost, flatTreeData } = useSelector(
+    (state) => ({
+      me: state.user.me,
+      orgPost: state.post.orgPost,
+      flatTreeData: state.category.flatTreeData,
+    }),
+    (prev, next) => {
+      return (
+        prev.me === next.me &&
+        prev.orgPost === next.orgPost &&
+        prev.flatTreeData === next.flatTreeData
+      );
+    }
+  );
+
   const [post, setPost] = useState(orgPost);
   const [title, setTitle] = useState("");
-  const flatTreeData = useSelector((state) => state.category.flatTreeData);
-  const [selectContents, setSelectContents] = useState([]);
   const [categoryId, setCategoryId] = useState("");
 
   const handleTitle = (e) => {
@@ -100,10 +124,6 @@ const NewPost = () => {
       dispatch({ type: "UPDATE_POST_REQUEST", data });
     }
   };
-
-  useEffect(() => {
-    setSelectContents(flatTreeData);
-  }, [flatTreeData]);
 
   //작성 성공
   useEffect(() => {
@@ -159,7 +179,7 @@ const NewPost = () => {
             style={{ width: 200, marginBottom: "10px" }}
           >
             <option value=''>카테고리 선택</option>
-            {selectContents.map((content) => (
+            {flatTreeData.map((content) => (
               <option key={content.id + content.title} value={content.id}>
                 {content.title}
               </option>

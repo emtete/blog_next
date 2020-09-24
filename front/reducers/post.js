@@ -16,6 +16,7 @@ export const initialState = {
   },
   imagePaths: null,
   isViewMode: false,
+  selectedPost: null,
 
   getListLoading: false,
   getListDone: false,
@@ -52,6 +53,7 @@ const getData = (data) => {
       content: element.content,
       categoryName: element.categoryName,
       categoryId: element.CategoryId,
+      imagePath: element.imagePath,
       published: element.createdAt,
     });
   });
@@ -63,6 +65,12 @@ const reducer = (state = initialState, action) => {
   let jsonData;
 
   switch (action.type) {
+    case "SET_SELECTED_POST_ACTION":
+      return {
+        ...state,
+        selectedPost: action.data.post,
+      };
+
     case "ADD_POST":
       return {
         ...state,

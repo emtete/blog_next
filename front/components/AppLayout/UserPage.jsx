@@ -96,6 +96,15 @@ const UserPage = ({ children }) => {
     }
   }, [getListError]);
 
+  const onClickItem = useCallback(
+    (e) => {
+      !getIsArray(e.children)
+        ? router.push(`/${e.isCard ? "card" : "post"}?categoryId=${e.id}`)
+        : onToggleMenu(e);
+    },
+    [menuList]
+  );
+
   console.log("UserPage rendering");
   return (
     <div className={classes.root}>
@@ -135,11 +144,7 @@ const UserPage = ({ children }) => {
                     button
                     key={e.id}
                     style={{ color: "#dbdfe2" }}
-                    onClick={() => {
-                      !getIsArray(e.children)
-                        ? router.push(`/post?categoryId=${e.id}`)
-                        : onToggleMenu(e);
-                    }}
+                    onClick={() => onClickItem(e)}
                   >
                     <ListItemText
                       primary={e.title}
@@ -162,9 +167,12 @@ const UserPage = ({ children }) => {
                             button
                             className={classes.nested}
                             style={{ color: "#dbdfe2" }}
-                            onClick={() => {
-                              router.push(`/post?categoryId=${ee.id}`);
-                            }}
+                            onClick={
+                              () => onClickItem(ee)
+                              //   {
+                              //   router.push(`/post?categoryId=${ee.id}`);
+                              // }
+                            }
                           >
                             <ListItemText
                               primary={ee.title}

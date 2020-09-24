@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useEffect, useState, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import { makeStyles } from "@material-ui/core/styles";
 import CardMedia from "@material-ui/core/CardMedia";
@@ -9,6 +9,7 @@ import dynamic from "next/dynamic";
 import draftToHtml from "draftjs-to-html";
 
 import { sample } from "./sampleData";
+import TuiEditor from "../NewPost/TuiEditor";
 
 const Editor = dynamic(
   () => import("react-draft-wysiwyg").then((mod) => mod.Editor),
@@ -32,6 +33,9 @@ const useStyles = makeStyles((theme) => ({
 const CardModal = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const tuiRef = useRef();
+
+  const post = useSelector((state) => state.post.selectedPost);
 
   // const editorContent = EditorState.createEmpty();
   const editorContent = EditorState.createWithContent(convertFromRaw(sample));
@@ -60,10 +64,10 @@ const CardModal = () => {
         <div className='inner_card_layer'>
           <CardMedia
             className={classes.media}
-            image='https://pds.joins.com/news/component/htmlphoto_mmdata/201911/10/htm_2019111016135789072.jpg'
+            image={`http://localhost:3065/${post.imagePath}`}
             title='Contemplative Reptile'
           />
-          <Editor
+          {/* <Editor
             readOnly={true}
             defaultEditorState={editorState}
             wrapperClassName='demo-wrapper'
@@ -86,6 +90,11 @@ const CardModal = () => {
             toolbar={{
               options: [],
             }}
+          /> */}
+          <TuiEditor
+            isEditorMode={false}
+            tuiRef={tuiRef}
+            initialContent={post.content}
           />
         </div>
       </div>
