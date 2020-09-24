@@ -1,4 +1,4 @@
-import React, { useRef, useCallback } from "react";
+import React, { useRef, useCallback, useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { makeStyles, useTheme } from "@material-ui/core/styles";
@@ -45,13 +45,25 @@ const getIsArray = (element) => {
   return Array.isArray(element) && element.length > 0;
 };
 
-const ImageRegister = () => {
+const ImageRegister = ({ post, setPost }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const theme = useTheme();
   const imageRef = useRef();
 
   const imagePaths = useSelector((state) => state.post.imagePaths);
+  const [imagePath, setImagePath] = useState("");
+
+  useEffect(() => {
+    if (imagePaths) {
+      setImagePath(imagePaths[0]);
+      setPost({ ...post, imagePath: imagePaths[0] });
+    }
+  }, [imagePaths]);
+
+  useEffect(() => {
+    post.imagePath && setImagePath(post.imagePath);
+  }, [post.imagePath]);
 
   const onClickImage = useCallback(
     (e) => {
@@ -83,7 +95,7 @@ const ImageRegister = () => {
           <input type='file' ref={imageRef} onChange={onChangeImage} />
         </div>
       </div>
-      {getIsArray(imagePaths) && (
+      {imagePath && (
         <CardMedia
           className={classes.cover}
           image={`http://localhost:3065/${imagePaths[0]}`}

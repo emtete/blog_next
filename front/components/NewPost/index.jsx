@@ -81,6 +81,7 @@ const NewPost = () => {
         title: post.title,
         categoryName: post.categoryName,
         CategoryId: post.categoryId,
+        imagePath: post.imagePath,
         content: content,
       };
       dispatch({ type: "WRITE_POST_REQUEST", data });
@@ -93,6 +94,7 @@ const NewPost = () => {
         title: post.title,
         categoryName: post.categoryName,
         categoryId: post.categoryId,
+        imagePath: post.imagePath,
         content: content,
       };
       dispatch({ type: "UPDATE_POST_REQUEST", data });
@@ -163,7 +165,7 @@ const NewPost = () => {
               </option>
             ))}
           </select>
-          <ImageRegister />
+          <ImageRegister post={post} setPost={setPost} />
           <TextField
             id='title'
             label='title'
