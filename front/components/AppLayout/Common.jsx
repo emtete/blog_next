@@ -37,6 +37,8 @@ const Common = () => {
   const loadMyInfoDone = useSelector((state) => state.user.loadMyInfoDone);
   const loadMyInfoError = useSelector((state) => state.user.loadMyInfoError);
 
+  const orgPost = useSelector((state) => state.post.orgPost);
+
   const handleLogin = () => {
     if (me) {
       dispatch({ type: "LOG_OUT_REQUEST" });
