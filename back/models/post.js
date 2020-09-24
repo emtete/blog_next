@@ -21,6 +21,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.TEXT,
         allowNull: false,
       },
+      imagePath: {
+        type: DataTypes.STRING(100),
+        allowNull: true,
+        unique: false,
+      },
     },
     {
       charset: "utf8mb4", // mb4는 이모티콘까지 담을 수 있도록..

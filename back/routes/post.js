@@ -34,6 +34,7 @@ router.post("/update", async (req, res, next) => {
         content: data.content,
         categoryName: data.categoryName,
         categoryId: data.categoryId,
+        imagePath: data.imagePath,
       },
       { where: { id: data.id } }
     );
