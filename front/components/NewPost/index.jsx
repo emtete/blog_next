@@ -72,8 +72,8 @@ const NewPost = () => {
   );
 
   const [post, setPost] = useState(orgPost);
-  const [title, setTitle] = useState("");
-  const [categoryId, setCategoryId] = useState("");
+  // const [title, setTitle] = useState("");
+  // const [categoryId, setCategoryId] = useState("");
 
   const handleTitle = (e) => {
     setPost({ ...post, title: e.target.value });
