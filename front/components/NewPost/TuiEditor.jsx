@@ -24,10 +24,9 @@ const TuiEditor = ({ tuiRef, initialContent }) => {
     hljs.registerLanguage("css", css);
   });
 
-  const onChangeContent = () => {
-    const instance = tuiRef.current.getInstance();
-    console.log(tuiRef.current.getInstance().getMarkdown());
-  };
+  // const onChangeContent = () => {
+  //   const instance = tuiRef.current.getInstance();
+  // };
 
   return (
     <EditorWrap
@@ -38,7 +37,7 @@ const TuiEditor = ({ tuiRef, initialContent }) => {
       useCommandShortcut={true}
       plugins={[[codeSyntaxHightlight, { hljs }]]}
       ref={tuiRef}
-      onChange={onChangeContent}
+      // onChange={onChangeContent}
     />
     // <Viewer
     //   initialValue='hello react editor world!'

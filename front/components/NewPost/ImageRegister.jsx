@@ -41,6 +41,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const getIsArray = (element) => {
+  return Array.isArray(element) && element.length > 0;
+};
+
 const ImageRegister = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -79,11 +83,13 @@ const ImageRegister = () => {
           <input type='file' ref={imageRef} onChange={onChangeImage} />
         </div>
       </div>
-      <CardMedia
-        className={classes.cover}
-        image={`http://localhost:3065/${imagePaths[0]}`}
-        title='Live from space album cover'
-      />
+      {getIsArray(imagePaths) && (
+        <CardMedia
+          className={classes.cover}
+          image={`http://localhost:3065/${imagePaths[0]}`}
+          title='Live from space album cover'
+        />
+      )}
     </Card>
   );
 };

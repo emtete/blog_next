@@ -14,9 +14,7 @@ export const initialState = {
     totalCount: 0,
     items: [],
   },
-  imagePaths: [
-    "https://pds.joins.com/news/component/htmlphoto_mmdata/201911/10/htm_2019111016135789072.jpg",
-  ],
+  imagePaths: null,
   isViewMode: false,
 
   getListLoading: false,

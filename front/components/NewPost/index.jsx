@@ -23,22 +23,6 @@ const getIsArray = (element) => {
 
 const deepCopy = (obj) => JSON.parse(JSON.stringify(obj));
 
-const getTreeToFlatData = (treeData) => {
-  const treeDataClone = deepCopy(treeData);
-  const clone = [];
-
-  treeDataClone.map((node1, index1) => {
-    clone.push(node1);
-    if (getIsArray(node1.children)) {
-      node1.children.map((node2, index2) => {
-        clone.push(node2);
-      });
-    }
-  });
-
-  return clone;
-};
-
 const NewPost = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -63,27 +47,9 @@ const NewPost = () => {
   const orgPost = deepCopy(useSelector((state) => state.post.orgPost));
   const [post, setPost] = useState(orgPost);
   const [title, setTitle] = useState("");
-  const treeData = useSelector((state) => state.category.treeData);
-  const flatDataArr = getTreeToFlatData(treeData);
-  const [selectContents, setSelectContents] = useState(flatDataArr);
+  const flatTreeData = useSelector((state) => state.category.flatTreeData);
+  const [selectContents, setSelectContents] = useState([]);
   const [categoryId, setCategoryId] = useState("");
-
-  // const editorContent =
-  //   post.content !== null
-  //     ? EditorState.createWithContent(convertFromRaw(JSON.parse(post.content)))
-  //     : EditorState.createEmpty();
-
-  // const [editorState, setEditorState] = useState("");
-  // const [content, setContent] = useState("");
-
-  // const handleTuiChange = useCallback(() => {
-  //   // if (tuiRef.current.getInstance) {
-  //   console.log("tuiRef.current : ", tuiRef.current);
-  //   console.log(tuiRef.current.textContent);
-  //   const value = tuiRef.current.getInstance().getValue();
-  //   // setContent(value);
-  //   // }
-  // }, [tuiRef.current]);
 
   const handleTitle = (e) => {
     setPost({ ...post, title: e.target.value });
@@ -101,16 +67,8 @@ const NewPost = () => {
     setPost({ ...post, categoryId: e.target.value, categoryName: selectText });
   };
 
-  // const onEditorStateChange = (editorState) => {
-  //   setEditorState(editorState);
-  //   console.log(editorState);
-  // };
-
   const onSubmitForm = (e) => {
     e.preventDefault();
-    // const content = JSON.stringify(
-    //   convertToRaw(editorState.getCurrentContent())
-    // );
     const content = tuiRef.current.getInstance().getMarkdown();
 
     // 새로 작성
@@ -125,7 +83,7 @@ const NewPost = () => {
         CategoryId: post.categoryId,
         content: content,
       };
-      // dispatch({ type: "WRITE_POST_REQUEST", data });
+      dispatch({ type: "WRITE_POST_REQUEST", data });
     } // 수정
     else {
       const data = {
@@ -137,9 +95,13 @@ const NewPost = () => {
         categoryId: post.categoryId,
         content: content,
       };
-      // dispatch({ type: "UPDATE_POST_REQUEST", data });
+      dispatch({ type: "UPDATE_POST_REQUEST", data });
     }
   };
+
+  useEffect(() => {
+    setSelectContents(flatTreeData);
+  }, [flatTreeData]);
 
   //작성 성공
   useEffect(() => {
@@ -181,7 +143,6 @@ const NewPost = () => {
     if (loadMyInfoDone && !me) {
       router.push("/");
     }
-    dispatch({ type: "LOAD_MY_INFO_RESET" });
   }, [loadMyInfoDone]);
 
   console.log("Wyzywig rendering");

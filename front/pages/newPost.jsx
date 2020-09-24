@@ -1,8 +1,7 @@
 import NewPost from "../components/NewPost";
-import TestPost from "../components/TestPost";
 
-const newPost = () => {
+const newpost = () => {
   return <NewPost />;
 };
 
-export default newPost;
+export default newpost;

@@ -22,7 +22,7 @@ const Post = ({ post, handleCheckbox, checkboxGroup }) => {
   // 수정 버튼 클릭 후
   useEffect(() => {
     // GET_POST_ONE_REQUEST를 통해 orgPost값이 호출된 후 수정페이지로 이동
-    if (orgPost.title !== "") router.push("/board");
+    if (orgPost.title !== "") router.push("/newpost");
   }, [orgPost]);
 
   // 삭제 버튼 클릭 후
