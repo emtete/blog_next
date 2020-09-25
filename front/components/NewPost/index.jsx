@@ -72,8 +72,43 @@ const NewPost = () => {
   );
 
   const [post, setPost] = useState(orgPost);
-  // const [title, setTitle] = useState("");
-  // const [categoryId, setCategoryId] = useState("");
+
+  useEffect(() => {
+    //작성 성공
+    if (writeDone) {
+      dispatch({ type: "REMOVE_ORG_POST_ACTION" });
+      dispatch({ type: "WRITE_POST_RESET" });
+      dispatch({ type: "GET_POST_LIST_REQUEST" });
+      router.push("/postManage");
+    }
+    //작성 실패
+    if (writeError) {
+      alert(writeError);
+      dispatch({ type: "WRITE_POST_RESET" });
+    }
+  }, [writeDone, writeError]);
+
+  useEffect(() => {
+    //수정 성공
+    if (updateDone) {
+      dispatch({ type: "REMOVE_ORG_POST_ACTION" });
+      dispatch({ type: "UPDATE_POST_RESET" });
+      router.push("/postManage");
+    }
+
+    //수정 실패
+    if (updateError) {
+      alert(updateError);
+      dispatch({ type: "UPDATE_POST_RESET" });
+    }
+  }, [updateDone, updateError]);
+
+  //
+  useEffect(() => {
+    if (loadMyInfoDone && !me) {
+      router.push("/");
+    }
+  }, [loadMyInfoDone]);
 
   const handleTitle = (e) => {
     setPost({ ...post, title: e.target.value });
@@ -124,48 +159,6 @@ const NewPost = () => {
       dispatch({ type: "UPDATE_POST_REQUEST", data });
     }
   };
-
-  //작성 성공
-  useEffect(() => {
-    if (writeDone) {
-      dispatch({ type: "REMOVE_ORG_POST_ACTION" });
-      dispatch({ type: "WRITE_POST_RESET" });
-      dispatch({ type: "GET_POST_LIST_REQUEST" });
-      router.push("/postManage");
-    }
-  }, [writeDone]);
-
-  //작성 실패
-  useEffect(() => {
-    if (writeError) {
-      alert(writeError);
-      dispatch({ type: "WRITE_POST_RESET" });
-    }
-  }, [writeError]);
-
-  //수정 성공
-  useEffect(() => {
-    if (updateDone) {
-      dispatch({ type: "REMOVE_ORG_POST_ACTION" });
-      dispatch({ type: "UPDATE_POST_RESET" });
-      router.push("/postManage");
-    }
-  }, [updateDone]);
-
-  //수정 실패
-  useEffect(() => {
-    if (updateError) {
-      alert(updateError);
-      dispatch({ type: "UPDATE_POST_RESET" });
-    }
-  }, [updateError]);
-
-  //
-  useEffect(() => {
-    if (loadMyInfoDone && !me) {
-      router.push("/");
-    }
-  }, [loadMyInfoDone]);
 
   console.log("Wyzywig rendering");
 
