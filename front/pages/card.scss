@@ -7,3 +7,16 @@
 // not card...
 // .upload_btn_layer label {cursor: pointer;display: inline-block; padding: .5em .75em; color: #556cd6; font-size: inherit; line-height: normal; vertical-align: middle;}
 .upload_btn_layer input[type="file"]{position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip:rect(0,0,0,0); border: 0;}
+
+
+.te-md-container .CodeMirror {
+  font-size: 1.125rem;
+  // height: inherit;
+}
+.tui-editor-contents {
+  font-size: 1.125rem;
+}
+// li {
+//   display: list-item;
+//   text-align: -webkit-match-parent;
+// }

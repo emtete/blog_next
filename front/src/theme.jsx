@@ -55,6 +55,7 @@ const theme = createMuiTheme({
         },
         body: {
           height: "100%",
+          // fontSize: "1.875rem",
         },
         "#__next": {
           height: "100%",

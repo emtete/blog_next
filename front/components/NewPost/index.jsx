@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 
 import { makeStyles } from "@material-ui/core/styles";
-import { TextField, FormControl, Button } from "@material-ui/core";
+import { TextField, FormControl, Button, Input } from "@material-ui/core";
 
 import ImageRegister from "./ImageRegister";
 import TuiEditor from "./TuiEditor";
@@ -14,6 +14,10 @@ const useStyles = makeStyles((theme) => ({
   content: {
     flexGrow: 1,
     padding: theme.spacing(3),
+  },
+  root: {
+    fontSize: "2.75rem",
+    fontWeight: "bold",
   },
 }));
 
@@ -187,7 +191,7 @@ const NewPost = () => {
           <select
             value={post.categoryId}
             onChange={handleCategoryId}
-            style={{ width: 200, marginBottom: "10px" }}
+            style={{ width: 200, marginBottom: "20px" }}
           >
             <option value=''>카테고리 선택</option>
             {flatTreeData.map((content) => (
@@ -197,11 +201,13 @@ const NewPost = () => {
             ))}
           </select>
           <ImageRegister post={post} setPost={setPost} />
-          <TextField
+          <Input
             id='title'
-            label='title'
+            placeholder='제목을 입력하세요.'
             onChange={handleTitle}
             value={post.title}
+            className={classes.root}
+            aria-describedby='my-helper-text'
           />
           <br />
           <TuiEditor

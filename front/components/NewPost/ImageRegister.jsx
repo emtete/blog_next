@@ -81,7 +81,7 @@ const ImageRegister = ({ post, setPost }) => {
   });
 
   return (
-    <Card className={classes.root}>
+    <Card className={classes.root} style={{ marginBottom: "20px" }}>
       <div className={classes.details}>
         <CardContent className={classes.content}>
           <Typography component='h5' variant='h5'>

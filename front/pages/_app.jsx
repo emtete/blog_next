@@ -10,15 +10,14 @@ import { useSelector } from "react-redux";
 // import AppLayout from "../components/AppLayout";
 import UserPage from "../components/AppLayout/UserPage";
 import ManagerPage from "../components/AppLayout/ManagerPage";
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import "./temp.scss";
-import "./card.scss";
 import "codemirror/lib/codemirror.css";
 import "highlight.js/styles/github.css";
 import "@toast-ui/editor/dist/toastui-editor.css";
 import "tui-editor/dist/tui-editor.min.css";
 import "tui-editor/dist/tui-editor-contents.min.css";
 import "highlight.js/styles/atom-one-dark.css";
+import "./temp.scss";
+import "./card.scss";
 // import "highlight.js/styles/monokai-sublime.css";
 
 import wrapper from "../store/configureStore";
