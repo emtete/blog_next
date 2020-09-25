@@ -22,11 +22,22 @@ const CardList = () => {
 
   const query = router.query;
 
-  const isViewMode = useSelector((state) => state.post.isViewMode);
-  const items = useSelector((state) => state.post.item.items);
-
-  const getListDone = useSelector((state) => state.post.getListDone);
-  const getListError = useSelector((state) => state.post.getListError);
+  const { items, isViewMode, getListDone, getListError } = useSelector(
+    (state) => ({
+      items: state.post.item.items,
+      isViewMode: state.post.item.isViewMode,
+      getListDone: state.post.item.getListDone,
+      getListError: state.post.item.getListError,
+    }),
+    (prev, next) => {
+      return (
+        next.items === prev.items &&
+        next.isViewMode === prev.isViewMode &&
+        next.getListDone === prev.getListDone &&
+        next.getListError === prev.getListError
+      );
+    }
+  );
 
   // 글 목록 호출
   useEffect(() => {
@@ -36,11 +47,8 @@ const CardList = () => {
 
   useEffect(() => {
     if (getListDone) dispatch({ type: "GET_POST_LIST_RESET" });
-  }, [getListDone]);
-
-  useEffect(() => {
     if (getListError) alert(getListError);
-  }, [getListError]);
+  }, [getListDone, getListError]);
 
   return (
     <main className={classes.content}>

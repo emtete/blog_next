@@ -67,11 +67,21 @@ export default function PostList() {
   const tuiRef = useRef();
 
   const query = router.query;
-  // const [expanded, setExpanded] = React.useState("");
-  const items = useSelector((state) => state.post.item.items);
 
-  const getListDone = useSelector((state) => state.post.getListDone);
-  const getListError = useSelector((state) => state.post.getListError);
+  const { items, getListDone, getListError } = useSelector(
+    (state) => ({
+      items: state.post.item.items,
+      getListDone: state.post.getListDone,
+      getListError: state.post.getListError,
+    }),
+    (prev, next) => {
+      return (
+        prev.items === next.items &&
+        prev.getListDone === next.getListDone &&
+        prev.getListError === next.getListError
+      );
+    }
+  );
 
   // 글 목록 호출
   useEffect(() => {
@@ -81,11 +91,8 @@ export default function PostList() {
 
   useEffect(() => {
     if (getListDone) dispatch({ type: "GET_POST_LIST_RESET" });
-  }, [getListDone]);
-
-  useEffect(() => {
     if (getListError) alert(getListError);
-  }, [getListError]);
+  }, [getListDone, getListError]);
 
   // const handleChange = (panel) => (event, newExpanded) => {
   //   setExpanded(newExpanded ? panel : false);
