@@ -14,7 +14,11 @@ import TuiEditor from "../NewPost/TuiEditor";
 const useStyles = makeStyles((theme) => ({
   content: {
     flexGrow: 1,
-    padding: theme.spacing(3),
+    // padding: theme.spacing(3),
+    paddingTop: "48px",
+    paddingLeft: "30px",
+    paddingRight: "30px",
+    backgroundColor: "#f3f5f7",
   },
 }));
 
@@ -100,32 +104,42 @@ export default function PostList() {
 
   return (
     <main className={classes.content}>
-      <div>
-        {items.map((v, i) => (
-          <Accordion
-            // square
-            // expanded={expanded === `panel1${i}`}
-            // onChange={handleChange(`panel1${i}`)}
-            key={v.id}
-          >
-            <AccordionSummary
-              aria-controls='panel1d-content'
-              id='panel1d-header'
-              style={{ justifyContent: "space-between" }}
-            >
-              <Typography>{v.title}</Typography>
-              <Typography>{v.date}</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              {/* <PostDetail postContent={JSON.parse(v.content)} /> */}
-              <TuiEditor
-                isEditorMode={false}
-                tuiRef={tuiRef}
-                initialContent={v.content}
-              />
-            </AccordionDetails>
-          </Accordion>
-        ))}
+      <div id='mArticle'>
+        <div className='blog_category'>
+          <h3 className='tit_cont'>
+            리뷰 페이지
+            <button className='link_write'>
+              글 쓰기<span className='ico_blog'></span>
+            </button>
+          </h3>
+          <div>
+            {items.map((v, i) => (
+              <Accordion
+                // square
+                // expanded={expanded === `panel1${i}`}
+                // onChange={handleChange(`panel1${i}`)}
+                key={v.id}
+              >
+                <AccordionSummary
+                  aria-controls='panel1d-content'
+                  id='panel1d-header'
+                  style={{ justifyContent: "space-between" }}
+                >
+                  <Typography>{v.title}</Typography>
+                  <Typography>{v.date}</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  {/* <PostDetail postContent={JSON.parse(v.content)} /> */}
+                  <TuiEditor
+                    isEditorMode={false}
+                    tuiRef={tuiRef}
+                    initialContent={v.content}
+                  />
+                </AccordionDetails>
+              </Accordion>
+            ))}
+          </div>
+        </div>
       </div>
     </main>
   );

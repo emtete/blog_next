@@ -76,7 +76,8 @@ const CardModal = () => {
           </div>
           <CardMedia
             className={classes.media}
-            image={`http://localhost:3065/${post.imagePath}`}
+            // image={`http://localhost:3065/${post.imagePath}`}
+            image={`http://localhost:3065/DEV_LIFE.png`}
             title='Contemplative Reptile'
           />
           <div style={{ padding: "30px" }}>

@@ -11,7 +11,11 @@ import CardModal from "./CardModal";
 const useStyles = makeStyles((theme) => ({
   content: {
     flexGrow: 1,
-    padding: theme.spacing(3),
+    // padding: theme.spacing(3),
+    paddingTop: "48px",
+    paddingLeft: "30px",
+    paddingRight: "30px",
+    backgroundColor: "#f3f5f7",
   },
 }));
 
@@ -54,22 +58,27 @@ const CardList = () => {
     <main className={classes.content}>
       <div id='mArticle'>
         <div className='blog_category'>
-          <h3 className='tit_cont'>리뷰 페이지</h3>
-          <div className='wrap_set'>
-            <Grid container spacing={2}>
-              {items.map((post, i) => (
-                <Grid
-                  key={post.id + post.title}
-                  item
-                  xs={6}
-                  justify='center'
-                  container
-                >
-                  <CardNode post={post} />
-                </Grid>
-              ))}
-            </Grid>
-          </div>
+          <h3 className='tit_cont'>
+            리뷰 페이지
+            <button className='link_write'>
+              글 쓰기<span className='ico_blog'></span>
+            </button>
+          </h3>
+          {/* <div className='wrap_set'> */}
+          <Grid container spacing={2}>
+            {items.map((post, i) => (
+              <Grid
+                key={post.id + post.title}
+                item
+                xs={4}
+                justify='center'
+                container
+              >
+                <CardNode post={post} />
+              </Grid>
+            ))}
+          </Grid>
+          {/* </div> */}
         </div>
       </div>
       {isViewMode && <CardModal />}

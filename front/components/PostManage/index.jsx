@@ -8,7 +8,10 @@ import Post from "./Post";
 const useStyles = makeStyles((theme) => ({
   content: {
     flexGrow: 1,
-    padding: theme.spacing(3),
+    // padding: theme.spacing(3),
+    paddingTop: "48px",
+    paddingLeft: "30px",
+    paddingRight: "30px",
     backgroundColor: "#f3f5f7",
   },
 }));
