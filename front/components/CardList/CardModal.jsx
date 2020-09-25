@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
   //   maxWidth: 245,
   // },
   media: {
-    height: 450,
+    height: 380,
   },
 }));
 
@@ -62,40 +62,30 @@ const CardModal = () => {
     <div className='container_layer'>
       <div className='card_layer'>
         <div className='inner_card_layer'>
+          <div style={{ padding: "30px" }}>
+            <h1 style={{ fontSize: "2.75rem" }}>제로초 강의 후기</h1>
+            <span
+              style={{
+                display: "block",
+                paddingTop: "30px",
+                fontSize: "1rem",
+              }}
+            >
+              작성일 : 2020 / 09 / 22
+            </span>
+          </div>
           <CardMedia
             className={classes.media}
             image={`http://localhost:3065/${post.imagePath}`}
             title='Contemplative Reptile'
           />
-          {/* <Editor
-            readOnly={true}
-            defaultEditorState={editorState}
-            wrapperClassName='demo-wrapper'
-            editorClassName='demo-editor'
-            editorStyle={{
-              height: "100%",
-              width: "100%",
-              borderWidth: "0px",
-              borderStyle: "solid",
-              borderColor: "rgb(241, 241, 241)",
-              borderImage: "initial",
-              padding: "10px",
-              borderRadius: "0px",
-            }}
-            toolbarStyle={{ display: "none" }}
-            onEditorStateChange={onEditorStateChange}
-            localization={{
-              locale: "ko",
-            }}
-            toolbar={{
-              options: [],
-            }}
-          /> */}
-          <TuiEditor
-            isEditorMode={false}
-            tuiRef={tuiRef}
-            initialContent={post.content}
-          />
+          <div style={{ padding: "30px" }}>
+            <TuiEditor
+              isEditorMode={false}
+              tuiRef={tuiRef}
+              initialContent={post.content}
+            />
+          </div>
         </div>
       </div>
     </div>

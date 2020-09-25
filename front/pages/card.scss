@@ -9,14 +9,12 @@
 .upload_btn_layer input[type="file"]{position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip:rect(0,0,0,0); border: 0;}
 
 
-.te-md-container .CodeMirror {
-  font-size: 1.125rem;
-  // height: inherit;
-}
-.tui-editor-contents {
-  font-size: 1.125rem;
-}
-// li {
-//   display: list-item;
-//   text-align: -webkit-match-parent;
-// }
+// editor
+.te-md-container .CodeMirror { font-size: 1.125rem; }
+
+// viewer
+.tui-editor-contents { font-size: 1.125rem; }
+.tui-editor-contents h1 { font-size: 2.5rem; border-bottom: none;}
+.tui-editor-contents h2 { font-size: 2rem; border-bottom: none;}
+.tui-editor-contents h3 { font-size: 1.5rem; }
+.tui-editor-contents h4 { font-size: 1.3125rem; }
