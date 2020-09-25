@@ -40,12 +40,16 @@ const theme = createMuiTheme({
     },
   },
   typography: {
-    fontFamily: "Raleway, Arial",
+    // fontFamily: "Raleway, Arial",
+    fontFamily: `-apple-system, BlinkMacSystemFont, Helvetica Neue,
+    Apple SD Gothic Neo, Malgun Gothic, 맑은 고딕, 나눔고딕,
+    Nanum Gothic, Noto Sans KR, Noto Sans CJK KR, arial, 돋움, Dotum,
+    Tahoma, Geneva, sans-serif`,
   },
   overrides: {
     MuiCssBaseline: {
       "@global": {
-        "@font-face": [raleway],
+        // "@font-face": [raleway],
         html: {
           height: "100%",
         },

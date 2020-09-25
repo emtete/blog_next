@@ -25,9 +25,9 @@ const CardList = () => {
   const { items, isViewMode, getListDone, getListError } = useSelector(
     (state) => ({
       items: state.post.item.items,
-      isViewMode: state.post.item.isViewMode,
-      getListDone: state.post.item.getListDone,
-      getListError: state.post.item.getListError,
+      isViewMode: state.post.isViewMode,
+      getListDone: state.post.getListDone,
+      getListError: state.post.getListError,
     }),
     (prev, next) => {
       return (

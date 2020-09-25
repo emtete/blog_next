@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { useDispatch } from "react-redux";
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -22,10 +23,10 @@ const CardNode = ({ post }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
 
-  const onClickCard = () => {
+  const onClickCard = useCallback(() => {
     dispatch({ type: "START_IS_VIEW_MODE_ACTION" });
     dispatch({ type: "SET_SELECTED_POST_ACTION", data: { post } });
-  };
+  }, [post]);
 
   return (
     <Card
