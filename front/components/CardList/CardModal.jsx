@@ -1,12 +1,10 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import dynamic from "next/dynamic";
 
 import { makeStyles } from "@material-ui/core/styles";
 import CardMedia from "@material-ui/core/CardMedia";
-
-import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
-import dynamic from "next/dynamic";
-import draftToHtml from "draftjs-to-html";
+import ImageSearchIcon from "@material-ui/icons/ImageSearch";
 
 import { sample } from "./sampleData";
 import TuiEditor from "../NewPost/TuiEditor";
@@ -28,27 +26,36 @@ const useStyles = makeStyles((theme) => ({
   media: {
     height: 380,
   },
+  media2: {
+    height: 380,
+    width: "10em",
+  },
 }));
 
 const CardModal = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const imageRef = useRef();
   const tuiRef = useRef();
 
   const post = useSelector((state) => state.post.selectedPost);
 
-  // const editorContent = EditorState.createEmpty();
-  const editorContent = EditorState.createWithContent(convertFromRaw(sample));
-  const [editorState, setEditorState] = useState(editorContent);
+  const imagePaths = useSelector((state) => state.post.imagePaths);
+  const [imagePath, setImagePath] = useState("");
 
-  const onEditorStateChange = (editorState) => {
-    setEditorState(editorState);
-  };
   // 모달 바깥 클릭시, 창 닫기
   const clickOutSideEvent = (e) => {
     if (e.target.className === "container_layer")
       dispatch({ type: "END_IS_VIEW_MODE_ACTION" });
   };
+
+  useEffect(() => {
+    if (imagePaths) setImagePath(imagePaths[0]);
+  }, [imagePaths]);
+
+  // useEffect(() => {
+  //   if (post.imagePath) setImagePath(post.imagePath);
+  // }, [post.imagePath]);
 
   // 이벤트 바인딩
   useEffect(() => {
@@ -58,6 +65,22 @@ const CardModal = () => {
       document.removeEventListener("click", clickOutSideEvent);
     };
   }, []);
+
+  const onClickImage = useCallback(
+    (e) => {
+      imageRef.current.click();
+    },
+    [imageRef.current]
+  );
+
+  const onChangeImage = useCallback((e) => {
+    const imageFormData = new FormData();
+    [].forEach.call(e.target.files, (f) => {
+      imageFormData.append("image", f);
+    });
+    dispatch({ type: "UPLOAD_IMAGES_REQUEST", data: imageFormData });
+  });
+
   return (
     <div className='container_layer'>
       <div className='card_layer'>
@@ -74,12 +97,19 @@ const CardModal = () => {
               작성일 : 2020 / 09 / 22
             </span>
           </div>
-          <CardMedia
-            className={classes.media}
-            // image={`http://localhost:3065/${post.imagePath}`}
-            image={`http://localhost:3065/DEV_LIFE.png`}
-            title='Contemplative Reptile'
-          />
+          {imagePath ? (
+            <CardMedia
+              className={classes.media}
+              image={`http://localhost:3065/${imagePath}`}
+              // image={`http://localhost:3065/DEV_LIFE.png`}
+              title='Contemplative Reptile'
+            />
+          ) : (
+            <div className='upload_image_layer' onClick={onClickImage}>
+              <ImageSearchIcon className={classes.media2} />
+              <input type='file' ref={imageRef} onChange={onChangeImage} />
+            </div>
+          )}
           <div style={{ padding: "30px" }}>
             <TuiEditor
               isEditorMode={false}
