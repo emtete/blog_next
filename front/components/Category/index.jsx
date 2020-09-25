@@ -53,21 +53,24 @@ const Category = () => {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const {me, treeData, treeHelper, isMoveMode, newComponent} = useSelector((state) => ({
-    me: state.user.me,
-    treeData: treeData: state.category.treeData,
-    treeHelper: state.category.treeHelper,
-    isMoveMode: state.category.isMoveMode,
-    newComponent: state.category.newComponent,
-  }), (prev, next) => {
-    return (
-      prev.me === next.me &&
-      prev.treeData === next.treeData &&
-      prev.treeHelper === next.treeHelper &&
-      prev.isMoveMode === next.isMoveMode &&
-      prev.newComponent === next.newComponent
-    );
-  });
+  const { me, treeData, treeHelper, isMoveMode, newComponent } = useSelector(
+    (state) => ({
+      me: state.user.me,
+      treeData: state.category.treeData,
+      treeHelper: state.category.treeHelper,
+      isMoveMode: state.category.isMoveMode,
+      newComponent: state.category.newComponent,
+    }),
+    (prev, next) => {
+      return (
+        prev.me === next.me &&
+        prev.treeData === next.treeData &&
+        prev.treeHelper === next.treeHelper &&
+        prev.isMoveMode === next.isMoveMode &&
+        prev.newComponent === next.newComponent
+      );
+    }
+  );
 
   const { appended, updated, deleted } = useSelector(
     (state) => ({
@@ -157,7 +160,6 @@ const Category = () => {
     }
   }, [applyDone, applyError]);
 
-
   useEffect(() => {
     // 카테고리 리스트 호출 성공.
     if (getListDone) {
@@ -170,7 +172,6 @@ const Category = () => {
       dispatch({ type: "GET_CATEGORY_LIST_RESET" });
     }
   }, [getListDone, getListError]);
-
 
   const onClickSave = useCallback(
     (e) => {

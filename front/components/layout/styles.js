@@ -48,12 +48,22 @@ export const menuStyles = makeStyles((theme) => ({
   // necessary for content to be below app bar
   toolbar: theme.mixins.toolbar,
   toolbarCustomising: {
-    height: 110,
+    height: 160,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "column",
+    color: "white",
+    fontSize: "2rem",
+  },
+  toolbarCustomising2: {
+    // height: 110,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
     color: "white",
-    fontSize: 24,
+    fontSize: "1.2rem",
+    fontWeight: 100,
   },
   drawerPaper: {
     width: drawerWidth,

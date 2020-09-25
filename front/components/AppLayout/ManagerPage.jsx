@@ -64,6 +64,9 @@ const ManagerPage = ({ children }) => {
           <div>
             <div className={(classes.toolbar, classes.toolbarCustomising)}>
               DEV LIFE
+              <span className={classes.toolbarCustomising2}>
+                Front-End Web Developer
+              </span>
             </div>
             <List>
               <Common />
