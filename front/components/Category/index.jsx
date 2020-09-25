@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import { useRouter } from "next/router";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -53,29 +53,124 @@ const Category = () => {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const me = useSelector((state) => state.user.me);
-  const treeData = useSelector((state) => state.category.treeData);
-  const treeHelper = useSelector((state) => state.category.treeHelper);
-  const isMoveMode = useSelector((state) => state.category.isMoveMode);
-  const newComponent = useSelector((state) => state.category.newComponent);
+  const {me, treeData, treeHelper, isMoveMode, newComponent} = useSelector((state) => ({
+    me: state.user.me,
+    treeData: treeData: state.category.treeData,
+    treeHelper: state.category.treeHelper,
+    isMoveMode: state.category.isMoveMode,
+    newComponent: state.category.newComponent,
+  }), (prev, next) => {
+    return (
+      prev.me === next.me &&
+      prev.treeData === next.treeData &&
+      prev.treeHelper === next.treeHelper &&
+      prev.isMoveMode === next.isMoveMode &&
+      prev.newComponent === next.newComponent
+    );
+  });
 
-  const appended = useSelector((state) => state.category.appendedCategories);
-  const updated = useSelector((state) => state.category.updatedCategories);
-  const deleted = useSelector((state) => state.category.deletedCategories);
-
-  const applyLoading = useSelector((state) => state.category.applyLoading);
-  const applyDone = useSelector((state) => state.category.applyDone);
-  const applyError = useSelector((state) => state.category.applyError);
-
-  const loadMyInfoLoading = useSelector(
-    (state) => state.user.loadMyInfoLoading
+  const { appended, updated, deleted } = useSelector(
+    (state) => ({
+      appended: state.category.appendedCategories,
+      updated: state.category.updatedCategories,
+      deleted: state.category.deletedCategories,
+    }),
+    (prev, next) => {
+      return (
+        prev.appended === next.appended &&
+        prev.updated === next.updated &&
+        prev.deleted === next.deleted
+      );
+    }
   );
-  const loadMyInfoDone = useSelector((state) => state.user.loadMyInfoDone);
-  const loadMyInfoError = useSelector((state) => state.user.loadMyInfoError);
 
-  const getListLoading = useSelector((state) => state.category.getListLoading);
-  const getListDone = useSelector((state) => state.category.getListDone);
-  const getListError = useSelector((state) => state.category.getListError);
+  const { applyLoading, applyDone, applyError } = useSelector(
+    (state) => ({
+      applyLoading: state.category.applyLoading,
+      applyDone: state.category.applyDone,
+      applyError: state.category.applyError,
+    }),
+    (prev, next) => {
+      return (
+        prev.applyLoading === next.applyLoading &&
+        prev.applyDone === next.applyDone &&
+        prev.applyError === next.applyError
+      );
+    }
+  );
+
+  const { loadMyInfoLoading, loadMyInfoDone, loadMyInfoError } = useSelector(
+    (state) => ({
+      loadMyInfoLoading: state.user.loadMyInfoLoading,
+      loadMyInfoDone: state.user.loadMyInfoDone,
+      loadMyInfoError: state.user.loadMyInfoError,
+    }),
+    (prev, next) => {
+      return (
+        prev.loadMyInfoLoading === next.loadMyInfoLoading &&
+        prev.loadMyInfoDone === next.loadMyInfoDone &&
+        prev.loadMyInfoError === next.loadMyInfoError
+      );
+    }
+  );
+
+  const { getListLoading, getListDone, getListError } = useSelector(
+    (state) => ({
+      getListLoading: state.category.getListLoading,
+      getListDone: state.category.getListDone,
+      getListError: state.category.getListError,
+    }),
+    (prev, next) => {
+      return (
+        prev.getListLoading === next.getListLoading &&
+        prev.getListDone === next.getListDone &&
+        prev.getListError === next.getListError
+      );
+    }
+  );
+
+  // 새로고침 혹은 주소로 접근시 처리.
+  useEffect(() => {
+    if (loadMyInfoDone && !me) {
+      router.push("/");
+    }
+  }, [loadMyInfoDone]);
+
+  // 카테고리 목록 호출
+  useEffect(() => {
+    if (me) {
+      dispatch({ type: "GET_CATEGORY_LIST_REQUEST" });
+    }
+  }, [me]);
+
+  useEffect(() => {
+    // 변경사항 적용 성공.
+    if (applyDone) {
+      alert("적용되었습니다.");
+      dispatch({ type: "APPLY_CATEGORY_RESET" });
+      dispatch({ type: "GET_CATEGORY_LIST_REQUEST" });
+    }
+    // 변경사항 적용 중 에러
+    if (applyError) {
+      alert(applyError);
+      dispatch({ type: "APPLY_CATEGORY_RESET" });
+    }
+  }, [applyDone, applyError]);
+
+
+  useEffect(() => {
+    // 카테고리 리스트 호출 성공.
+    if (getListDone) {
+      dispatch({ type: "GET_CATEGORY_LIST_RESET" });
+      dispatch({ type: "RESET_INDEX_PATH_ACTION" });
+    }
+    // 카테고리 리스트 호출 중 에러.
+    if (getListError) {
+      alert(getListError);
+      dispatch({ type: "GET_CATEGORY_LIST_RESET" });
+    }
+  }, [getListDone, getListError]);
+
 
   const onClickSave = useCallback(
     (e) => {
@@ -112,54 +207,6 @@ const Category = () => {
     },
     [treeData]
   );
-
-  // 새로고침 혹은 주소로 접근시 처리.
-  useEffect(() => {
-    if (loadMyInfoDone && !me) {
-      router.push("/");
-    }
-    dispatch({ type: "LOAD_MY_INFO_RESET" });
-  }, [loadMyInfoDone]);
-
-  // 카테고리 목록 호출
-  useEffect(() => {
-    if (me) {
-      dispatch({ type: "GET_CATEGORY_LIST_REQUEST" });
-    }
-  }, [me]);
-
-  // 변경사항 적용 성공.
-  useEffect(() => {
-    if (applyDone) {
-      alert("적용되었습니다.");
-      dispatch({ type: "APPLY_CATEGORY_RESET" });
-      dispatch({ type: "GET_CATEGORY_LIST_REQUEST" });
-    }
-  }, [applyDone]);
-
-  // 변경사항 적용 중 에러
-  useEffect(() => {
-    if (applyError) {
-      alert(applyError);
-      dispatch({ type: "APPLY_CATEGORY_RESET" });
-    }
-  }, [applyError]);
-
-  // 카테고리 리스트 호출 성공.
-  useEffect(() => {
-    if (getListDone) {
-      dispatch({ type: "GET_CATEGORY_LIST_RESET" });
-      dispatch({ type: "RESET_INDEX_PATH_ACTION" });
-    }
-  }, [getListDone]);
-
-  // 카테고리 리스트 호출 중 에러.
-  useEffect(() => {
-    if (getListError) {
-      alert(getListError);
-      dispatch({ type: "GET_CATEGORY_LIST_RESET" });
-    }
-  }, [getListError]);
 
   console.log("Category Index rendering");
   return (

@@ -35,7 +35,13 @@ const NewPost = () => {
       writeDone: state.post.writeDone,
       writeError: state.post.writeError,
     }),
-    shallowEqual
+    (prev, next) => {
+      return (
+        prev.writeLoading === next.writeLoading &&
+        prev.writeDone === next.writeDone &&
+        prev.writeError === next.writeError
+      );
+    }
   );
 
   const { updateLoading, updateDone, updateError } = useSelector(
@@ -44,7 +50,13 @@ const NewPost = () => {
       updateDone: state.post.updateDone,
       updateError: state.post.updateError,
     }),
-    shallowEqual
+    (prev, next) => {
+      return (
+        prev.updateLoading === next.updateLoading &&
+        prev.updateDone === next.updateDone &&
+        prev.updateError === next.updateError
+      );
+    }
   );
 
   const { loadMyInfoLoading, loadMyInfoDone, loadMyInfoError } = useSelector(
@@ -53,7 +65,13 @@ const NewPost = () => {
       loadMyInfoDone: state.user.loadMyInfoDone,
       loadMyInfoError: state.user.loadMyInfoError,
     }),
-    shallowEqual
+    (prev, next) => {
+      return (
+        prev.loadMyInfoLoading === next.loadMyInfoLoading &&
+        prev.loadMyInfoDone === next.loadMyInfoDone &&
+        prev.loadMyInfoError === next.loadMyInfoError
+      );
+    }
   );
 
   const { me, orgPost, flatTreeData } = useSelector(

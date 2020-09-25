@@ -1,5 +1,5 @@
 import { useEffect, useCallback, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import { useRouter } from "next/router";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -51,41 +51,87 @@ const PostManage = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const router = useRouter();
-  const items = useSelector((state) => state.post.item.items);
 
   const [searchCategoryId, setSearchCategoryId] = useState("");
   const [changeCategoryId, setChangeCategoryId] = useState("");
   const [checkboxGroup, setCheckboxGroup] = useState({ all: false });
   const [posts, setPosts] = useState([]);
 
-  const me = useSelector((state) => state.user.me);
-  const flatTreeData = useSelector((state) => state.category.flatTreeData);
-
-  const getListLoading = useSelector((state) => state.post.getListLoading);
-  const getListDone = useSelector((state) => state.post.getListDone);
-  const getListError = useSelector((state) => state.post.getListError);
-
-  const loadMyInfoLoading = useSelector(
-    (state) => state.user.loadMyInfoLoading
-  );
-  const loadMyInfoDone = useSelector((state) => state.user.loadMyInfoDone);
-  const loadMyInfoError = useSelector((state) => state.user.loadMyInfoError);
-
-  const getCategoryListLoading = useSelector(
-    (state) => state.category.getListLoading
-  );
-  const getCategoryListDone = useSelector(
-    (state) => state.category.getListDone
-  );
-  const getCategoryListError = useSelector(
-    (state) => state.category.getListError
+  const { me, items, flatTreeData } = useSelector(
+    (state) => ({
+      me: state.user.me,
+      items: state.post.item.items,
+      flatTreeData: state.category.flatTreeData,
+    }),
+    (prev, next) => {
+      return (
+        prev.me === next.me &&
+        prev.items === next.items &&
+        prev.flatTreeData === next.flatTreeData
+      );
+    }
   );
 
-  const changeCategoryDone = useSelector(
-    (state) => state.post.changeCategoryDone
+  const { getListLoading, getListDone, getListError } = useSelector(
+    (state) => ({
+      getListLoading: state.post.getListLoading,
+      getListDone: state.post.getListDone,
+      getListError: state.post.getListError,
+    }),
+    (prev, next) => {
+      return (
+        prev.getListLoading === next.getListLoading &&
+        prev.getListDone === next.getListDone &&
+        prev.getListError === next.getListError
+      );
+    }
   );
-  const changeCategoryError = useSelector(
-    (state) => state.post.changeCategoryError
+
+  const { loadMyInfoLoading, loadMyInfoDone, loadMyInfoError } = useSelector(
+    (state) => ({
+      loadMyInfoLoading: state.user.loadMyInfoLoading,
+      loadMyInfoDone: state.user.loadMyInfoDone,
+      loadMyInfoError: state.user.loadMyInfoError,
+    }),
+    (prev, next) => {
+      return (
+        prev.loadMyInfoLoading === next.loadMyInfoLoading &&
+        prev.loadMyInfoDone === next.loadMyInfoDone &&
+        prev.loadMyInfoError === next.loadMyInfoError
+      );
+    }
+  );
+
+  const {
+    getCategoryListLoading,
+    getCategoryListDone,
+    getCategoryListError,
+  } = useSelector(
+    (state) => ({
+      getListLoading: state.category.getListLoading,
+      getListDone: state.category.getListDone,
+      getListError: state.category.getListError,
+    }),
+    (prev, next) => {
+      return (
+        prev.getListLoading === next.getListLoading &&
+        prev.getListDone === next.getListDone &&
+        prev.getListError === next.getListError
+      );
+    }
+  );
+
+  const { changeCategoryDone, changeCategoryError } = useSelector(
+    (state) => ({
+      changeCategoryDone: state.post.changeCategoryDone,
+      changeCategoryError: state.post.changeCategoryError,
+    }),
+    (prev, next) => {
+      return (
+        prev.changeCategoryDone === next.changeCategoryDone &&
+        prev.changeCategoryError === next.changeCategoryError
+      );
+    }
   );
 
   // 새로고침 혹은 주소로 접근한 경우의 처리.
@@ -93,7 +139,6 @@ const PostManage = () => {
     if (loadMyInfoDone && !me) {
       router.push("/");
     }
-    dispatch({ type: "LOAD_MY_INFO_RESET" });
   }, [loadMyInfoDone]);
 
   // 글 목록 호출
@@ -112,35 +157,32 @@ const PostManage = () => {
     dispatch({ type: "CHANGE_CATEGORY_IN_POST_RESET" });
   }, [changeCategoryDone]);
 
-  // 글 목록 호출 성공
   useEffect(() => {
+    // 글 목록 호출 성공
     if (getListDone) {
       setPosts(items);
       setCheckboxGroup(initCheckboxGroup(items));
       dispatch({ type: "GET_POST_LIST_RESET" });
     }
-  }, [getListDone]);
+    // 글 목록 호출 실패
+    if (getListError) {
+      alert(getListError);
+    }
+  }, [getListDone, getListError]);
 
-  // 글 목록 호출 실패
   useEffect(() => {
-    if (getListError) alert(getListError);
-  }, [getListError]);
-
-  // 카테고리 리스트 호출 성공.
-  useEffect(() => {
-    if (changeCategoryDone) {
+    // 카테고리 리스트 호출 성공.
+    // if (changeCategoryDone) {
+    if (getCategoryListDone) {
       dispatch({ type: "GET_CATEGORY_LIST_RESET" });
       dispatch({ type: "RESET_INDEX_PATH_ACTION" });
     }
-  }, [getCategoryListDone]);
-
-  // 카테고리 리스트 호출 중 에러.
-  useEffect(() => {
+    // 카테고리 리스트 호출 중 에러.
     if (getCategoryListError) {
       alert(getCategoryListError);
       dispatch({ type: "GET_CATEGORY_LIST_RESET" });
     }
-  }, [getCategoryListError]);
+  }, [getCategoryListDone, getCategoryListError]);
 
   const onChangeSelect1 = useCallback(
     (e) => {
