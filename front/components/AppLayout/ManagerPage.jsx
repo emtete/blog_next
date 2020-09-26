@@ -69,7 +69,7 @@ const ManagerPage = ({ children }) => {
               <ListItem
                 button
                 style={{ color: "#dbdfe2" }}
-                onClick={(e) => handleRouter(e, "/manage/postManage")}
+                onClick={(e) => handleRouter(e, "/manage/post")}
               >
                 <ListItemText
                   primary='글관리'
