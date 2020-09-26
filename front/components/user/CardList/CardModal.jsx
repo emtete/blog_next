@@ -7,17 +7,7 @@ import CardMedia from "@material-ui/core/CardMedia";
 import ImageSearchIcon from "@material-ui/icons/ImageSearch";
 
 import { sample } from "./sampleData";
-import TuiEditor from "../../manage/NewPost/TuiEditor";
-
-const Editor = dynamic(
-  () => import("react-draft-wysiwyg").then((mod) => mod.Editor),
-  { ssr: false }
-);
-
-const htmlToDraft = dynamic(
-  () => import("html-to-draftjs").then((mod) => mod.htmlToDraft),
-  { ssr: false }
-);
+import TuiEditor from "../../TuiEditor";
 
 const useStyles = makeStyles((theme) => ({
   // root: {
@@ -43,19 +33,9 @@ const CardModal = () => {
   const imagePaths = useSelector((state) => state.post.imagePaths);
   const [imagePath, setImagePath] = useState("");
 
-  // 모달 바깥 클릭시, 창 닫기
-  const clickOutSideEvent = (e) => {
-    if (e.target.className === "container_layer")
-      dispatch({ type: "END_IS_VIEW_MODE_ACTION" });
-  };
-
   useEffect(() => {
     if (imagePaths) setImagePath(imagePaths[0]);
   }, [imagePaths]);
-
-  // useEffect(() => {
-  //   if (post.imagePath) setImagePath(post.imagePath);
-  // }, [post.imagePath]);
 
   // 이벤트 바인딩
   useEffect(() => {
@@ -64,6 +44,13 @@ const CardModal = () => {
     return () => {
       document.removeEventListener("click", clickOutSideEvent);
     };
+  }, []);
+
+  // 모달 바깥 클릭시, 창 닫기
+  const clickOutSideEvent = useCallback((e) => {
+    if (e.target.className === "container_layer")
+      dispatch({ type: "END_IS_VIEW_MODE_ACTION" });
+    dispatch({ type: "SET_SELECTED_POST_ACTION", data: { post: null } });
   }, []);
 
   const onClickImage = useCallback(
