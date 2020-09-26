@@ -23,20 +23,39 @@ const UserPage = ({ children }) => {
   const classes = menuStyles();
   const router = useRouter();
   const dispatch = useDispatch();
-  const treeData = useSelector((state) => state.category.treeData);
   const [menuList, setMenuList] = useState([]);
 
-  const getListLoading = useSelector((state) => state.category.getListLoading);
-  const getListDone = useSelector((state) => state.category.getListDone);
-  const getListError = useSelector((state) => state.category.getListError);
+  const treeData = useSelector((state) => state.category.treeData);
 
-  const loadMyInfoLoading = useSelector(
-    (state) => state.user.loadMyInfoLoading
+  const { getListLoading, getListDone, getListError } = useSelector(
+    (state) => ({
+      getListLoading: state.category.getListLoading,
+      getListDone: state.category.getListDone,
+      getListError: state.category.getListError,
+    }),
+    (prev, next) => {
+      return (
+        prev.getListLoading === next.getListLoading &&
+        prev.getListDone === next.getListDone &&
+        prev.getListError === next.getListError
+      );
+    }
   );
-  const loadMyInfoDone = useSelector((state) => state.user.loadMyInfoDone);
-  const loadMyInfoError = useSelector((state) => state.user.loadMyInfoError);
 
-  const logOutDone = useSelector((state) => state.user.logOutDone);
+  const { loadMyInfoLoading, loadMyInfoDone, loadMyInfoError } = useSelector(
+    (state) => ({
+      loadMyInfoLoading: state.user.loadMyInfoLoading,
+      loadMyInfoDone: state.user.loadMyInfoDone,
+      loadMyInfoError: state.user.loadMyInfoError,
+    }),
+    (prev, next) => {
+      return (
+        prev.loadMyInfoLoading === next.loadMyInfoLoading &&
+        prev.loadMyInfoDone === next.loadMyInfoDone &&
+        prev.loadMyInfoError === next.loadMyInfoError
+      );
+    }
+  );
 
   const onToggleMenu = (e) => {
     e.isOpend = !e.isOpend;
@@ -47,21 +66,19 @@ const UserPage = ({ children }) => {
     dispatch({ type: "GET_CATEGORY_LIST_REQUEST" });
   }, []);
 
-  // 카테고리 리스트 호출 성공.
+  // 카테고리 리스트 호출
   useEffect(() => {
+    //  성공
     if (getListDone) {
       setMenuList(deepCopy(treeData));
       dispatch({ type: "GET_CATEGORY_LIST_RESET" });
     }
-  }, [getListDone]);
-
-  // 카테고리 리스트 호출 중 에러.
-  useEffect(() => {
+    // 실패
     if (getListError) {
       alert(getListError);
       dispatch({ type: "GET_CATEGORY_LIST_RESET" });
     }
-  }, [getListError]);
+  }, [getListDone, getListError]);
 
   const onClickItem = useCallback(
     (e) => {
@@ -94,19 +111,6 @@ const UserPage = ({ children }) => {
             </div>
             <List>
               <Common />
-              <ListItem
-                button
-                key='card'
-                style={{ color: "#dbdfe2" }}
-                onClick={() => {
-                  router.push(`/card`);
-                }}
-              >
-                <ListItemText
-                  primary='Card'
-                  style={{ paddingLeft: "20px", color: "#dbdfe2" }}
-                />
-              </ListItem>
 
               {menuList.map((e, index) => (
                 <div key={e.id}>
@@ -137,12 +141,7 @@ const UserPage = ({ children }) => {
                             button
                             className={classes.nested}
                             style={{ color: "#dbdfe2" }}
-                            onClick={
-                              () => onClickItem(ee)
-                              //   {
-                              //   router.push(`/post?categoryId=${ee.id}`);
-                              // }
-                            }
+                            onClick={() => onClickItem(ee)}
                           >
                             <ListItemText
                               primary={ee.title}
