@@ -136,11 +136,11 @@ const Category = () => {
   );
 
   // 새로고침 혹은 주소로 접근시 처리.
-  useEffect(() => {
-    if (loadMyInfoDone && !me) {
-      router.push("/");
-    }
-  }, [loadMyInfoDone]);
+  // useEffect(() => {
+  //   if (loadMyInfoDone && !me) {
+  //     router.push("/");
+  //   }
+  // }, [loadMyInfoDone]);
 
   // 카테고리 목록 호출
   useEffect(() => {

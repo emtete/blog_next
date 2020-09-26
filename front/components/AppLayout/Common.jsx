@@ -1,21 +1,9 @@
-import Divider from "@material-ui/core/Divider";
-import IconButton from "@material-ui/core/IconButton";
-import InboxIcon from "@material-ui/icons/MoveToInbox";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import MailIcon from "@material-ui/icons/Mail";
-import Toolbar from "@material-ui/core/Toolbar";
-import ExpandLess from "@material-ui/icons/ExpandLess";
-import ExpandMore from "@material-ui/icons/ExpandMore";
-import Collapse from "@material-ui/core/Collapse";
-
-import PersonIcon from "@material-ui/icons/Person";
-import SettingsIcon from "@material-ui/icons/Settings";
-import { FormControl, TextField, Button } from "@material-ui/core";
-import { useSelector, useDispatch } from "react-redux";
 import { useState, useMemo, useCallback, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useRouter } from "next/router";
+
+import ListItem from "@material-ui/core/ListItem";
+import { Button } from "@material-ui/core";
 
 import { modalStyles, getModalStyle } from "../layout/LoginStyles";
 import { ToggleButton, menuStyles } from "../layout/styles";
@@ -23,12 +11,10 @@ import { ToggleButton, menuStyles } from "../layout/styles";
 import useInput from "../../hooks/useInput";
 import LoginModal from "./LoginModal";
 
-import Modal from "@material-ui/core/Modal";
-import { useRouter } from "next/router";
-
 const Common = () => {
   const router = useRouter();
   const dispatch = useDispatch();
+  const [isManage, setIsManage] = useState(false);
 
   const me = useSelector((state) => state.user.me);
   const isLoginMode = useSelector((state) => state.user.isLoginMode);
@@ -38,6 +24,19 @@ const Common = () => {
   const loadMyInfoError = useSelector((state) => state.user.loadMyInfoError);
 
   const orgPost = useSelector((state) => state.post.orgPost);
+
+  useEffect(() => {
+    setIsManage(router.pathname.split("/")[1] === "manage");
+  }, [router.pathname]);
+
+  useEffect(() => {
+    dispatch({ type: "LOAD_MY_INFO_REQUEST" });
+  }, []);
+
+  useEffect(() => {
+    if (loadMyInfoDone) dispatch({ type: "LOAD_MY_INFO_RESET" });
+    if (loadMyInfoError) alert(loadMyInfoError);
+  }, [loadMyInfoDone, loadMyInfoError]);
 
   const handleLogin = () => {
     if (me) {
@@ -49,24 +48,14 @@ const Common = () => {
   };
 
   const handleAdminMode = () => {
-    if (isAdminMode) {
-      dispatch({ type: "END_ADMIN_MODE_ACTION" });
+    if (isManage) {
+      // dispatch({ type: "END_ADMIN_MODE_ACTION" });
+      router.push("/");
     } else {
-      dispatch({ type: "START_ADMIN_MODE_ACTION" });
+      // dispatch({ type: "START_ADMIN_MODE_ACTION" });
+      router.push("/manage/category");
     }
   };
-
-  useEffect(() => {
-    dispatch({ type: "LOAD_MY_INFO_REQUEST" });
-  }, []);
-
-  useEffect(() => {
-    if (loadMyInfoDone) dispatch({ type: "LOAD_MY_INFO_RESET" });
-  }, [loadMyInfoDone]);
-
-  useEffect(() => {
-    if (loadMyInfoError) alert(loadMyInfoError);
-  }, [loadMyInfoError]);
 
   console.log("Common rendering");
   return (
@@ -81,7 +70,7 @@ const Common = () => {
 
         {me && (
           <Button style={{ color: "#ffffff" }} onClick={handleAdminMode}>
-            {isAdminMode ? "사용자 페이지" : "관리자 페이지"}
+            {isManage ? "사용자 페이지" : "관리자 페이지"}
           </Button>
         )}
         <div></div>

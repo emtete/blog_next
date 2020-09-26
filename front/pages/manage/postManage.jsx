@@ -1,4 +1,4 @@
-import PostManage from "../components/PostManage";
+import PostManage from "../../components/PostManage";
 
 const postManage = () => {
   return <PostManage></PostManage>;

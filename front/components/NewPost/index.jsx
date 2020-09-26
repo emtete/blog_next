@@ -126,11 +126,11 @@ const NewPost = () => {
   }, [updateDone, updateError]);
 
   //
-  useEffect(() => {
-    if (loadMyInfoDone && !me) {
-      router.push("/");
-    }
-  }, [loadMyInfoDone]);
+  // useEffect(() => {
+  //   if (loadMyInfoDone && !me) {
+  //     router.push("/");
+  //   }
+  // }, [loadMyInfoDone]);
 
   const handleTitle = (e) => {
     setPost({ ...post, title: e.target.value });
