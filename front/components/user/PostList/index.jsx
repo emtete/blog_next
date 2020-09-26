@@ -9,7 +9,7 @@ import MuiAccordionDetails from "@material-ui/core/AccordionDetails";
 import Typography from "@material-ui/core/Typography";
 
 // import PostDetail from "./PostDetail";
-import TuiEditor from "../../manage/NewPost/TuiEditor";
+import TuiEditor from "../../TuiEditor";
 
 const useStyles = makeStyles((theme) => ({
   content: {

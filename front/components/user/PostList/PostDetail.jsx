@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import draftToHtml from "draftjs-to-html";
 import PropTypes from "prop-types";
 
-import TuiEditor from "./TuiEditor";
+import TuiEditor from "../../TuiEditor";
 
 // const Editor = dynamic(
 //   () => import("react-draft-wysiwyg").then((mod) => mod.Editor),
