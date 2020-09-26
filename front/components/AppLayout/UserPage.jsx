@@ -42,26 +42,6 @@ const UserPage = ({ children }) => {
     }
   );
 
-  const { loadMyInfoLoading, loadMyInfoDone, loadMyInfoError } = useSelector(
-    (state) => ({
-      loadMyInfoLoading: state.user.loadMyInfoLoading,
-      loadMyInfoDone: state.user.loadMyInfoDone,
-      loadMyInfoError: state.user.loadMyInfoError,
-    }),
-    (prev, next) => {
-      return (
-        prev.loadMyInfoLoading === next.loadMyInfoLoading &&
-        prev.loadMyInfoDone === next.loadMyInfoDone &&
-        prev.loadMyInfoError === next.loadMyInfoError
-      );
-    }
-  );
-
-  const onToggleMenu = (e) => {
-    e.isOpend = !e.isOpend;
-    setMenuList([...menuList]);
-  };
-
   useEffect(() => {
     dispatch({ type: "GET_CATEGORY_LIST_REQUEST" });
   }, []);
@@ -88,6 +68,11 @@ const UserPage = ({ children }) => {
     },
     [menuList]
   );
+
+  const onToggleMenu = (e) => {
+    e.isOpend = !e.isOpend;
+    setMenuList([...menuList]);
+  };
 
   console.log("UserPage rendering");
   return (
