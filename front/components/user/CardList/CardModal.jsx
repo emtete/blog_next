@@ -7,7 +7,7 @@ import CardMedia from "@material-ui/core/CardMedia";
 import ImageSearchIcon from "@material-ui/icons/ImageSearch";
 
 import { sample } from "./sampleData";
-import TuiEditor from "../NewPost/TuiEditor";
+import TuiEditor from "../../manage/NewPost/TuiEditor";
 
 const Editor = dynamic(
   () => import("react-draft-wysiwyg").then((mod) => mod.Editor),

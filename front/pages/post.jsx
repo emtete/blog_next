@@ -1,5 +1,4 @@
-// import AppLayout from "../components/AppLayout";
-import PostList from "../components/PostList";
+import PostList from "../components/user/PostList";
 
 const Post = () => {
   return (
