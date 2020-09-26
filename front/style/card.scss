@@ -10,6 +10,7 @@
 .upload_image_layer input[type="file"]{position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip:rect(0,0,0,0); border: 0;}
 .upload_image_layer {display: flex; justify-content: center; cursor: pointer; background-color: #f3f5f7}
 
+.post_title {display: block; padding: 0px; font-size: 2.75rem; width: 100%; resize: none; line-height: 1.5; outline: none; border: none; font-weight: bold; color: rgb(33, 37, 41);}
 
 // editor
 .te-md-container .CodeMirror { font-size: 1.125rem; }

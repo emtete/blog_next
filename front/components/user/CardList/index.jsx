@@ -7,6 +7,7 @@ import Grid from "@material-ui/core/Grid";
 
 import CardNode from "./CardNode";
 import CardModal from "./CardModal";
+import { useCallback } from "react";
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -18,6 +19,10 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "#f3f5f7",
   },
 }));
+
+const getIsArray = (element) => {
+  return Array.isArray(element) && element.length > 0;
+};
 
 const CardList = () => {
   const classes = useStyles();
@@ -54,17 +59,20 @@ const CardList = () => {
     if (getListError) alert(getListError);
   }, [getListDone, getListError]);
 
+  const onClickWrite = useCallback(() => {
+    dispatch({ type: "START_IS_VIEW_MODE_ACTION" });
+  }, []);
+
   return (
     <main className={classes.content}>
       <div id='mArticle'>
         <div className='blog_category'>
           <h3 className='tit_cont'>
-            리뷰 페이지
-            <button className='link_write'>
+            {getIsArray(items) && items[0].categoryName}
+            <button className='link_write' onClick={onClickWrite}>
               글 쓰기<span className='ico_blog'></span>
             </button>
           </h3>
-          {/* <div className='wrap_set'> */}
           <Grid container spacing={2}>
             {items.map((post, i) => (
               <Grid
@@ -78,10 +86,14 @@ const CardList = () => {
               </Grid>
             ))}
           </Grid>
-          {/* </div> */}
         </div>
       </div>
-      {isViewMode && <CardModal />}
+      {isViewMode && (
+        <CardModal
+          categoryId={items && items[0].categoryId}
+          categoryName={items && items[0].categoryName}
+        />
+      )}
     </main>
   );
 };

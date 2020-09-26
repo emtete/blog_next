@@ -5,10 +5,10 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 
 import { makeStyles } from "@material-ui/core/styles";
-import { TextField, FormControl, Button, Input } from "@material-ui/core";
+import { FormControl, Button, Input } from "@material-ui/core";
 
 import ImageRegister from "./ImageRegister";
-import TuiEditor from "./TuiEditor";
+import TuiEditor from "../../TuiEditor";
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -209,6 +209,13 @@ const NewPost = () => {
             className={classes.root}
             aria-describedby='my-helper-text'
           />
+          {/* <input type='text' /> */}
+          <textarea
+            placeholder='제목을 입력하세요'
+            rows='1'
+            className='post_title'
+            style={{ height: "66px" }}
+          ></textarea>
           <br />
           <TuiEditor
             isEditorMode={true}
