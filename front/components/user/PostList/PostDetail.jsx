@@ -1,5 +1,5 @@
-import { useState, useRef, useCallback } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState, useRef, useCallback } from "react";
+import { useDispatch, useSelector, shallowEqual } from "react-redux";
 
 import { withStyles } from "@material-ui/core/styles";
 import MuiAccordion from "@material-ui/core/Accordion";
@@ -60,6 +60,7 @@ const PostDetail = ({ post, CategoryId, categoryName }) => {
   const isNewPost = post.id === "";
   const [isEditMode, setIsEditMode] = useState(isNewPost);
   const [title, setTitle] = useState(post.title);
+  const [content, setContent] = useState(post.content);
 
   const { me } = useSelector(
     (state) => ({
@@ -70,9 +71,56 @@ const PostDetail = ({ post, CategoryId, categoryName }) => {
     }
   );
 
+  const { writeLoading, writeDone, writeError } = useSelector(
+    (state) => ({
+      writeLoading: state.post.writeLoading,
+      writeDone: state.post.writeDone,
+      writeError: state.post.writeError,
+    }),
+    shallowEqual
+  );
+
+  const { updateLoading, updateDone, updateError } = useSelector(
+    (state) => ({
+      updateLoading: state.post.updateLoading,
+      updateDone: state.post.updateDone,
+      updateError: state.post.updateError,
+    }),
+    shallowEqual
+  );
+
+  useEffect(() => {
+    //작성 성공
+    if (writeDone) {
+      const data = { CategoryId, includeContent: true };
+      dispatch({ type: "WRITE_POST_RESET" });
+      dispatch({ type: "GET_POST_LIST_REQUEST", data });
+    }
+    //작성 실패
+    if (writeError) {
+      alert(writeError);
+      dispatch({ type: "WRITE_POST_RESET" });
+    }
+  }, [writeDone, writeError]);
+
+  useEffect(() => {
+    //수정 성공
+    if (updateDone) {
+      const data = { CategoryId, includeContent: true };
+      setIsEditMode(false);
+      dispatch({ type: "UPDATE_POST_RESET" });
+      dispatch({ type: "GET_POST_LIST_REQUEST", data });
+    }
+
+    //수정 실패
+    if (updateError) {
+      alert(updateError);
+      dispatch({ type: "UPDATE_POST_RESET" });
+    }
+  }, [updateDone, updateError]);
+
   const onClickBtn1 = useCallback(() => {
     if (isEditMode) {
-      //
       setIsEditMode(false);
     } // 수정
     else {
@@ -82,7 +130,6 @@ const PostDetail = ({ post, CategoryId, categoryName }) => {
 
   const onSubmitForm = (e) => {
     e.preventDefault();
-    const content = tuiRef.current.getInstance().getMarkdown();
 
     // 새로 작성
     if (isNewPost) {
@@ -99,17 +146,17 @@ const PostDetail = ({ post, CategoryId, categoryName }) => {
       dispatch({ type: "WRITE_POST_REQUEST", data });
     } // 수정
     else {
+      const author = "victor_77";
       const data = {
         id: post.id,
         UserId: me.id,
-        author: post.author,
+        author,
         title,
         categoryName,
-        CategoryId: categoryId,
-        imagePath,
+        CategoryId,
         content,
       };
-      // dispatch({ type: "UPDATE_POST_REQUEST", data });
+      dispatch({ type: "UPDATE_POST_REQUEST", data });
     }
   };
 
@@ -129,10 +176,10 @@ const PostDetail = ({ post, CategoryId, categoryName }) => {
             type='text'
             value={title}
             onChange={onHandleTitle}
-            style={{ fontSize: "2rem", width: "72%" }}
+            style={{ fontSize: "1.2rem", width: "72%" }}
           />
         ) : (
-          <Typography>{title}</Typography>
+          <Typography style={{ fontSize: "1.2rem" }}>{title}</Typography>
         )}
 
         <Typography>{post.date}</Typography>
@@ -141,9 +188,8 @@ const PostDetail = ({ post, CategoryId, categoryName }) => {
         <TuiEditor
           isEditorMode={isEditMode}
           tuiRef={tuiRef}
-          initialContent={post.content}
-          // editType='wysiwyg'
-          height={"70vh"}
+          initialContent={content}
+          setContent={setContent}
         />
       </AccordionDetails>
       <AccordionActions>

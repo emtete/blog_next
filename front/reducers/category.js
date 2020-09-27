@@ -363,7 +363,7 @@ const reducer = (state = initialState, action) => {
         ...state,
         applyLoading: false,
         applyDone: false,
-        applyError: action.error,
+        applyError: String(action.error),
       };
 
     case "APPLY_CATEGORY_RESET":
@@ -397,7 +397,7 @@ const reducer = (state = initialState, action) => {
         ...state,
         getListLoading: false,
         getListDone: false,
-        getListError: action.error,
+        getListError: String(action.error),
       };
 
     case "GET_CATEGORY_LIST_RESET":

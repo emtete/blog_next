@@ -16,21 +16,16 @@ const ViewerWrap = React.forwardRef((props, ref) => (
   <Viewer {...props} forwardedRef={ref} />
 ));
 
-const TuiEditor = ({
-  isEditorMode,
-  tuiRef,
-  initialContent,
-  editType,
-  height,
-}) => {
+const TuiEditor = ({ isEditorMode, tuiRef, initialContent, setContent }) => {
   useEffect(() => {
     hljs.registerLanguage("javascript", javascript);
     hljs.registerLanguage("css", css);
   });
 
-  // const onChangeContent = () => {
-  //   const instance = tuiRef.current.getInstance();
-  // };
+  const onChangeContent = () => {
+    const instance = tuiRef.current.getInstance();
+    setContent(instance.getMarkdown());
+  };
 
   return (
     <>
@@ -38,12 +33,12 @@ const TuiEditor = ({
         <EditorWrap
           initialValue={initialContent || ""}
           previewStyle='vertical'
-          height={height || "600px"}
-          initialEditType={editType || "markdown"}
+          height='600px'
+          initialEditType='markdown'
           useCommandShortcut={true}
           plugins={[[codeSyntaxHightlight, { hljs }]]}
           ref={tuiRef}
-          // onChange={onChangeContent}
+          onChange={onChangeContent}
         />
       ) : (
         <ViewerWrap

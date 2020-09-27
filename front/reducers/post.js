@@ -118,7 +118,7 @@ const reducer = (state = initialState, action) => {
         ...state,
         writeLoading: false,
         writeDone: false,
-        writeError: action.error,
+        writeError: String(action.error),
       };
 
     case "WRITE_POST_RESET":
@@ -150,7 +150,7 @@ const reducer = (state = initialState, action) => {
         ...state,
         deleteLoading: false,
         deleteDone: false,
-        deleteError: action.error,
+        deleteError: String(action.error),
       };
 
     case "DELETE_POST_RESET":
@@ -182,7 +182,7 @@ const reducer = (state = initialState, action) => {
         ...state,
         updateLoading: false,
         updateDone: false,
-        updateError: action.error,
+        updateError: String(action.error),
       };
 
     case "UPDATE_POST_RESET":
@@ -214,7 +214,7 @@ const reducer = (state = initialState, action) => {
         ...state,
         changeCategoryLoading: false,
         changeCategoryDone: false,
-        changeCategoryError: action.error,
+        changeCategoryError: String(action.error),
       };
 
     case "CHANGE_CATEGORY_IN_POST_RESET":
@@ -251,7 +251,7 @@ const reducer = (state = initialState, action) => {
         ...state,
         getListLoading: false,
         getListDone: false,
-        getListError: action.error,
+        getListError: String(action.error),
       };
 
     case "GET_POST_LIST_RESET":
@@ -285,7 +285,7 @@ const reducer = (state = initialState, action) => {
         ...state,
         uploadImagesLoading: false,
         uploadImagesDone: false,
-        uploadImagesError: action.error,
+        uploadImagesError: String(action.error),
       };
 
     case "UPLOAD_IMAGES_RESET":

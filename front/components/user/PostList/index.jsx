@@ -55,6 +55,7 @@ export default function PostList() {
 
   useEffect(() => {
     if (getListDone) {
+      console.log(1111);
       setPostList([...items]);
       dispatch({ type: "GET_POST_LIST_RESET" });
     }
@@ -93,7 +94,7 @@ export default function PostList() {
             {postList.map((post, i) => (
               <PostDetail
                 post={post}
-                key={post.id + post.date}
+                key={String(post.id) + String(post.date)}
                 CategoryId={query.categoryId}
                 categoryName={query.categoryName}
               />

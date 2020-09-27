@@ -65,7 +65,7 @@ const reducer = (state = initialState, action) => {
         ...state,
         logInLoading: false,
         logInDone: false,
-        logInError: action.error,
+        logInError: String(action.error),
       };
 
     case "LOG_OUT_REQUEST":
@@ -95,7 +95,7 @@ const reducer = (state = initialState, action) => {
         ...state,
         logOutLoading: false,
         logOutDone: false,
-        logOutError: action.error,
+        logOutError: String(action.error),
       };
 
     case "LOG_OUT_RESET":
@@ -128,7 +128,7 @@ const reducer = (state = initialState, action) => {
         ...state,
         loadMyInfoLoading: false,
         loadMyInfoDone: false,
-        loadMyInfoError: action.error,
+        loadMyInfoError: String(action.error),
       };
 
     case "LOAD_MY_INFO_RESET":

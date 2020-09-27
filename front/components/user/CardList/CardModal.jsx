@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, useCallback } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import dynamic from "next/dynamic";
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -10,9 +10,6 @@ import { sample } from "./sampleData";
 import TuiEditor from "../../TuiEditor";
 
 const useStyles = makeStyles((theme) => ({
-  // root: {
-  //   maxWidth: 245,
-  // },
   media: {
     height: 380,
   },
@@ -49,13 +46,7 @@ const CardModal = ({ categoryId, categoryName }) => {
       writeDone: state.post.writeDone,
       writeError: state.post.writeError,
     }),
-    (prev, next) => {
-      return (
-        prev.writeLoading === next.writeLoading &&
-        prev.writeDone === next.writeDone &&
-        prev.writeError === next.writeError
-      );
-    }
+    shallowEqual
   );
 
   const { updateLoading, updateDone, updateError } = useSelector(
@@ -64,21 +55,19 @@ const CardModal = ({ categoryId, categoryName }) => {
       updateDone: state.post.updateDone,
       updateError: state.post.updateError,
     }),
-    (prev, next) => {
-      return (
-        prev.updateLoading === next.updateLoading &&
-        prev.updateDone === next.updateDone &&
-        prev.updateError === next.updateError
-      );
-    }
+    shallowEqual
   );
 
-  const initImagePath = post ? post.imagePath : null;
+  const isWriter = post ? post.userId === me.id : false;
   const initTitle = post ? post.title : "";
-  const [imagePath, setImagePath] = useState(initImagePath);
+  const initContent = post ? post.content : "";
+  const initImagePath = post ? post.imagePath : null;
+
   const [title, setTitle] = useState(initTitle);
+  const [content, setContent] = useState(initContent);
+  const [imagePath, setImagePath] = useState(initImagePath);
+
   const [isEditMode, setIsEditMode] = useState(false);
-  const isWriter = post.userId === me.id;
 
   useEffect(() => {
     if (imagePaths) setImagePath(imagePaths[0]);
@@ -136,7 +125,6 @@ const CardModal = ({ categoryId, categoryName }) => {
 
   const onSubmitForm = (e) => {
     e.preventDefault();
-    const content = tuiRef.current.getInstance().getMarkdown();
 
     // 새로 작성
     if (!post) {
@@ -275,6 +263,7 @@ const CardModal = ({ categoryId, categoryName }) => {
                 isEditorMode={!post || isEditMode}
                 tuiRef={tuiRef}
                 initialContent={post ? post.content : ""}
+                setContent={setContent}
               />
               {(!post || isEditMode) && (
                 <div
