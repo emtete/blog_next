@@ -16,7 +16,13 @@ const ViewerWrap = React.forwardRef((props, ref) => (
   <Viewer {...props} forwardedRef={ref} />
 ));
 
-const TuiEditor = ({ isEditorMode, tuiRef, initialContent }) => {
+const TuiEditor = ({
+  isEditorMode,
+  tuiRef,
+  initialContent,
+  editType,
+  height,
+}) => {
   useEffect(() => {
     hljs.registerLanguage("javascript", javascript);
     hljs.registerLanguage("css", css);
@@ -32,8 +38,8 @@ const TuiEditor = ({ isEditorMode, tuiRef, initialContent }) => {
         <EditorWrap
           initialValue={initialContent || ""}
           previewStyle='vertical'
-          height='600px'
-          initialEditType='markdown'
+          height={height || "600px"}
+          initialEditType={editType || "markdown"}
           useCommandShortcut={true}
           plugins={[[codeSyntaxHightlight, { hljs }]]}
           ref={tuiRef}

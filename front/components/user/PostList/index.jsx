@@ -1,15 +1,11 @@
-import { useEffect, useRef } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 
-import { withStyles, makeStyles } from "@material-ui/core/styles";
-import MuiAccordion from "@material-ui/core/Accordion";
-import MuiAccordionSummary from "@material-ui/core/AccordionSummary";
-import MuiAccordionDetails from "@material-ui/core/AccordionDetails";
-import Typography from "@material-ui/core/Typography";
+import { makeStyles } from "@material-ui/core/styles";
 
-// import PostDetail from "./PostDetail";
 import TuiEditor from "../../TuiEditor";
+import PostDetail from "./PostDetail";
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -22,47 +18,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Accordion = withStyles({
-  root: {
-    border: "1px solid rgba(0, 0, 0, .125)",
-    boxShadow: "none",
-    "&:not(:last-child)": {
-      borderBottom: 0,
-    },
-    "&:before": {
-      display: "none",
-    },
-    "&$expanded": {
-      margin: "auto",
-    },
-  },
-  expanded: {},
-})(MuiAccordion);
-
-const AccordionSummary = withStyles({
-  root: {
-    backgroundColor: "rgba(0, 0, 0, .03)",
-    borderBottom: "1px solid rgba(0, 0, 0, .125)",
-    marginBottom: -1,
-    minHeight: 56,
-    "&$expanded": {
-      minHeight: 56,
-    },
-  },
-  content: {
-    "&$expanded": {
-      margin: "12px 0",
-    },
-    justifyContent: "space-between",
-  },
-  expanded: {},
-})(MuiAccordionSummary);
-
-const AccordionDetails = withStyles((theme) => ({
-  root: {
-    padding: theme.spacing(2),
-  },
-}))(MuiAccordionDetails);
+const deepCopy = (obj) => JSON.parse(JSON.stringify(obj));
 
 export default function PostList() {
   const classes = useStyles();
@@ -87,6 +43,10 @@ export default function PostList() {
     }
   );
 
+  const [postList, setPostList] = useState([]);
+  const [newPost, setNewPost] = useState();
+  const [isEditMode, setIsEditMode] = useState(null);
+
   // 글 목록 호출
   useEffect(() => {
     const data = { CategoryId: query.categoryId, includeContent: true };
@@ -94,49 +54,49 @@ export default function PostList() {
   }, [query]);
 
   useEffect(() => {
-    if (getListDone) dispatch({ type: "GET_POST_LIST_RESET" });
+    if (getListDone) {
+      setPostList([...items]);
+      dispatch({ type: "GET_POST_LIST_RESET" });
+    }
     if (getListError) alert(getListError);
   }, [getListDone, getListError]);
 
-  // const handleChange = (panel) => (event, newExpanded) => {
-  //   setExpanded(newExpanded ? panel : false);
-  // };
+  const onClickWrite = useCallback(() => {
+    if (isEditMode === null) {
+      const newPost = { title: "", content: "", date: "", id: "" };
+      const clone = deepCopy(postList);
+      clone.push(newPost);
+      setPostList([...clone]);
+      setIsEditMode(postList.length);
+      // console.log(isEditMode);
+    } else {
+      const clone = deepCopy(postList);
+      clone.splice(isEditMode, 1);
+      setPostList([...clone]);
+      setIsEditMode(null);
+    }
+  }, [isEditMode, postList]);
 
+  console.log("PostList rendering");
   return (
     <main className={classes.content}>
       <div id='mArticle'>
         <div className='blog_category'>
           <h3 className='tit_cont'>
             리뷰 페이지
-            <button className='link_write'>
-              글 쓰기<span className='ico_blog'></span>
+            <button className='link_write' onClick={onClickWrite}>
+              {isEditMode ? "취소" : "글 쓰기"}
+              <span className='ico_blog'></span>
             </button>
           </h3>
           <div>
-            {items.map((v, i) => (
-              <Accordion
-                // square
-                // expanded={expanded === `panel1${i}`}
-                // onChange={handleChange(`panel1${i}`)}
-                key={v.id}
-              >
-                <AccordionSummary
-                  aria-controls='panel1d-content'
-                  id='panel1d-header'
-                  style={{ justifyContent: "space-between" }}
-                >
-                  <Typography>{v.title}</Typography>
-                  <Typography>{v.date}</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  {/* <PostDetail postContent={JSON.parse(v.content)} /> */}
-                  <TuiEditor
-                    isEditorMode={false}
-                    tuiRef={tuiRef}
-                    initialContent={v.content}
-                  />
-                </AccordionDetails>
-              </Accordion>
+            {postList.map((post, i) => (
+              <PostDetail
+                post={post}
+                key={post.id + post.date}
+                CategoryId={query.categoryId}
+                categoryName={query.categoryName}
+              />
             ))}
           </div>
         </div>

@@ -162,13 +162,6 @@ const CardModal = ({ categoryId, categoryName }) => {
         CategoryId: categoryId,
         imagePath,
         content,
-        // UserId: me.id,
-        // author: post.author,
-        // title: post.title,
-        // categoryName: post.categoryName,
-        // categoryId: post.categoryId,
-        // imagePath: post.imagePath,
-        // content: content,
       };
       dispatch({ type: "UPDATE_POST_REQUEST", data });
     }
