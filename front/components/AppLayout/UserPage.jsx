@@ -63,7 +63,11 @@ const UserPage = ({ children }) => {
   const onClickItem = useCallback(
     (e) => {
       !getIsArray(e.children)
-        ? router.push(`/${e.isCard ? "card" : "post"}?categoryId=${e.id}`)
+        ? router.push(
+            `/${e.isCard ? "card" : "post"}?categoryId=${e.id}&categoryName=${
+              e.title
+            }`
+          )
         : onToggleMenu(e);
     },
     [menuList]

@@ -264,6 +264,12 @@ const toggleIsCard = (state, id, isCard) => {
   return clone;
 };
 
+// const resetCategoryManager = (state) => {
+//   state.updatedCategories
+//   state.deletedCategories
+//   state.appendedCategories
+// }
+
 const reducer = (state = initialState, action) => {
   let newObject;
   let title;
@@ -300,6 +306,14 @@ const reducer = (state = initialState, action) => {
   let deletedChildren;
 
   switch (action.type) {
+    case "RESET_CATEGORY_MANAGER_ACTION":
+      return {
+        ...state,
+        appendedCategories: [],
+        updatedCategories: [],
+        deletedCategories: [],
+      };
+
     case "OPEN_ALL_CATEGORY_ACTION":
       openAllCategory(state.treeData);
       return {

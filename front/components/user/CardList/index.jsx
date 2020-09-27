@@ -68,7 +68,8 @@ const CardList = () => {
       <div id='mArticle'>
         <div className='blog_category'>
           <h3 className='tit_cont'>
-            {getIsArray(items) && items[0].categoryName}
+            {/* {getIsArray(items) && items[0].categoryName} */}
+            {query.categoryName}
             <button className='link_write' onClick={onClickWrite}>
               글 쓰기<span className='ico_blog'></span>
             </button>

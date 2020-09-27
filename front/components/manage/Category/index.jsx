@@ -22,6 +22,7 @@ const getNode = (treeData, indexPath, idArr) => {
   const result = [];
 
   idArr.map((id) => {
+    console.log("id : ", id);
     if (indexPath[id].length === 1) {
       const path = indexPath[id][0];
       const node = deepCopy(treeData[path]);
@@ -135,13 +136,6 @@ const Category = () => {
     }
   );
 
-  // 새로고침 혹은 주소로 접근시 처리.
-  // useEffect(() => {
-  //   if (loadMyInfoDone && !me) {
-  //     router.push("/");
-  //   }
-  // }, [loadMyInfoDone]);
-
   // 카테고리 목록 호출
   useEffect(() => {
     if (me) {
@@ -155,6 +149,7 @@ const Category = () => {
       alert("적용되었습니다.");
       dispatch({ type: "APPLY_CATEGORY_RESET" });
       dispatch({ type: "GET_CATEGORY_LIST_REQUEST" });
+      dispatch({ type: "RESET_CATEGORY_MANAGER_ACTION" });
     }
     // 변경사항 적용 중 에러
     if (applyError) {
