@@ -37,8 +37,8 @@ const CardNode = ({ post }) => {
       <CardActionArea>
         <CardMedia
           className={classes.media}
-          // image={`http://localhost:3065/${post.imagePath}`}
-          image={`http://localhost:3065/DEV_LIFE.png`}
+          image={`http://localhost:3065/${post.imagePath}`}
+          // image={`http://localhost:3065/DEV_LIFE.png`}
           title='Contemplative Reptile'
         />
         <CardContent>

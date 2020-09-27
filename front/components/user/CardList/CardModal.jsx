@@ -58,10 +58,27 @@ const CardModal = ({ categoryId, categoryName }) => {
     }
   );
 
+  const { updateLoading, updateDone, updateError } = useSelector(
+    (state) => ({
+      updateLoading: state.post.updateLoading,
+      updateDone: state.post.updateDone,
+      updateError: state.post.updateError,
+    }),
+    (prev, next) => {
+      return (
+        prev.updateLoading === next.updateLoading &&
+        prev.updateDone === next.updateDone &&
+        prev.updateError === next.updateError
+      );
+    }
+  );
+
   const initImagePath = post ? post.imagePath : null;
   const initTitle = post ? post.title : "";
   const [imagePath, setImagePath] = useState(initImagePath);
   const [title, setTitle] = useState(initTitle);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const isWriter = post.userId === me.id;
 
   useEffect(() => {
     if (imagePaths) setImagePath(imagePaths[0]);
@@ -79,12 +96,10 @@ const CardModal = ({ categoryId, categoryName }) => {
   useEffect(() => {
     //작성 성공
     if (writeDone) {
-      // dispatch({ type: "REMOVE_ORG_POST_ACTION" });
       const data = { CategoryId: categoryId, includeContent: true };
       dispatch({ type: "WRITE_POST_RESET" });
       dispatch({ type: "GET_POST_LIST_REQUEST", data });
       dispatch({ type: "END_IS_VIEW_MODE_ACTION" });
-      // router.push("/postManage");
     }
     //작성 실패
     if (writeError) {
@@ -93,26 +108,29 @@ const CardModal = ({ categoryId, categoryName }) => {
     }
   }, [writeDone, writeError]);
 
-  // useEffect(() => {
-  //   //수정 성공
-  //   if (updateDone) {
-  //     dispatch({ type: "REMOVE_ORG_POST_ACTION" });
-  //     dispatch({ type: "UPDATE_POST_RESET" });
-  //     router.push("/postManage");
-  //   }
+  useEffect(() => {
+    //수정 성공
+    if (updateDone) {
+      const data = { CategoryId: categoryId, includeContent: true };
+      setIsEditMode(false);
+      dispatch({ type: "UPDATE_POST_RESET" });
+      dispatch({ type: "GET_POST_LIST_REQUEST", data });
+      dispatch({ type: "END_IS_VIEW_MODE_ACTION" });
+    }
 
-  //   //수정 실패
-  //   if (updateError) {
-  //     alert(updateError);
-  //     dispatch({ type: "UPDATE_POST_RESET" });
-  //   }
-  // }, [updateDone, updateError]);
+    //수정 실패
+    if (updateError) {
+      alert(updateError);
+      dispatch({ type: "UPDATE_POST_RESET" });
+    }
+  }, [updateDone, updateError]);
 
   // 모달 바깥 클릭시, 창 닫기
   const clickOutSideEvent = useCallback((e) => {
     if (e.target.className === "container_layer") {
       dispatch({ type: "END_IS_VIEW_MODE_ACTION" });
       dispatch({ type: "SET_SELECTED_POST_ACTION", data: { post: null } });
+      setIsEditMode(false);
     }
   }, []);
 
@@ -124,7 +142,6 @@ const CardModal = ({ categoryId, categoryName }) => {
     if (!post) {
       const author = "victor_77";
       const data = {
-        // id: post.id,
         UserId: me.id,
         author,
         title,
@@ -140,11 +157,18 @@ const CardModal = ({ categoryId, categoryName }) => {
         id: post.id,
         UserId: me.id,
         author: post.author,
-        title: post.title,
-        categoryName: post.categoryName,
-        categoryId: post.categoryId,
-        imagePath: post.imagePath,
-        content: content,
+        title,
+        categoryName,
+        CategoryId: categoryId,
+        imagePath,
+        content,
+        // UserId: me.id,
+        // author: post.author,
+        // title: post.title,
+        // categoryName: post.categoryName,
+        // categoryId: post.categoryId,
+        // imagePath: post.imagePath,
+        // content: content,
       };
       dispatch({ type: "UPDATE_POST_REQUEST", data });
     }
@@ -176,15 +200,21 @@ const CardModal = ({ categoryId, categoryName }) => {
     setTitle(e.target.value);
   }, []);
 
+  const onClickEdit = useCallback(() => {
+    setIsEditMode((prev) => !prev);
+  }, [isEditMode]);
+
+  const onClickChangeImage = useCallback(() => {
+    setImagePath(null);
+  }, []);
+
   return (
     <div className='container_layer'>
       <div className='card_layer'>
         <div className='inner_card_layer'>
           <form onSubmit={onSubmitForm}>
-            <div style={{ padding: "30px" }}>
-              {post ? (
-                <h1 style={{ fontSize: "2.75rem" }}>{title}</h1>
-              ) : (
+            <div style={{ padding: "30px 30px 10px" }}>
+              {!post || isEditMode ? (
                 <textarea
                   placeholder='제목을 입력하세요'
                   rows='1'
@@ -193,16 +223,32 @@ const CardModal = ({ categoryId, categoryName }) => {
                   value={title}
                   onChange={onHandleTitle}
                 ></textarea>
+              ) : (
+                <h1 style={{ fontSize: "2.75rem" }}>{title}</h1>
               )}
-              <span
+              <div
                 style={{
-                  display: "block",
                   paddingTop: "30px",
-                  fontSize: "1rem",
+                  display: "flex",
+                  justifyContent: "space-between",
                 }}
               >
-                {post ? `작성일 : ${post.published}` : ""}
-              </span>
+                <span
+                  style={{
+                    fontSize: "1rem",
+                  }}
+                >
+                  {post ? `작성일 : ${post.published}` : ""}
+                </span>
+                {isWriter && (
+                  <span
+                    style={{ color: "#959595", cursor: "pointer" }}
+                    onClick={onClickEdit}
+                  >
+                    {!isEditMode ? "수정" : "취소"}
+                  </span>
+                )}
+              </div>
             </div>
             {imagePath ? (
               <CardMedia
@@ -216,13 +262,28 @@ const CardModal = ({ categoryId, categoryName }) => {
                 <input type='file' ref={imageRef} onChange={onChangeImage} />
               </div>
             )}
+            {isEditMode && (
+              <span
+                style={{
+                  color: "#959595",
+                  cursor: "pointer",
+                  marginRight: "30px",
+                  marginTop: "10px",
+                  textAlign: "right",
+                  display: "block",
+                }}
+                onClick={onClickChangeImage}
+              >
+                이미지 변경
+              </span>
+            )}
             <div style={{ padding: "30px" }}>
               <TuiEditor
-                isEditorMode={!post}
+                isEditorMode={!post || isEditMode}
                 tuiRef={tuiRef}
                 initialContent={post ? post.content : ""}
               />
-              {!post && (
+              {(!post || isEditMode) && (
                 <div
                   style={{
                     display: "flex",

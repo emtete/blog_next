@@ -48,6 +48,7 @@ const getData = (data) => {
   data.map((element) => {
     arr.push({
       id: element.id,
+      userId: element.UserId,
       author: element.author,
       title: element.title,
       content: element.content,
