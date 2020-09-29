@@ -50,19 +50,9 @@ router.post("/login", isNotLoggedIn, (req, res, next) => {
 
       const fullUserWithoutPassword = await User.findOne({
         where: { id: user.id },
-        // attributes: ["id", "nickname", "email"],
         attributes: {
           exclude: ["password"],
         },
-        // include: [
-        //   {
-        // model: Post,
-        // },
-        // {
-        // model: dbUser.
-        // as : 'Followings'
-        // },
-        // ],
       });
 
       return res.status(200).json(fullUserWithoutPassword);
