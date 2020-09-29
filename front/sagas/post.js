@@ -101,6 +101,9 @@ function getPostListAPI(data) {
   if (data && data.CategoryId !== undefined)
     request = request + `CategoryId=${data.CategoryId}&`;
 
+  if (data && data.userId !== undefined)
+    request = request + `userId=${data.userId}&`;
+
   if (data && data.includeContent)
     request = request + `includeContent=${data.includeContent}`;
 

@@ -28,6 +28,7 @@ export default function PostList() {
 
   const query = router.query;
 
+  const me = useSelector((state) => state.user.me);
   const { items, getListDone, getListError } = useSelector(
     (state) => ({
       items: state.post.item.items,
@@ -49,7 +50,11 @@ export default function PostList() {
 
   // 글 목록 호출
   useEffect(() => {
-    const data = { CategoryId: query.categoryId, includeContent: true };
+    const data = {
+      userId: me ? me.id : 1,
+      CategoryId: query.categoryId,
+      includeContent: true,
+    };
     dispatch({ type: "GET_POST_LIST_REQUEST", data });
   }, [query]);
 

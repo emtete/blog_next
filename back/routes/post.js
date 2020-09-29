@@ -96,6 +96,10 @@ router.get("/getList", async (req, res, next) => {
     if (query && query.CategoryId !== undefined) {
       searchCondition["where"] = { CategoryId: query.CategoryId };
     }
+
+    if (query && query.userId !== undefined) {
+      searchCondition["where"] = { UserId: query.userId };
+    }
     const post = await Post.findAll(searchCondition);
     res.status(201).json(post);
   } catch (err) {
