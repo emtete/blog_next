@@ -77,7 +77,7 @@ const ManagerPage = ({ children }) => {
                 />
               </ListItem>
 
-              <ListItem
+              {/* <ListItem
                 button
                 style={{ color: "#dbdfe2" }}
                 onClick={(e) => handleRouter(e, "/manage/newpost")}
@@ -86,7 +86,7 @@ const ManagerPage = ({ children }) => {
                   primary='글쓰기'
                   style={{ paddingLeft: "20px", color: "#dbdfe2" }}
                 />
-              </ListItem>
+              </ListItem> */}
             </List>
           </div>
         </Drawer>
