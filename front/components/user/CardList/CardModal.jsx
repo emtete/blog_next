@@ -187,9 +187,10 @@ const CardModal = ({ categoryId, categoryName }) => {
 
   const onClickImage = useCallback(
     (e) => {
+      if (!isEditMode) return;
       imageRef.current.click();
     },
-    [imageRef.current]
+    [imageRef.current, isEditMode]
   );
 
   const onHandleTitle = useCallback((e) => {
