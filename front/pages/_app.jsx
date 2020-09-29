@@ -8,7 +8,6 @@ import { ThemeProvider } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import theme from "../src/theme";
 
-import withReduxSaga from "next-redux-saga";
 import { useSelector } from "react-redux";
 
 import UserPage from "../components/AppLayout/UserPage";
@@ -75,4 +74,4 @@ MyApp.propTypes = {
   pageProps: PropTypes.object,
 };
 
-export default wrapper.withRedux(withReduxSaga(MyApp));
+export default wrapper.withRedux(MyApp);
