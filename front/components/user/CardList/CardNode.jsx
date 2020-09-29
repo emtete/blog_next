@@ -6,8 +6,8 @@ import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
-import ImageSearchIcon from "@material-ui/icons/ImageSearch";
 import Typography from "@material-ui/core/Typography";
+import ImageOutlinedIcon from "@material-ui/icons/ImageOutlined";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -43,7 +43,7 @@ const CardNode = ({ post }) => {
           />
         ) : (
           <div className='upload_image_layer'>
-            <ImageSearchIcon className={classes.media} />
+            <ImageOutlinedIcon className={classes.media} />
           </div>
         )}
         <CardContent>
