@@ -86,7 +86,8 @@ router.post("/changeCategory", async (req, res, next) => {
 router.get("/getList", async (req, res, next) => {
   try {
     const query = req.query;
-    const searchCondition = {};
+    const where = {};
+    const searchCondition = { where };
 
     if (query && !query.includeContent) {
       searchCondition["attributes"] = {
@@ -94,11 +95,11 @@ router.get("/getList", async (req, res, next) => {
       };
     }
     if (query && query.CategoryId !== undefined) {
-      searchCondition["where"] = { CategoryId: query.CategoryId };
+      where["CategoryId"] = query.CategoryId;
     }
 
     if (query && query.userId !== undefined) {
-      searchCondition["where"] = { UserId: query.userId };
+      where["UserId"] = query.userId;
     }
     const post = await Post.findAll(searchCondition);
     res.status(201).json(post);
