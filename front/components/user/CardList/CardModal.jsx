@@ -85,7 +85,11 @@ const CardModal = ({ categoryId, categoryName }) => {
   useEffect(() => {
     //작성 성공
     if (writeDone) {
-      const data = { CategoryId: categoryId, includeContent: true };
+      const data = {
+        CategoryId: categoryId,
+        includeContent: true,
+        userId: me.id,
+      };
       dispatch({ type: "WRITE_POST_RESET" });
       dispatch({ type: "GET_POST_LIST_REQUEST", data });
       dispatch({ type: "END_IS_VIEW_MODE_ACTION" });
@@ -100,7 +104,11 @@ const CardModal = ({ categoryId, categoryName }) => {
   useEffect(() => {
     //수정 성공
     if (updateDone) {
-      const data = { CategoryId: categoryId, includeContent: true };
+      const data = {
+        CategoryId: categoryId,
+        includeContent: true,
+        userId: me.id,
+      };
       setIsEditMode(false);
       dispatch({ type: "UPDATE_POST_RESET" });
       dispatch({ type: "GET_POST_LIST_REQUEST", data });

@@ -11,6 +11,8 @@ const Post = ({ post, handleCheckbox, checkboxGroup }) => {
   const deleteDone = useSelector((state) => state.post.deleteDone);
   const deleteError = useSelector((state) => state.post.deleteError);
 
+  const me = useSelector((state) => state.user.me);
+
   const onClickUpdate = () => {
     dispatch({ type: "GET_POST_ONE_REQUEST", data: { id: post.id } });
   };
@@ -29,7 +31,8 @@ const Post = ({ post, handleCheckbox, checkboxGroup }) => {
   useEffect(() => {
     // 삭제 성공시, post list 재호출
     if (deleteDone) {
-      dispatch({ type: "GET_POST_LIST_REQUEST" });
+      const data = { userId: me.id };
+      dispatch({ type: "GET_POST_LIST_REQUEST", data });
       dispatch({ type: "DELETE_POST_RESET" });
     }
   }, [deleteDone]);

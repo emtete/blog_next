@@ -141,7 +141,7 @@ const PostManage = () => {
   useEffect(() => {
     if (me) {
       const data = { userId: me.id };
-      dispatch({ type: "GET_POST_LIST_REQUEST" });
+      dispatch({ type: "GET_POST_LIST_REQUEST", data });
       dispatch({ type: "GET_CATEGORY_LIST_REQUEST", data });
     }
   }, [me]);
@@ -149,7 +149,8 @@ const PostManage = () => {
   // 글 목록 호출
   useEffect(() => {
     if (changeCategoryDone) {
-      dispatch({ type: "GET_POST_LIST_REQUEST" });
+      const data = { userId: me.id };
+      dispatch({ type: "GET_POST_LIST_REQUEST", data });
     }
     dispatch({ type: "CHANGE_CATEGORY_IN_POST_RESET" });
   }, [changeCategoryDone]);
@@ -199,7 +200,7 @@ const PostManage = () => {
   const onChangeSelect2 = useCallback(
     (e) => {
       setSearchCategoryId(e.target.value);
-      const data = { CategoryId: e.target.value };
+      const data = { CategoryId: e.target.value, userId: me.id };
       dispatch({ type: "GET_POST_LIST_REQUEST", data });
     },
     [searchCategoryId]

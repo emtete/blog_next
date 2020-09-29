@@ -31,6 +31,7 @@ const CardList = () => {
 
   const query = router.query;
 
+  const me = useSelector((state) => state.user.me);
   const { items, isViewMode, getListDone, getListError } = useSelector(
     (state) => ({
       items: state.post.item.items,
@@ -50,7 +51,11 @@ const CardList = () => {
 
   // 글 목록 호출
   useEffect(() => {
-    const data = { CategoryId: query.categoryId, includeContent: true };
+    const data = {
+      CategoryId: query.categoryId,
+      includeContent: true,
+      userId: me ? me.id : 1,
+    };
     dispatch({ type: "GET_POST_LIST_REQUEST", data });
   }, [query]);
 
