@@ -18,6 +18,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const changeDateFormat = (dateStr) => {
+  const date = new Date(dateStr);
+  const y = date.getFullYear();
+  const m = date.getMonth() + 1;
+  const d = date.getDate();
+  return `${y} / ${m} / ${d}`;
+};
+
 const CardModal = ({ categoryId, categoryName }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -226,7 +234,7 @@ const CardModal = ({ categoryId, categoryName }) => {
                     fontSize: "1rem",
                   }}
                 >
-                  {post ? `작성일 : ${post.published}` : ""}
+                  {post ? `작성일 : ${changeDateFormat(post.published)}` : ""}
                 </span>
                 {isWriter && (
                   <span

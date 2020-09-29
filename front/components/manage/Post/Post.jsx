@@ -2,6 +2,14 @@ import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 
+const changeDateFormat = (dateStr) => {
+  const date = new Date(dateStr);
+  const y = date.getFullYear();
+  const m = date.getMonth() + 1;
+  const d = date.getDate();
+  return `${y} / ${m} / ${d}`;
+};
+
 const Post = ({ post, handleCheckbox, checkboxGroup }) => {
   const router = useRouter();
   const dispatch = useDispatch();
@@ -69,7 +77,7 @@ const Post = ({ post, handleCheckbox, checkboxGroup }) => {
           <span className='txt_cate txt_ellip'>{post.categoryName}</span>
         </a>
         <span className='txt_info txt_ellip'>{post.author}</span>
-        <span className='txt_info'>{post.published}</span>
+        <span className='txt_info'>{changeDateFormat(post.published)}</span>
       </div>
       <div className='post_btn'>
         <div className='info_btn'>
