@@ -1,6 +1,7 @@
 import { useState, useMemo, useCallback, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
+import Cookies from "js-cookie";
 
 import ListItem from "@material-ui/core/ListItem";
 import { Button } from "@material-ui/core";
@@ -41,6 +42,7 @@ const Common = () => {
   const handleLogin = () => {
     if (me) {
       dispatch({ type: "LOG_OUT_REQUEST" });
+      Cookies.remove("id");
       router.push("/");
     } else {
       dispatch({ type: "START_LOG_IN_MODE_ACTION" });

@@ -1,5 +1,6 @@
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector, shallowEqual } from "react-redux";
+import Cookies from "js-cookie";
 
 import { FormControl, TextField, Button } from "@material-ui/core";
 
@@ -11,9 +12,16 @@ const LoginModal = () => {
   const modalClasses = modalStyles();
   const [id, onChangeId] = useInput("");
   const [password, onChangePassword] = useInput("");
-  const logInLoading = useSelector((state) => state.user.logInLoading);
-  const logInDone = useSelector((state) => state.user.logInDone);
-  const logInError = useSelector((state) => state.user.logInError);
+
+  const me = useSelector((state) => state.user.me);
+  const { logInLoading, logInDone, logInError } = useSelector(
+    (state) => ({
+      logInLoading: state.user.logInLoading,
+      logInDone: state.user.logInDone,
+      logInError: state.user.logInError,
+    }),
+    shallowEqual
+  );
 
   // 모달 바깥 클릭시, 창 닫기
   const clickOutSideEvent = (e) => {
@@ -37,6 +45,7 @@ const LoginModal = () => {
   useEffect(() => {
     if (logInDone) {
       dispatch({ type: "END_LOG_IN_MODE_ACTION" });
+      Cookies.set("id", me.id, { expires: 7 });
     }
   }, [logInDone]);
 
