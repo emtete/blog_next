@@ -50,14 +50,14 @@ const CardList = () => {
   );
 
   // 글 목록 호출
-  useEffect(() => {
-    const data = {
-      CategoryId: query.categoryId,
-      includeContent: true,
-      userId: me ? me.id : 1,
-    };
-    dispatch({ type: "GET_POST_LIST_REQUEST", data });
-  }, [query, me]);
+  // useEffect(() => {
+  //   const data = {
+  //     CategoryId: query.categoryId,
+  //     includeContent: true,
+  //     userId: me ? me.id : 1,
+  //   };
+  //   dispatch({ type: "GET_POST_LIST_REQUEST", data });
+  // }, [query, me]);
 
   useEffect(() => {
     if (getListDone) dispatch({ type: "GET_POST_LIST_RESET" });
