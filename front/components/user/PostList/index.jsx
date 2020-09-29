@@ -49,14 +49,14 @@ const PostList = () => {
   const [isEditMode, setIsEditMode] = useState(null);
 
   // 글 목록 호출
-  useEffect(() => {
-    const data = {
-      userId: me ? me.id : 1,
-      CategoryId: query.categoryId,
-      includeContent: true,
-    };
-    dispatch({ type: "GET_POST_LIST_REQUEST", data });
-  }, [query, me]);
+  // useEffect(() => {
+  //   const data = {
+  //     userId: me ? me.id : 1,
+  //     CategoryId: query.categoryId,
+  //     includeContent: true,
+  //   };
+  //   dispatch({ type: "GET_POST_LIST_REQUEST", data });
+  // }, [query, me]);
 
   useEffect(() => {
     if (getListDone) {
