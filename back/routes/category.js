@@ -53,13 +53,19 @@ router.post("/apply", async (req, res, next) => {
 
 router.get("/getList", async (req, res, next) => {
   try {
-    const category = await Category.findAll({
+    const query = req.query;
+    const searchCondition = {
       order: [
         ["depth", "ASC"],
         ["parent", "ASC"],
         ["priority", "ASC"],
       ],
-    });
+    };
+    if (query && query.userId !== undefined) {
+      searchCondition["where"] = { UserId: query.userId };
+    }
+    const category = await Category.findAll(searchCondition);
+
     res.status(201).json(category);
   } catch (err) {
     console.error(err);

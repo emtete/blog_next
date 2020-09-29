@@ -25,6 +25,7 @@ const UserPage = ({ children }) => {
   const dispatch = useDispatch();
   const [menuList, setMenuList] = useState([]);
 
+  const me = useSelector((state) => state.user.me);
   const treeData = useSelector((state) => state.category.treeData);
 
   const { getListLoading, getListDone, getListError } = useSelector(
@@ -43,7 +44,8 @@ const UserPage = ({ children }) => {
   );
 
   useEffect(() => {
-    dispatch({ type: "GET_CATEGORY_LIST_REQUEST" });
+    const data = { userId: me ? me.id : 1 };
+    dispatch({ type: "GET_CATEGORY_LIST_REQUEST", data });
   }, []);
 
   // 카테고리 리스트 호출

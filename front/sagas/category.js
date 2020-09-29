@@ -31,15 +31,19 @@ function* applyCategoris(action) {
   }
 }
 
-function getCategoryListAPI() {
-  // return axios.get("/category/getList", { data });
-  return axios.get("/category/getList");
+function getCategoryListAPI(data) {
+  let request = "/category/getList?";
+
+  if (data && data.userId !== undefined)
+    request = request + `userId=${data.userId}`;
+
+  return axios.get(request);
 }
 
 // 비동기 액션 크리에이터
 function* getCategoryList(action) {
   try {
-    const result = yield call(getCategoryListAPI);
+    const result = yield call(getCategoryListAPI, action.data);
     yield put({
       type: "GET_CATEGORY_LIST_SUCCESS",
       data: result.data, // 성공 결과
