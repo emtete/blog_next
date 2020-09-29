@@ -6,7 +6,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import { CardMedia, Button } from "@material-ui/core";
 import ImageSearchIcon from "@material-ui/icons/ImageSearch";
 
-import { sample } from "./sampleData";
 import TuiEditor from "../../TuiEditor";
 
 const useStyles = makeStyles((theme) => ({
@@ -58,7 +57,7 @@ const CardModal = ({ categoryId, categoryName }) => {
     shallowEqual
   );
 
-  const isWriter = post ? post.userId === me.id : false;
+  const isWriter = post && me ? post.userId === me.id : false;
   const initTitle = post ? post.title : "";
   const initContent = post ? post.content : "";
   const initImagePath = post ? post.imagePath : null;
