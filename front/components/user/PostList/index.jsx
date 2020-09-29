@@ -56,7 +56,7 @@ export default function PostList() {
       includeContent: true,
     };
     dispatch({ type: "GET_POST_LIST_REQUEST", data });
-  }, [query]);
+  }, [query, me]);
 
   useEffect(() => {
     if (getListDone) {

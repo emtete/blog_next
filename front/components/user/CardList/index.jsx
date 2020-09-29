@@ -57,7 +57,7 @@ const CardList = () => {
       userId: me ? me.id : 1,
     };
     dispatch({ type: "GET_POST_LIST_REQUEST", data });
-  }, [query]);
+  }, [query, me]);
 
   useEffect(() => {
     if (getListDone) dispatch({ type: "GET_POST_LIST_RESET" });
