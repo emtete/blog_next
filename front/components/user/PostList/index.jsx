@@ -89,7 +89,7 @@ export default function PostList() {
       <div id='mArticle'>
         <div className='blog_category'>
           <h3 className='tit_cont'>
-            리뷰 페이지
+            {query.categoryName}
             {me && (
               <button className='link_write' onClick={onClickWrite}>
                 {isEditMode ? "취소" : "글 쓰기"}
