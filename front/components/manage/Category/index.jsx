@@ -139,16 +139,18 @@ const Category = () => {
   // 카테고리 목록 호출
   useEffect(() => {
     if (me) {
-      dispatch({ type: "GET_CATEGORY_LIST_REQUEST" });
+      const data = { userId: me.id };
+      dispatch({ type: "GET_CATEGORY_LIST_REQUEST", data });
     }
   }, [me]);
 
   useEffect(() => {
     // 변경사항 적용 성공.
     if (applyDone) {
+      const data = { userId: me.id };
       alert("적용되었습니다.");
       dispatch({ type: "APPLY_CATEGORY_RESET" });
-      dispatch({ type: "GET_CATEGORY_LIST_REQUEST" });
+      dispatch({ type: "GET_CATEGORY_LIST_REQUEST", data });
       dispatch({ type: "RESET_CATEGORY_MANAGER_ACTION" });
     }
     // 변경사항 적용 중 에러

@@ -137,18 +137,12 @@ const PostManage = () => {
     }
   );
 
-  // 새로고침 혹은 주소로 접근한 경우의 처리.
-  // useEffect(() => {
-  //   if (loadMyInfoDone && !me) {
-  //     router.push("/");
-  //   }
-  // }, [loadMyInfoDone]);
-
   // 글 목록 호출
   useEffect(() => {
     if (me) {
+      const data = { userId: me.id };
       dispatch({ type: "GET_POST_LIST_REQUEST" });
-      dispatch({ type: "GET_CATEGORY_LIST_REQUEST" });
+      dispatch({ type: "GET_CATEGORY_LIST_REQUEST", data });
     }
   }, [me]);
 
