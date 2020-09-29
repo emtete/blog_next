@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
 
 const deepCopy = (obj) => JSON.parse(JSON.stringify(obj));
 
-export default function PostList() {
+const PostList = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const router = useRouter();
@@ -60,7 +60,6 @@ export default function PostList() {
 
   useEffect(() => {
     if (getListDone) {
-      console.log(1111);
       setPostList([...items]);
       dispatch({ type: "GET_POST_LIST_RESET" });
     }
@@ -74,7 +73,6 @@ export default function PostList() {
       clone.push(newPost);
       setPostList([...clone]);
       setIsEditMode(postList.length);
-      // console.log(isEditMode);
     } else {
       const clone = deepCopy(postList);
       clone.splice(isEditMode, 1);
@@ -111,4 +109,6 @@ export default function PostList() {
       </div>
     </main>
   );
-}
+};
+
+export default PostList;
