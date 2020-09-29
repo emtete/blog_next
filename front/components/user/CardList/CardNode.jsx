@@ -6,7 +6,7 @@ import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
-
+import ImageSearchIcon from "@material-ui/icons/ImageSearch";
 import Typography from "@material-ui/core/Typography";
 
 const useStyles = makeStyles((theme) => ({
@@ -35,12 +35,17 @@ const CardNode = ({ post }) => {
       onClick={onClickCard}
     >
       <CardActionArea>
-        <CardMedia
-          className={classes.media}
-          image={`http://localhost:3065/${post.imagePath}`}
-          // image={`http://localhost:3065/DEV_LIFE.png`}
-          title='Contemplative Reptile'
-        />
+        {post.imagePath ? (
+          <CardMedia
+            className={classes.media}
+            image={`http://localhost:3065/${post.imagePath}`}
+            title='Contemplative Reptile'
+          />
+        ) : (
+          <div className='upload_image_layer'>
+            <ImageSearchIcon className={classes.media} />
+          </div>
+        )}
         <CardContent>
           <Typography gutterBottom variant='h6' component='p'>
             {post.title}
