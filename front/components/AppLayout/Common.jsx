@@ -18,7 +18,7 @@ const Common = () => {
 
   const me = useSelector((state) => state.user.me);
   const isLoginMode = useSelector((state) => state.user.isLoginMode);
-  const isAdminMode = useSelector((state) => state.user.isAdminMode);
+  // const isAdminMode = useSelector((state) => state.user.isAdminMode);
 
   const loadMyInfoDone = useSelector((state) => state.user.loadMyInfoDone);
   const loadMyInfoError = useSelector((state) => state.user.loadMyInfoError);
