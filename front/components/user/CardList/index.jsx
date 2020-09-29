@@ -74,9 +74,11 @@ const CardList = () => {
         <div className='blog_category'>
           <h3 className='tit_cont'>
             {query.categoryName}
-            <button className='link_write' onClick={onClickWrite}>
-              글 쓰기<span className='ico_blog'></span>
-            </button>
+            {me && (
+              <button className='link_write' onClick={onClickWrite}>
+                글 쓰기<span className='ico_blog'></span>
+              </button>
+            )}
           </h3>
           <Grid container spacing={2}>
             {items.map((post, i) => (

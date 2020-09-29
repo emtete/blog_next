@@ -193,7 +193,7 @@ const PostDetail = ({ post, CategoryId, categoryName }) => {
         />
       </AccordionDetails>
       <AccordionActions>
-        {!isNewPost && (
+        {me && !isNewPost && (
           <Button size='small' onClick={onClickBtn1}>
             {isEditMode ? "취소" : "수정"}
           </Button>

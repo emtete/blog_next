@@ -90,10 +90,12 @@ export default function PostList() {
         <div className='blog_category'>
           <h3 className='tit_cont'>
             리뷰 페이지
-            <button className='link_write' onClick={onClickWrite}>
-              {isEditMode ? "취소" : "글 쓰기"}
-              <span className='ico_blog'></span>
-            </button>
+            {me && (
+              <button className='link_write' onClick={onClickWrite}>
+                {isEditMode ? "취소" : "글 쓰기"}
+                <span className='ico_blog'></span>
+              </button>
+            )}
           </h3>
           <div>
             {postList.map((post, i) => (
