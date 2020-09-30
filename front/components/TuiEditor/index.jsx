@@ -1,7 +1,7 @@
 import React, { forwardRef, useEffect } from "react";
 import dynamic from "next/dynamic";
 
-import hljs from "highlight.js";
+import hljs from "highlight.js/lib/highlight";
 import codeSyntaxHightlight from "@toast-ui/editor-plugin-code-syntax-highlight";
 import javascript from "highlight.js/lib/languages/javascript";
 import css from "highlight.js/lib/languages/css";
