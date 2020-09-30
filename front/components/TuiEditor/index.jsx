@@ -1,6 +1,6 @@
 import React, { forwardRef, useEffect } from "react";
 import dynamic from "next/dynamic";
-
+import axios from "axios";
 import hljs from "highlight.js/lib/core";
 import codeSyntaxHightlight from "@toast-ui/editor-plugin-code-syntax-highlight";
 import javascript from "highlight.js/lib/languages/javascript";
@@ -27,6 +27,22 @@ const TuiEditor = ({ isEditorMode, tuiRef, initialContent, setContent }) => {
     setContent(instance.getMarkdown());
   };
 
+  const uploadImage = (blob) => {
+    let formData = new FormData();
+
+    formData.append("image", blob);
+    return axios("/post/images", {
+      method: "POST",
+      data: formData,
+      headers: { "Content-type": "multipart/form-data" },
+    }).then((response) => {
+      if (response.data) {
+        return response.data;
+      }
+      throw new Error("Server or network error");
+    });
+  };
+
   return (
     <>
       {isEditorMode ? (
@@ -39,6 +55,13 @@ const TuiEditor = ({ isEditorMode, tuiRef, initialContent, setContent }) => {
           plugins={[[codeSyntaxHightlight, { hljs }]]}
           ref={tuiRef}
           onChange={onChangeContent}
+          hooks={{
+            addImageBlobHook: async (blob, callback) => {
+              const uploadedImageURL = await uploadImage(blob);
+              callback("http://localhost:3065/" + uploadedImageURL[0]);
+              return false;
+            },
+          }}
         />
       ) : (
         <ViewerWrap
