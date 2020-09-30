@@ -29,11 +29,13 @@ export const getServerSideProps = wrapper.getServerSideProps(
       includeContent: true,
     };
 
+    // 글 목록 호출
     context.store.dispatch({
       type: "GET_POST_LIST_REQUEST",
       data,
     });
-    // 글 목록 호출
+
+    context.store.dispatch({ type: "LOAD_MY_INFO_REQUEST" });
 
     context.store.dispatch(END);
     await context.store.sagaTask.toPromise();
