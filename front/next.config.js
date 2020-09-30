@@ -14,6 +14,10 @@ module.exports = withBundleAnalyzer({
       plugins: [
         ...config.plugins,
         // new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /^\.\/ko$/),
+        new webpack.ContextReplacementPlugin(
+          /highlight\.js\/lib\/languages$/,
+          new RegExp(`^./(${["javascript", "css"].join("|")})$`)
+        ),
       ],
     };
   },
