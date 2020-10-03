@@ -8,7 +8,7 @@ import ImageSearchIcon from "@material-ui/icons/ImageSearch";
 
 import TuiEditor from "../../TuiEditor";
 
-import { backUrl } from "../config/config";
+import { backUrl } from "../../../config/config";
 
 const useStyles = makeStyles((theme) => ({
   media: {
