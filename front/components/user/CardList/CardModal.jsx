@@ -8,6 +8,8 @@ import ImageSearchIcon from "@material-ui/icons/ImageSearch";
 
 import TuiEditor from "../../TuiEditor";
 
+import { backUrl } from "../config/config";
+
 const useStyles = makeStyles((theme) => ({
   media: {
     height: 380,
@@ -250,7 +252,7 @@ const CardModal = ({ categoryId, categoryName }) => {
             {imagePath ? (
               <CardMedia
                 className={classes.media}
-                image={`http://localhost:3065/${imagePath}`}
+                image={`${backUrl}${imagePath}`}
                 title='Contemplative Reptile'
               />
             ) : (

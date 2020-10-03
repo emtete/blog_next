@@ -6,6 +6,8 @@ import codeSyntaxHightlight from "@toast-ui/editor-plugin-code-syntax-highlight"
 import javascript from "highlight.js/lib/languages/javascript";
 import css from "highlight.js/lib/languages/css";
 
+import { backUrl } from "../config/config";
+
 const Editor = dynamic(() => import("./EditorWrap"), { ssr: false });
 const Viewer = dynamic(() => import("./ViewerWrap"), { ssr: false });
 
@@ -58,7 +60,7 @@ const TuiEditor = ({ isEditorMode, tuiRef, initialContent, setContent }) => {
           hooks={{
             addImageBlobHook: async (blob, callback) => {
               const uploadedImageURL = await uploadImage(blob);
-              callback("http://localhost:3065/" + uploadedImageURL[0]);
+              callback(backUrl + uploadedImageURL[0]);
               return false;
             },
           }}

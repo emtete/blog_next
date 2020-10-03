@@ -9,6 +9,8 @@ import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
 import ImageOutlinedIcon from "@material-ui/icons/ImageOutlined";
 
+import { backUrl } from "../config/config";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     // maxWidth: 345,
@@ -38,7 +40,7 @@ const CardNode = ({ post }) => {
         {post.imagePath ? (
           <CardMedia
             className={classes.media}
-            image={`http://localhost:3065/${post.imagePath}`}
+            image={`${backUrl}${post.imagePath}`}
             title='Contemplative Reptile'
           />
         ) : (
