@@ -5,6 +5,9 @@ const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const passport = require("passport");
 const dotenv = require("dotenv");
+const margan = require("morgan");
+const hpp = require("hpp");
+const helmet = require("helmet");
 
 const postRouter = require("./routes/post");
 const userRouter = require("./routes/user");
@@ -24,6 +27,14 @@ db.sequelize
   .catch(console.error);
 
 passportConfig();
+
+if (process.env.NODE_ENV === "production") {
+  app.use(morgan("combined"));
+  app.use(hpp());
+  app.use(helmet());
+} else {
+  app.use(morgan("dev"));
+}
 
 // app.use는 express 서버에 다른 기능을 장착한다는 의미.
 // 순서 중요.
