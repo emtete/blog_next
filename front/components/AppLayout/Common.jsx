@@ -59,7 +59,6 @@ const Common = () => {
     }
   };
 
-  console.log("Common rendering");
   return (
     <>
       <ListItem

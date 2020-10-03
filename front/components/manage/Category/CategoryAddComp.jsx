@@ -14,7 +14,6 @@ const CategoryAddComp = ({ data }) => {
   // const isFocus = categoryInEditMode[editLength - 1] === id;
 
   // useEffect(() => {
-  //   console.log(textRef.current.focus());
   //   textRef.current.focus();
   // if (isFocus) {
   // }

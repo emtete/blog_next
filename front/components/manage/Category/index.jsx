@@ -22,7 +22,6 @@ const getNode = (treeData, indexPath, idArr) => {
   const result = [];
 
   idArr.map((id) => {
-    console.log("id : ", id);
     if (indexPath[id].length === 1) {
       const path = indexPath[id][0];
       const node = deepCopy(treeData[path]);
@@ -209,7 +208,6 @@ const Category = () => {
     [treeData]
   );
 
-  console.log("Category Index rendering");
   return (
     <main className={classes.content}>
       <div id='mArticle'>

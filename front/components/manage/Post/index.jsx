@@ -213,13 +213,11 @@ const PostManage = () => {
       } else {
         let clone = deepCopy(checkboxGroup);
         clone[e.target.value] = e.target.checked; // true
-        console.log(e.target.value);
         setCheckboxGroup(clone);
       }
     },
     [checkboxGroup]
   );
-  console.log("PostManage rendering");
   return (
     <main className={classes.content}>
       <div id='mArticle'>

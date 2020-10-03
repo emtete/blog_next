@@ -73,8 +73,6 @@ function* deletePost(action) {
 }
 
 function changeCategoryInPostAPI(data) {
-  console.log("request url: ", "/post/changeCategory");
-  console.log("data", data);
   return axios.post("/post/changeCategory", { data });
 }
 
@@ -107,7 +105,6 @@ function getPostListAPI(data) {
   if (data && data.includeContent)
     request = request + `includeContent=${data.includeContent}`;
 
-  console.log("request : ", request);
   return axios.get(request);
 }
 
@@ -150,7 +147,6 @@ function* getPostOne(action) {
 }
 
 function uploadImagesAPI(data) {
-  console.log("request : ", `/post/images`);
   return axios.post(`/post/images`, data);
 }
 

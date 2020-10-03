@@ -81,7 +81,6 @@ const PostList = () => {
     }
   }, [isEditMode, postList]);
 
-  console.log("PostList rendering");
   return (
     <main className={classes.content}>
       <div id='mArticle'>

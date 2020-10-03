@@ -45,7 +45,6 @@ const Post = ({ post, handleCheckbox, checkboxGroup }) => {
     }
   }, [deleteDone]);
 
-  console.log("Post rendering");
   return (
     <>
       <div className='check_blog'>

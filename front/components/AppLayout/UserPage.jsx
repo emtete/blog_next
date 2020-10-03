@@ -85,7 +85,6 @@ const UserPage = ({ children }) => {
     setMenuList([...menuList]);
   };
 
-  console.log("UserPage rendering");
   return (
     <div className={classes.root}>
       {/* <CssBaseline /> */}

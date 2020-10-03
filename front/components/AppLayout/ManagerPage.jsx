@@ -33,7 +33,6 @@ const ManagerPage = ({ children }) => {
     router.push(path);
   };
 
-  console.log("ManagerPage rendering");
   return (
     <div className={classes.root}>
       {/* <CssBaseline /> */}

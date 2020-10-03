@@ -142,7 +142,6 @@ const PostDetail = ({ post, CategoryId, categoryName }) => {
         CategoryId,
         content,
       };
-      console.log("data : ", data);
       dispatch({ type: "WRITE_POST_REQUEST", data });
     } // 수정
     else {

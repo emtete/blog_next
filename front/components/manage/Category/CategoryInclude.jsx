@@ -73,7 +73,6 @@ const CategoryInclude = ({ data }) => {
     }
   };
 
-  console.log("CategoryInclude Rendering");
   return (
     <div
       className={`bundle_item ${isOpened && "open_subcate"}`}
