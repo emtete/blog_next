@@ -41,7 +41,7 @@ if (process.env.NODE_ENV === "production") {
 // credentials -> 서로 다른 도메인 간 쿠키를 전달 할 수 없는데, 그걸 허용해준다.
 app.use(
   cors({
-    origin: ["http://localhost:3000", "http://13.125.58.36"],
+    origin: ["http://localhost:3000", "http://dev-life.kr"],
     credentials: true,
   })
 );
