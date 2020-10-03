@@ -9,7 +9,7 @@ import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
 import ImageOutlinedIcon from "@material-ui/icons/ImageOutlined";
 
-import { backUrl } from "../config/config";
+import { backUrl } from "../../../config/config";
 
 const useStyles = makeStyles((theme) => ({
   root: {
