@@ -308,6 +308,15 @@ const reducer = (state = initialState, action) => {
   let deletedChildren;
 
   switch (action.type) {
+    case "SET_CATEGORY_TOGGLE_ACTION":
+      clone = deepCopy(state.treeData);
+      index = clone.findIndex((e) => e.id == action.data.id);
+      clone[index].isOpened = !clone[index].isOpened;
+      return {
+        ...state,
+        treeData: [...clone],
+      };
+
     case "RESET_CATEGORY_MANAGER_ACTION":
       return {
         ...state,

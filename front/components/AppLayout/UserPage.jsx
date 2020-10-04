@@ -25,8 +25,16 @@ const UserPage = ({ children }) => {
   const dispatch = useDispatch();
   const [menuList, setMenuList] = useState([]);
 
-  const me = useSelector((state) => state.user.me);
-  const treeData = useSelector((state) => state.category.treeData);
+  const { me, treeData } = useSelector(
+    (state) => ({
+      me: state.user.me,
+      treeData: state.category.treeData,
+    }),
+    (prev, next) => {
+      return prev.me === next.me && prev.treeData === next.treeData;
+    }
+  );
+  // const treeData = useSelector((state) => state.category.treeData);
 
   const { getListLoading, getListDone, getListError } = useSelector(
     (state) => ({
@@ -42,6 +50,9 @@ const UserPage = ({ children }) => {
       );
     }
   );
+  useEffect(() => {
+    console.log(treeData);
+  }, [treeData]);
 
   useEffect(() => {
     const data = { userId: me ? me.id : 1 };
@@ -57,7 +68,7 @@ const UserPage = ({ children }) => {
   useEffect(() => {
     //  성공
     if (getListDone) {
-      setMenuList(deepCopy(treeData));
+      // setMenuList(deepCopy(treeData));
       dispatch({ type: "GET_CATEGORY_LIST_RESET" });
     }
     // 실패
@@ -70,25 +81,24 @@ const UserPage = ({ children }) => {
   const onClickItem = useCallback(
     (e) => {
       if (!getIsArray(e.children)) {
-        console.log(1);
         router.push(
           `/${e.isCard ? "card" : "post"}?categoryId=${e.id}&categoryName=${
             e.title
           }`
         );
       } else {
-        console.log(2);
         onToggleMenu(e);
       }
     },
-    [menuList]
+    [treeData]
   );
 
   const onToggleMenu = (e) => {
-    e.isOpend = !e.isOpend;
-    setMenuList([...menuList]);
+    // e.isOpend = !e.isOpend;
+    // setMenuList([...menuList]);
+    dispatch({ type: "SET_CATEGORY_TOGGLE_ACTION", data: { id: e.id } });
   };
-
+  console.log("UserPage");
   return (
     <div className={classes.root}>
       {/* <CssBaseline /> */}
@@ -111,7 +121,7 @@ const UserPage = ({ children }) => {
             <List>
               <Common />
 
-              {menuList.map((e, index) => (
+              {treeData.map((e, index) => (
                 <div key={e.id}>
                   <ListItem
                     button
