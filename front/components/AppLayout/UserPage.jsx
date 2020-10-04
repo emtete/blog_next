@@ -69,6 +69,7 @@ const UserPage = ({ children }) => {
 
   const onClickItem = useCallback(
     (e) => {
+      console.log(!getIsArray(e.children));
       !getIsArray(e.children)
         ? router.push(
             `/${e.isCard ? "card" : "post"}?categoryId=${e.id}&categoryName=${
