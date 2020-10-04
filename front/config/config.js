@@ -1,1 +1,4 @@
-export const backUrl = "https://api.dev-life.kr/";
+export const backUrl =
+  process.env.NODE_ENV === "production"
+    ? "https://api.dev-life.kr/"
+    : "http://localhost:3065/";

@@ -62,19 +62,23 @@ app.use("/", express.static(path.join(__dirname, "uploads")));
 app.use(express.json()); // json 데이터를 req.body 안에 넣어준다.
 app.use(express.urlencoded({ extended: true })); // form 데이터, url encoding된 데이터를  req.body에 넣어준다.
 app.use(cookieParser("next_blog_secret"));
-app.use(
-  session({
-    saveUninitialized: false,
-    resave: false,
-    secret: process.env.COOKIE_SECRET,
-    proxy: true,
-    cookie: {
-      httpOnly: true,
-      secure: true,
-      domain: process.env.NODE_ENV === "production" && ".dev-life.kr",
-    },
-  })
-);
+
+const sessionObj = {
+  saveUninitialized: false,
+  resave: false,
+  secret: process.env.COOKIE_SECRET,
+};
+
+if (process.env.NODE_ENV === "production") {
+  sessionObj["proxy"] = true;
+  sessionObj["cookie"] = {
+    httpOnly: true,
+    secure: true,
+    domain: process.env.NODE_ENV === "production" && ".dev-life.kr",
+  };
+}
+
+app.use(session(sessionObj));
 app.use(passport.initialize());
 app.use(passport.session());
 
