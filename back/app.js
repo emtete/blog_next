@@ -34,7 +34,7 @@ if (process.env.NODE_ENV === "production") {
   app.use(helmet());
   app.use(
     cors({
-      origin: "http://dev-life.kr",
+      origin: "https://dev-life.kr",
       credentials: true,
     })
   );
@@ -68,7 +68,7 @@ app.use(
     secret: process.env.COOKIE_SECRET,
     cookie: {
       httpOnly: true,
-      secure: false,
+      secure: true,
       domain: process.env.NODE_ENV === "production" && ".dev-life.kr",
     },
   })
