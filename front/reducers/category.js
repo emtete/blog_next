@@ -207,8 +207,6 @@ const flatToHierarchy = (flatData) => {
     const parentId = clone[i].parent;
     const parentIndex = treeData.findIndex((e) => e.id == parentId);
     const parentNode = treeData[parentIndex];
-    console.log(parentId);
-    console.log(parentIndex);
     if (parentNode["children"] === undefined) parentNode["children"] = [];
     parentNode["children"].push(clone[i]);
   }

@@ -2,6 +2,8 @@ import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/router";
 
+import AppLayout from "../components/AppLayout";
+
 const getIsArray = (element) => {
   return Array.isArray(element) && element.length > 0;
 };
@@ -26,7 +28,7 @@ const Home = () => {
     }
   }, [treeData]);
 
-  return <></>;
+  return <AppLayout></AppLayout>;
 };
 
 export default Home;

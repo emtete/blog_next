@@ -25,17 +25,10 @@ const UserPage = ({ children }) => {
   const dispatch = useDispatch();
   const [menuList, setMenuList] = useState([]);
 
-  const { me, treeData } = useSelector(
-    (state) => ({
-      me: state.user.me,
-      treeData: state.category.treeData,
-    }),
-    (prev, next) => {
-      return prev.me === next.me && prev.treeData === next.treeData;
-    }
-  );
-  // const treeData = useSelector((state) => state.category.treeData);
+  const me = useSelector((state) => state.user.me);
+  const treeData = useSelector((state) => state.category.treeData);
 
+  // console.log("treeData", treeData);
   const { getListLoading, getListDone, getListError } = useSelector(
     (state) => ({
       getListLoading: state.category.getListLoading,
@@ -50,8 +43,10 @@ const UserPage = ({ children }) => {
       );
     }
   );
+
   useEffect(() => {
-    console.log(treeData);
+    console.log("treeDatass", treeData);
+    // setMenuList(deepCopy(treeData));
   }, [treeData]);
 
   useEffect(() => {
@@ -68,7 +63,8 @@ const UserPage = ({ children }) => {
   useEffect(() => {
     //  성공
     if (getListDone) {
-      // setMenuList(deepCopy(treeData));
+      setMenuList(deepCopy(treeData));
+      // console.log("treeData", treeData);
       dispatch({ type: "GET_CATEGORY_LIST_RESET" });
     }
     // 실패
@@ -90,14 +86,15 @@ const UserPage = ({ children }) => {
         onToggleMenu(e);
       }
     },
-    [treeData]
+    [menuList]
   );
 
   const onToggleMenu = (e) => {
-    // e.isOpend = !e.isOpend;
-    // setMenuList([...menuList]);
-    dispatch({ type: "SET_CATEGORY_TOGGLE_ACTION", data: { id: e.id } });
+    e.isOpend = !e.isOpend;
+    setMenuList([...menuList]);
+    // dispatch({ type: "SET_CATEGORY_TOGGLE_ACTION", data: { id: e.id } });
   };
+
   console.log("UserPage");
   return (
     <div className={classes.root}>
@@ -121,7 +118,7 @@ const UserPage = ({ children }) => {
             <List>
               <Common />
 
-              {treeData.map((e, index) => (
+              {menuList.map((e, index) => (
                 <div key={e.id}>
                   <ListItem
                     button
@@ -154,7 +151,10 @@ const UserPage = ({ children }) => {
                           >
                             <ListItemText
                               primary={ee.title}
-                              style={{ paddingLeft: "30px", color: "#dbdfe2" }}
+                              style={{
+                                paddingLeft: "30px",
+                                color: "#dbdfe2",
+                              }}
                             />
                           </ListItem>
                         ))}

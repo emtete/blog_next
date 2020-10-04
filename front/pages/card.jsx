@@ -4,8 +4,14 @@ import wrapper from "../store/configureStore";
 import axios from "axios";
 import { END } from "redux-saga";
 
+import AppLayout from "../components/AppLayout";
+
 const Card = () => {
-  return <CardList />;
+  return (
+    <AppLayout>
+      <CardList />
+    </AppLayout>
+  );
 };
 
 export const getServerSideProps = wrapper.getServerSideProps(
