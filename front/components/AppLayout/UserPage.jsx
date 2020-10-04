@@ -54,10 +54,10 @@ const UserPage = ({ children }) => {
     dispatch({ type: "GET_CATEGORY_LIST_REQUEST", data });
   }, []);
 
-  useEffect(() => {
-    const data = { userId: me ? me.id : 1 };
-    dispatch({ type: "GET_CATEGORY_LIST_REQUEST", data });
-  }, [me]);
+  // useEffect(() => {
+  //   const data = { userId: me ? me.id : 1 };
+  //   dispatch({ type: "GET_CATEGORY_LIST_REQUEST", data });
+  // }, [me]);
 
   // 카테고리 리스트 호출
   useEffect(() => {
