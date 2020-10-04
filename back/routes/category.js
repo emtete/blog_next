@@ -22,6 +22,7 @@ router.post("/apply", async (req, res, next) => {
   const deleted = req.body.data.deleted;
   const userId = req.body.data.userId;
   const parentIds = {};
+
   try {
     for (let i in appended) {
       if (appended[i].depth == 1) {
@@ -39,6 +40,9 @@ router.post("/apply", async (req, res, next) => {
     for (let i in updated) {
       const willUpdate = getObj(updated[i]);
       delete willUpdate.UserId;
+      if (parseInt(willUpdate.parent) < 0) {
+        willUpdate.parent = parentIds[willUpdate.parent];
+      }
       await Category.update(willUpdate, { where: { id: updated[i].id } });
     }
     for (let i in deleted) {
