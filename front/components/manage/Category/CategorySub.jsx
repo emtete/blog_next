@@ -50,6 +50,10 @@ const CategorySub = ({ data }) => {
     });
   };
 
+  const onClickDel = () => {
+    dispatch({ type: "DELETE_NODE_ACTION", data: { id } });
+  };
+
   return (
     <div className='bundle_item open_subcate'>
       <div className='item_order' ref={itemOrderRef}>
@@ -76,7 +80,9 @@ const CategorySub = ({ data }) => {
                 <span className='btn_post' onClick={onClickMove}>
                   이동
                 </span>
-                <span className='btn_post'>삭제</span>
+                <span className='btn_post' onClick={onClickDel}>
+                  삭제
+                </span>
               </div>
             </div>
           </div>
