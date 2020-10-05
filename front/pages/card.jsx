@@ -23,7 +23,7 @@ export const getServerSideProps = wrapper.getServerSideProps(
       axios.defaults.headers.Cookie = cookie;
     }
 
-    const cookieArr = cookie.split("; ");
+    const cookieArr = cookie && cookie.split("; ");
     let cookieObj = {};
     for (let i in cookieArr) {
       cookieObj[cookieArr[i].split("=")[0]] = cookieArr[i].split("=")[1];
