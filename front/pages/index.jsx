@@ -28,7 +28,8 @@ const Home = () => {
     }
   }, [treeData]);
 
-  return <AppLayout></AppLayout>;
+  // return <AppLayout></AppLayout>;
+  return <></>;
 };
 
 export default Home;

@@ -8,9 +8,9 @@ import AppLayout from "../components/AppLayout";
 
 const Post = () => {
   return (
-    <AppLayout>
-      <PostList />
-    </AppLayout>
+    // <AppLayout>
+    <PostList />
+    // </AppLayout>
   );
 };
 
