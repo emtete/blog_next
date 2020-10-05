@@ -72,10 +72,10 @@ const PostList = () => {
       const clone = deepCopy(postList);
       clone.push(newPost);
       setPostList([...clone]);
-      setIsEditMode(postList.length);
+      setIsEditMode(postList.length + 1);
     } else {
       const clone = deepCopy(postList);
-      clone.splice(isEditMode, 1);
+      clone.splice(isEditMode - 1, 1);
       setPostList([...clone]);
       setIsEditMode(null);
     }
