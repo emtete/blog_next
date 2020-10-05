@@ -4,14 +4,10 @@ import wrapper from "../store/configureStore";
 import axios from "axios";
 import { END } from "redux-saga";
 
-import AppLayout from "../components/AppLayout";
+// import AppLayout from "../components/AppLayout";
 
 const Post = () => {
-  return (
-    // <AppLayout>
-    <PostList />
-    // </AppLayout>
-  );
+  return <PostList />;
 };
 
 export const getServerSideProps = wrapper.getServerSideProps(
