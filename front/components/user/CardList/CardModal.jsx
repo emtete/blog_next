@@ -76,7 +76,13 @@ const CardModal = ({ categoryId, categoryName }) => {
   const [content, setContent] = useState(initContent);
   const [imagePath, setImagePath] = useState(initImagePath);
 
-  const [isEditMode, setIsEditMode] = useState(false);
+  // const [isEditMode, setIsEditMode] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(!post);
+
+  // useEffect(() => {
+  //   // if (imagePaths) setImagePath(imagePaths[0]);
+  //   setIsEditMode();
+  // }, [post]);
 
   useEffect(() => {
     if (imagePaths) setImagePath(imagePaths[0]);
