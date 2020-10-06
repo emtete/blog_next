@@ -86,6 +86,10 @@ app.get("/", (req, res) => {
   res.send("hello express");
 });
 
+app.get("/api/", (req, res) => {
+  res.send("hello express api");
+});
+
 // app.get("/api", (req, res) => {
 //   res.send("hello api");
 // });
