@@ -83,7 +83,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.get("/", (req, res) => {
-  res.send("hello express");
+  res.send("hello express, ", process.env.NODE_ENV);
 });
 
 app.use("/post", postRouter);
