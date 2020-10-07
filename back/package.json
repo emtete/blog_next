@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon app",
-    "start1": "cross-env NODE_ENV=production pm2 start app.js",
-    "start2": "cross-env NODE_ENV=production start app.js"
+    "start1": "NODE_ENV=production pm2 start app.js",
+    "start2": "NODE_ENV=production start app.js"
   },
   "author": "victor_77",
   "license": "ISC",
