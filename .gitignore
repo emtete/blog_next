@@ -1,8 +1,11 @@
 /front/node_modules
 /front/.next
+/front/.DS_Store
 
 /back/node_modules
 /back/.env
 /back/uploads
+/back/.DS_Store
 
 /next_blog.pem
+.DS_Store
