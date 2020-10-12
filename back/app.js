@@ -75,6 +75,11 @@ if (process.env.NODE_ENV === "production") {
     httpOnly: true,
     secure: true,
     domain: process.env.NODE_ENV === "production" && ".dev-life.kr",
+    maxAge: 1000 * 60 * 30,
+  };
+} else {
+  sessionObj["cookie"] = {
+    maxAge: 1000 * 60 * 30,
   };
 }
 

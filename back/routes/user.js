@@ -8,6 +8,8 @@ const db = require("../models");
 
 const router = express.Router();
 
+const runningSession = {};
+
 // 클라이언트에서 새로고침 할 경우 실행된다.
 router.get("/", async (req, res, next) => {
   try {
@@ -61,12 +63,12 @@ router.post("/login", isNotLoggedIn, (req, res, next) => {
       } //
       else {
         try {
-          await User.update(
-            {
-              isLoggedIn: true,
-            },
-            { where: { id: user.id } }
-          );
+          await updateIsLoggedIn(true, user.id);
+
+          runningSession[req.sessionID] = setTimeout(async () => {
+            await updateIsLoggedIn(false, user.id);
+            req.session.destroy();
+          }, 1000 * 60 * 30);
           return res.status(200).json(fullUserWithoutPassword);
         } catch (err) {
           console.error(err);
@@ -76,6 +78,16 @@ router.post("/login", isNotLoggedIn, (req, res, next) => {
     });
   })(req, res, next);
 });
+
+const updateIsLoggedIn = (login, userId) => {
+  User.update(
+    {
+      isLoggedIn: login,
+    },
+    { where: { id: userId } }
+  );
+  return true;
+};
 
 // next???
 router.post("/signup", async (req, res, next) => {
@@ -104,24 +116,25 @@ router.post("/signup", async (req, res, next) => {
   }
 });
 
-router.post("/logout", isLoggedIn, (req, res, next) => {
-  passport.authenticate("local", (err, user, info) => {
-    // try {
-    //   await User.update(
-    //     {
-    //       isLoggedIn: false,
-    //     },
-    //     { where: { id: user.id } }
-    //   );
-    //   return res.status(200).json(fullUserWithoutPassword);
-    // } catch (err) {
-    //   console.error(err);
-    //   next(err); // status 500
-    // }
-    req.logout();
-    req.session.destroy();
-    res.send("ok");
-  })(req, res, next);
+router.post("/logout", isLoggedIn, async (req, res, next) => {
+  try {
+    await User.update(
+      {
+        isLoggedIn: false,
+      },
+      { where: { id: req.user.id } }
+    );
+  } catch (err) {
+    console.error(err);
+    next(err); // status 500
+  }
+
+  clearTimeout(runningSession[req.sessionID]);
+  delete runningSession[req.sessionID];
+
+  req.logout();
+  req.session.destroy();
+  res.send("ok");
 });
 
 module.exports = router;
