@@ -15,6 +15,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING(100),
         allowNull: false,
       },
+      isLoggedIn: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+      },
     },
     {
       charset: "utf8",

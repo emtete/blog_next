@@ -43,11 +43,6 @@ router.post("/login", isNotLoggedIn, (req, res, next) => {
 
     //passport 처리
     return req.login(user, async (loginErr) => {
-      if (loginErr) {
-        console.error(loginErr);
-        return next(loginErr);
-      }
-
       const fullUserWithoutPassword = await User.findOne({
         where: { id: user.id },
         attributes: {
@@ -55,7 +50,29 @@ router.post("/login", isNotLoggedIn, (req, res, next) => {
         },
       });
 
-      return res.status(200).json(fullUserWithoutPassword);
+      if (loginErr) {
+        req.session.destroy();
+        console.error(loginErr);
+        return next(loginErr);
+      } //
+      else if (fullUserWithoutPassword.dataValues.isLoggedIn) {
+        req.session.destroy();
+        return res.status(400).json("다른기기에서 사용중인 아이디입니다.");
+      } //
+      else {
+        try {
+          await User.update(
+            {
+              isLoggedIn: true,
+            },
+            { where: { id: user.id } }
+          );
+          return res.status(200).json(fullUserWithoutPassword);
+        } catch (err) {
+          console.error(err);
+          next(err); // status 500
+        }
+      }
     });
   })(req, res, next);
 });
@@ -87,10 +104,24 @@ router.post("/signup", async (req, res, next) => {
   }
 });
 
-router.post("/logout", isLoggedIn, (req, res) => {
-  req.logout();
-  req.session.destroy();
-  res.send("ok");
+router.post("/logout", isLoggedIn, (req, res, next) => {
+  passport.authenticate("local", (err, user, info) => {
+    // try {
+    //   await User.update(
+    //     {
+    //       isLoggedIn: false,
+    //     },
+    //     { where: { id: user.id } }
+    //   );
+    //   return res.status(200).json(fullUserWithoutPassword);
+    // } catch (err) {
+    //   console.error(err);
+    //   next(err); // status 500
+    // }
+    req.logout();
+    req.session.destroy();
+    res.send("ok");
+  })(req, res, next);
 });
 
 module.exports = router;
