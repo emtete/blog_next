@@ -8,7 +8,7 @@ module.exports = {
      * Example:
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
-    return await queryInterface.addColumn("users", "isLoggedIn", {
+    return await queryInterface.addColumn("Users", "isLoggedIn", {
       type: Sequelize.BOOLEAN,
     });
   },
