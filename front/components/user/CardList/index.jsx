@@ -92,7 +92,7 @@ const CardList = () => {
               //   container
               //   zeroMinWidth={true}
               // >
-              <CardNode post={post} />
+              <CardNode post={post} key={post.id + post.title} />
               // </Grid>
             ))}
             {/* </Grid> */}
