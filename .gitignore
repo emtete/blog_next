@@ -9,3 +9,5 @@
 
 /next_blog.pem
 .DS_Store
+
+/next_blog_dump.sql

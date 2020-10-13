@@ -80,19 +80,23 @@ const CardList = () => {
               </button>
             )}
           </h3>
-          <Grid container spacing={2}>
+          <div style={{ display: "flex", flexWrap: "wrap" }}>
+            {/* <Grid container spacing={2}> */}
             {items.map((post, i) => (
-              <Grid
-                key={post.id + post.title}
-                item
-                xs={4}
-                justify='center'
-                container
-              >
-                <CardNode post={post} />
-              </Grid>
+              // <Grid
+              //   key={post.id + post.title}
+              //   item
+              //   xs={3}
+              //   spacing={1}
+              //   // justify='center'
+              //   container
+              //   zeroMinWidth={true}
+              // >
+              <CardNode post={post} />
+              // </Grid>
             ))}
-          </Grid>
+            {/* </Grid> */}
+          </div>
         </div>
       </div>
       {isViewMode && (

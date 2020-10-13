@@ -13,7 +13,9 @@ import { backUrl } from "../../../config/config";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    // maxWidth: 345,
+    maxWidth: 300,
+    marginRight: 30,
+    marginBottom: 30,
   },
   media: {
     width: 300,
