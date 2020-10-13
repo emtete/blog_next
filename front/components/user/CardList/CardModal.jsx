@@ -5,6 +5,8 @@ import dynamic from "next/dynamic";
 import { makeStyles } from "@material-ui/core/styles";
 import { CardMedia, Button } from "@material-ui/core";
 import ImageSearchIcon from "@material-ui/icons/ImageSearch";
+import CancelIcon from "@material-ui/icons/Cancel";
+import CloseIcon from "@material-ui/icons/Close";
 
 import TuiEditor from "../../TuiEditor";
 
@@ -12,7 +14,8 @@ import { backUrl } from "../../../config/config";
 
 const useStyles = makeStyles((theme) => ({
   media: {
-    height: 380,
+    // height: 380,
+    paddingTop: "50%",
   },
   media2: {
     height: 380,
@@ -140,11 +143,15 @@ const CardModal = ({ categoryId, categoryName }) => {
   // 모달 바깥 클릭시, 창 닫기
   const clickOutSideEvent = useCallback((e) => {
     if (e.target.className === "container_layer") {
-      dispatch({ type: "END_IS_VIEW_MODE_ACTION" });
-      dispatch({ type: "SET_SELECTED_POST_ACTION", data: { post: null } });
-      setIsEditMode(false);
+      closeModal();
     }
   }, []);
+
+  const closeModal = () => {
+    dispatch({ type: "END_IS_VIEW_MODE_ACTION" });
+    dispatch({ type: "SET_SELECTED_POST_ACTION", data: { post: null } });
+    setIsEditMode(false);
+  };
 
   const onSubmitForm = (e) => {
     e.preventDefault();
@@ -222,24 +229,50 @@ const CardModal = ({ categoryId, categoryName }) => {
     setImagePath(null);
   }, []);
 
+  const onClickClose = useCallback(() => {
+    closeModal();
+  }, []);
+
   return (
-    <div className='container_layer'>
+    <div
+      className='container_layer'
+      style={{ paddingTop: 10, display: "flex", justifyContent: "center" }}
+    >
       <div className='card_layer'>
         <div className='inner_card_layer'>
           <form onSubmit={onSubmitForm}>
             <div style={{ padding: "30px 30px 10px" }}>
-              {!post || isEditMode ? (
-                <textarea
-                  placeholder='제목을 입력하세요'
-                  rows='1'
-                  className='post_title'
-                  style={{ height: "66px" }}
-                  value={title}
-                  onChange={onHandleTitle}
-                ></textarea>
-              ) : (
-                <h1 style={{ fontSize: "2.75rem" }}>{title}</h1>
-              )}
+              <div>
+                <CloseIcon
+                  style={{
+                    float: "right",
+                    fontSize: "2rem",
+                    cursor: "pointer",
+                  }}
+                  onClick={onClickClose}
+                />
+                {!post || isEditMode ? (
+                  <textarea
+                    placeholder='제목을 입력하세요'
+                    rows='1'
+                    className='post_title'
+                    style={{ height: "66px" }}
+                    value={title}
+                    onChange={onHandleTitle}
+                  ></textarea>
+                ) : (
+                  <h1
+                    style={{
+                      // fontSize: "2.75rem",
+                      width: "90%",
+                      display: "inline",
+                    }}
+                  >
+                    {title}
+                  </h1>
+                )}
+              </div>
+
               <div
                 style={{
                   paddingTop: "30px",
