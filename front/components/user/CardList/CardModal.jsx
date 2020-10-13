@@ -178,27 +178,36 @@ const CardModal = ({ categoryId, categoryName }) => {
     }
   };
 
-  const onChangeImage = useCallback((e) => {
-    const imageFormData = new FormData();
+  // const onChangeImage = useCallback((e) => {
+  //   const imageFormData = new FormData();
 
-    if (e.target.files.length > 1) {
-      alert("한번에 하나의 이미지만 올릴 수 있습니다.");
-      return;
-    }
+  //   if (e.target.files.length > 1) {
+  //     alert("한번에 하나의 이미지만 올릴 수 있습니다.");
+  //     return;
+  //   }
 
-    [].forEach.call(e.target.files, (f) => {
-      imageFormData.append("image", f);
-    });
+  //   [].forEach.call(e.target.files, (f) => {
+  //     imageFormData.append("image", f);
+  //   });
 
-    dispatch({ type: "UPLOAD_IMAGES_REQUEST", data: imageFormData });
-  });
+  //   dispatch({ type: "UPLOAD_IMAGES_REQUEST", data: imageFormData });
+  // });
+
+  // const onClickImage = useCallback(
+  //   (e) => {
+  //     if (!isEditMode) return;
+
+  //     imageRef.current.click();
+  //   },
+  //   [imageRef.current, isEditMode]
+  // );
 
   const onClickImage = useCallback(
     (e) => {
       if (!isEditMode) return;
-      imageRef.current.click();
+      setImagePath(prompt("image url을 넣어주세요."));
     },
-    [imageRef.current, isEditMode]
+    [imagePath, isEditMode]
   );
 
   const onHandleTitle = useCallback((e) => {
@@ -258,13 +267,14 @@ const CardModal = ({ categoryId, categoryName }) => {
             {imagePath ? (
               <CardMedia
                 className={classes.media}
-                image={`${backUrl}${imagePath}`}
+                // image={`${backUrl}${imagePath}`}
+                image={imagePath}
                 title='Contemplative Reptile'
               />
             ) : (
               <div className='upload_image_layer' onClick={onClickImage}>
                 <ImageSearchIcon className={classes.media2} />
-                <input type='file' ref={imageRef} onChange={onChangeImage} />
+                {/* <input type='file' ref={imageRef} onChange={onChangeImage} /> */}
               </div>
             )}
             {isEditMode && (

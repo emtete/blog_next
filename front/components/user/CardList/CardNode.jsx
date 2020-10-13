@@ -40,7 +40,8 @@ const CardNode = ({ post }) => {
         {post.imagePath ? (
           <CardMedia
             className={classes.media}
-            image={`${backUrl}${post.imagePath}`}
+            // image={`${backUrl}${post.imagePath}`}
+            image={post.imagePath}
             title='Contemplative Reptile'
           />
         ) : (
