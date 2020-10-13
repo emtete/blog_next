@@ -57,10 +57,14 @@ const PostList = () => {
   //   };
   //   dispatch({ type: "GET_POST_LIST_REQUEST", data });
   // }, [query, me]);
+  useEffect(() => {
+    setIsEditMode(null);
+  }, [query.categoryId]);
 
   useEffect(() => {
     if (getListDone) {
       setPostList([...items]);
+      setIsEditMode(null);
       dispatch({ type: "GET_POST_LIST_RESET" });
     }
     if (getListError) alert(getListError);
