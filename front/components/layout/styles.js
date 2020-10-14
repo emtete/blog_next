@@ -28,10 +28,10 @@ export const menuStyles = makeStyles((theme) => ({
     height: "100%",
   },
   drawer: {
-    [theme.breakpoints.up("sm")]: {
-      width: drawerWidth,
-      flexShrink: 0,
-    },
+    // [theme.breakpoints.up("sm")]: {
+    width: drawerWidth,
+    flexShrink: 0,
+    // },
   },
   appBar: {
     [theme.breakpoints.up("sm")]: {

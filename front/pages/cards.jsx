@@ -7,11 +7,6 @@ import { END } from "redux-saga";
 import AppLayout from "../components/AppLayout";
 
 const Card = () => {
-  // return (
-  //   <AppLayout>
-  //     <CardList />
-  //   </AppLayout>
-  // );
   return <CardList />;
 };
 

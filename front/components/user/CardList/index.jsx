@@ -10,7 +10,7 @@ import CardNode from "./CardNode";
 import CardModal from "./CardModal";
 import { useCallback } from "react";
 
-// const drawerWidth = 320;
+const drawerWidth = 290;
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
-    // marginLeft: -drawerWidth,
+    marginLeft: -drawerWidth,
   },
   contentShift: {
     transition: theme.transitions.create("margin", {
