@@ -80,7 +80,7 @@ const UserPage = ({ children }) => {
     (e) => {
       if (!getIsArray(e.children)) {
         router.push(
-          `/${e.isCard ? "card" : "post"}?categoryId=${e.id}&categoryName=${
+          `/${e.isCard ? "cards" : "post"}?categoryId=${e.id}&categoryName=${
             e.title
           }`
         );

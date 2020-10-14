@@ -15,13 +15,13 @@ const Home = () => {
   useEffect(() => {
     if (treeData[0] && !getIsArray(treeData[0].children)) {
       router.push(
-        `/${treeData[0].isCard ? "card" : "post"}?categoryId=${
+        `/${treeData[0].isCard ? "cards" : "post"}?categoryId=${
           treeData[0].id
         }&categoryName=${treeData[0].title}`
       );
     } else if (treeData[0] && getIsArray(treeData[0].children)) {
       router.push(
-        `/${treeData[0].children[0].isCard ? "card" : "post"}?categoryId=${
+        `/${treeData[0].children[0].isCard ? "cards" : "post"}?categoryId=${
           treeData[0].children[0].id
         }&categoryName=${treeData[0].children[0].title}`
       );
