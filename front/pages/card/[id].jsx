@@ -1,19 +1,15 @@
-import { useEffect, useState, useRef, useCallback } from "react";
-import { useDispatch, useSelector, shallowEqual } from "react-redux";
+import { useRef } from "react";
+import { useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import useSWR from "swr";
 
 import { makeStyles } from "@material-ui/core/styles";
-import { CardMedia, Button } from "@material-ui/core";
-import ImageSearchIcon from "@material-ui/icons/ImageSearch";
-import CancelIcon from "@material-ui/icons/Cancel";
-import CloseIcon from "@material-ui/icons/Close";
+import { CardMedia } from "@material-ui/core";
 import clsx from "clsx";
 
 import TuiEditor from "../../components/TuiEditor";
 
 import { backUrl } from "../../config/config";
-import { abc } from "./sample";
 import Axios from "axios";
 
 const changeDateFormat = (dateStr) => {
@@ -58,7 +54,6 @@ const Card = () => {
   const router = useRouter();
 
   const query = router.query;
-  const demo = abc;
 
   const { data: post, err } = useSWR(
     `${backUrl}post/getOne?id=${query.id}`,
