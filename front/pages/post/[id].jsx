@@ -98,11 +98,14 @@ const Card = () => {
               </span>
             </div>
           </div>
-          <CardMedia
-            className={classes.media}
-            image={post ? post.imagePath : "https://i.imgur.com/qHh3uir.png"}
-            title='Contemplative Reptile'
-          />
+          {post && post.imagePath && (
+            <CardMedia
+              className={classes.media}
+              image={post.imagePath}
+              title='Contemplative Reptile'
+            />
+          )}
+          {/* "https://i.imgur.com/qHh3uir.png" */}
           <div style={{ padding: "30px" }}>
             <TuiEditor
               isEditorMode={false}
