@@ -14,6 +14,7 @@ export const initialState = {
     totalCount: 0,
     items: [],
   },
+  isDrawer: true,
   imagePaths: null,
   isViewMode: false,
   selectedPost: null,
@@ -66,6 +67,12 @@ const reducer = (state = initialState, action) => {
   let jsonData;
 
   switch (action.type) {
+    case "SET_TOGGLE_IS_DRAWER_ACTION":
+      return {
+        ...state,
+        isDrawer: !state.isDrawer,
+      };
+
     case "SET_SELECTED_POST_ACTION":
       return {
         ...state,

@@ -1,22 +1,42 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
+import clsx from "clsx";
 
 import CardNode from "./CardNode";
 import CardModal from "./CardModal";
 import { useCallback } from "react";
 
+// const drawerWidth = 320;
+
 const useStyles = makeStyles((theme) => ({
   content: {
     flexGrow: 1,
     // padding: theme.spacing(3),
-    paddingTop: "48px",
+    // paddingTop: "48px",
     paddingLeft: "30px",
     paddingRight: "30px",
     backgroundColor: "#f3f5f7",
+  },
+  content1: {
+    paddingTop: "80px",
+    flexGrow: 1,
+    padding: theme.spacing(3),
+    transition: theme.transitions.create("margin", {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    // marginLeft: -drawerWidth,
+  },
+  contentShift: {
+    transition: theme.transitions.create("margin", {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+    marginLeft: 0,
   },
 }));
 
@@ -31,6 +51,7 @@ const CardList = () => {
 
   const query = router.query;
 
+  const isDrawer = useSelector((state) => state.post.isDrawer);
   const me = useSelector((state) => state.user.me);
   const { items, isViewMode, getListDone, getListError } = useSelector(
     (state) => ({
@@ -69,7 +90,11 @@ const CardList = () => {
   }, []);
 
   return (
-    <main className={classes.content}>
+    <main //className={`${classes.content} inner_layout_bar`}
+      className={clsx(classes.content1, {
+        [classes.contentShift]: isDrawer,
+      })}
+    >
       <div id='mArticle'>
         <div className='blog_category'>
           <h3 className='tit_cont'>
@@ -80,7 +105,7 @@ const CardList = () => {
               </button>
             )}
           </h3>
-          <div style={{ display: "flex", flexWrap: "wrap" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", width: "100%" }}>
             {/* <Grid container spacing={2}> */}
             {items.map((post, i) => (
               // <Grid

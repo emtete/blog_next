@@ -12,6 +12,7 @@ import { useRouter } from "next/router";
 
 import { menuStyles } from "../layout/styles";
 import Common from "./Common";
+import LayoutBar from "./LayoutBar";
 
 const getIsArray = (element) => {
   return Array.isArray(element) && element.length > 0;
@@ -25,6 +26,7 @@ const UserPage = ({ children }) => {
   const dispatch = useDispatch();
   const [menuList, setMenuList] = useState([]);
 
+  const isDrawer = useSelector((state) => state.post.isDrawer);
   const me = useSelector((state) => state.user.me);
   const treeData = useSelector((state) => state.category.treeData);
 
@@ -101,12 +103,16 @@ const UserPage = ({ children }) => {
       {/* <CssBaseline /> */}
 
       <nav className={classes.drawer} aria-label='mailbox folders'>
+        <LayoutBar />
         <Drawer
           classes={{
             paper: classes.drawerPaper,
           }}
-          variant='permanent'
-          open
+          // drawer
+          // variant='permanent'
+          variant='persistent'
+          anchor='left'
+          open={isDrawer}
         >
           <div>
             <div className={(classes.toolbar, classes.toolbarCustomising)}>

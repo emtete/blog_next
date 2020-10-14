@@ -18,8 +18,8 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 30,
   },
   media: {
-    width: 300,
-    height: 150,
+    width: 270,
+    height: 135,
   },
 }));
 

@@ -19,7 +19,7 @@ export const ToggleButton = styled.div`
   z-index: 1;
 `;
 
-const drawerWidth = 320;
+const drawerWidth = 290;
 
 // 메뉴 스타일
 export const menuStyles = makeStyles((theme) => ({

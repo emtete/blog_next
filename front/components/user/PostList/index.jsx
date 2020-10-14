@@ -3,9 +3,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 
 import { makeStyles } from "@material-ui/core/styles";
+import clsx from "clsx";
 
 import TuiEditor from "../../TuiEditor";
 import PostDetail from "./PostDetail";
+
+// const drawerWidth = 320;
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -15,6 +18,23 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: "30px",
     paddingRight: "30px",
     backgroundColor: "#f3f5f7",
+  },
+  content1: {
+    paddingTop: "80px",
+    flexGrow: 1,
+    padding: theme.spacing(3),
+    transition: theme.transitions.create("margin", {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    // marginLeft: -drawerWidth,
+  },
+  contentShift: {
+    transition: theme.transitions.create("margin", {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+    marginLeft: 0,
   },
 }));
 
@@ -28,6 +48,7 @@ const PostList = () => {
 
   const query = router.query;
 
+  const isDrawer = useSelector((state) => state.post.isDrawer);
   const me = useSelector((state) => state.user.me);
   const { items, getListDone, getListError } = useSelector(
     (state) => ({
@@ -86,7 +107,12 @@ const PostList = () => {
   }, [isEditMode, postList]);
 
   return (
-    <main className={classes.content}>
+    // <main className={classes.content}>
+    <main //className={`${classes.content} inner_layout_bar`}
+      className={clsx(classes.content1, {
+        [classes.contentShift]: isDrawer,
+      })}
+    >
       <div id='mArticle'>
         <div className='blog_category'>
           <h3 className='tit_cont'>

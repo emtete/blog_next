@@ -11,26 +11,7 @@ const AppLayout = ({ children }) => {
   // const [isManage, setIsManage] = useState(false);
   const treeData = useSelector((state) => state.category.treeData);
 
-  // const { getListLoading, getListDone, getListError } = useSelector(
-  //   (state) => ({
-  //     getListLoading: state.category.getListLoading,
-  //     getListDone: state.category.getListDone,
-  //     getListError: state.category.getListError,
-  //   }),
-  //   (prev, next) => {
-  //     return (
-  //       prev.getListLoading === next.getListLoading &&
-  //       prev.getListDone === next.getListDone &&
-  //       prev.getListError === next.getListError
-  //     );
-  //   }
-  // );
-
   const isAdminMode = useSelector((state) => state.user.isAdminMode);
-
-  // React.useEffect(() => {
-  //   console.log("getListDone", treeData);
-  // }, [getListDone]);
 
   React.useEffect(() => {
     // setIsManage(router.pathname.split("/")[1] === "manage");
