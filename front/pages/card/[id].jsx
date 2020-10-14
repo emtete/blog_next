@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
-import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
+import useSWR from "swr";
 
 import { makeStyles } from "@material-ui/core/styles";
 import { CardMedia, Button } from "@material-ui/core";
@@ -11,19 +12,23 @@ import clsx from "clsx";
 
 import TuiEditor from "../../components/TuiEditor";
 
-// import { backUrl } from "../../../config/config";
+import { backUrl } from "../../config/config";
 import { abc } from "./sample";
+import Axios from "axios";
+
+const changeDateFormat = (dateStr) => {
+  const date = new Date(dateStr);
+  const y = date.getFullYear();
+  const m = date.getMonth() + 1;
+  const d = date.getDate();
+  return `${y} / ${m} / ${d}`;
+};
 
 const drawerWidth = 290;
 
 const useStyles = makeStyles((theme) => ({
   media: {
-    // height: 380,
     paddingTop: "50%",
-  },
-  media2: {
-    height: 380,
-    width: "10em",
   },
   content1: {
     paddingTop: "80px",
@@ -42,46 +47,43 @@ const useStyles = makeStyles((theme) => ({
     }),
     marginLeft: 0,
   },
-  drawerHeader: {
-    display: "flex",
-    alignItems: "center",
-    padding: theme.spacing(0, 1),
-    // necessary for content to be below app bar
-    ...theme.mixins.toolbar,
-    justifyContent: "flex-end",
-  },
 }));
+
+const fetcher = (url) =>
+  Axios.get(url, { withCredentials: true }).then((result) => result.data);
 
 const Card = () => {
   const classes = useStyles();
   const tuiRef = useRef();
+  const router = useRouter();
+
+  const query = router.query;
   const demo = abc;
 
+  const { data: post, err } = useSWR(
+    `${backUrl}post/getOne?id=${query.id}`,
+    fetcher
+  );
   const isDrawer = useSelector((state) => state.post.isDrawer);
 
+  console.log("post : ", post);
   return (
-    // <div className='card_layer'>
-    // <div className='inner_card_layer'>
-    <main //className={`${classes.content} inner_layout_bar`}
+    <main
       className={clsx(classes.content1, {
         [classes.contentShift]: isDrawer,
       })}
       style={{ width: "100%" }}
     >
       <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
-        <form
-          // onSubmit={onSubmitForm}
-          className='page_card_layer'
-        >
+        <form className='page_card_layer'>
           <div style={{ padding: "30px 30px 10px" }}>
             <div>
               <h1
                 style={{
-                  // fontSize: "2.75rem",
                   display: "inline",
                 }}
               >
-                title
+                {post && post.title}
               </h1>
             </div>
 
@@ -97,68 +99,21 @@ const Card = () => {
                   fontSize: "1rem",
                 }}
               >
-                {/* {post ? `작성일 : ${changeDateFormat(post.published)}` : ""} */}
-                작성일 : 2020 / 10 / 11
+                {post ? `작성일 : ${changeDateFormat(post.createdAt)}` : ""}
               </span>
-              {/* {isWriter && (
-                <span
-                  style={{ color: "#959595", cursor: "pointer" }}
-                  // onClick={onClickEdit}
-                >
-                  {!isEditMode ? "수정" : "취소"}
-                </span>
-              )} */}
             </div>
           </div>
           <CardMedia
             className={classes.media}
-            image={"https://i.imgur.com/qHh3uir.png"}
+            image={post ? post.imagePath : "https://i.imgur.com/qHh3uir.png"}
             title='Contemplative Reptile'
           />
-          {/*  */}
-          {/* {isEditMode && (
-            <span
-              style={{
-                color: "#959595",
-                cursor: "pointer",
-                marginRight: "30px",
-                marginTop: "10px",
-                textAlign: "right",
-                display: "block",
-              }}
-              // onClick={onClickChangeImage}
-            >
-              이미지 변경
-            </span>
-          )} */}
           <div style={{ padding: "30px" }}>
             <TuiEditor
-              // isEditorMode={!post || isEditMode}
               isEditorMode={false}
               tuiRef={tuiRef}
-              // initialContent={post ? post.content : ""}
-              initialContent={demo}
-              // setContent={setContent}
+              initialContent={post ? post.content : ""}
             />
-            {/* {(!post || isEditMode) && (
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  marginTop: "10px",
-                }}
-              >
-                <Button
-                  variant='contained'
-                  color='primary'
-                  type='submit'
-                  fullWidth={false}
-                  size='large'
-                >
-                  등록
-                </Button>
-              </div>
-            )} */}
           </div>
         </form>
       </div>
