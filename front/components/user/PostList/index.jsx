@@ -80,6 +80,10 @@ const PostList = () => {
   // }, [query, me]);
   useEffect(() => {
     setIsEditMode(null);
+    if (window.innerWidth < 600) {
+      const data = { isDrawer: false };
+      dispatch({ type: "SET_TOGGLE_IS_DRAWER_ACTION", data });
+    }
   }, [query.categoryId]);
 
   useEffect(() => {

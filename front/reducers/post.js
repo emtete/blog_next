@@ -70,7 +70,7 @@ const reducer = (state = initialState, action) => {
     case "SET_TOGGLE_IS_DRAWER_ACTION":
       return {
         ...state,
-        isDrawer: !state.isDrawer,
+        isDrawer: action.data.isDrawer,
       };
 
     case "SET_SELECTED_POST_ACTION":

@@ -81,6 +81,13 @@ const CardList = () => {
   // }, [query, me]);
 
   useEffect(() => {
+    if (window.innerWidth < 600) {
+      const data = { isDrawer: false };
+      dispatch({ type: "SET_TOGGLE_IS_DRAWER_ACTION", data });
+    }
+  }, [query.categoryId]);
+
+  useEffect(() => {
     if (getListDone) dispatch({ type: "GET_POST_LIST_RESET" });
     if (getListError) alert(getListError);
   }, [getListDone, getListError]);

@@ -79,11 +79,13 @@ const LayoutBar = () => {
   const isDrawer = useSelector((state) => state.post.isDrawer);
 
   const handleDrawerOpen = () => {
-    dispatch({ type: "SET_TOGGLE_IS_DRAWER_ACTION" });
+    const data = { isDrawer: true };
+    dispatch({ type: "SET_TOGGLE_IS_DRAWER_ACTION", data });
   };
 
   const handleDrawerClose = () => {
-    dispatch({ type: "SET_TOGGLE_IS_DRAWER_ACTION" });
+    const data = { isDrawer: false };
+    dispatch({ type: "SET_TOGGLE_IS_DRAWER_ACTION", data });
   };
 
   return (
@@ -100,7 +102,7 @@ const LayoutBar = () => {
           {isDrawer ? (
             <NavigateBeforeIcon
               style={{ cursor: "pointer" }}
-              onClick={handleDrawerOpen}
+              onClick={handleDrawerClose}
             />
           ) : (
             <NavigateNextIcon
