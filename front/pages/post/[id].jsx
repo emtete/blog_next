@@ -51,25 +51,24 @@ const useStyles = makeStyles((theme) => ({
 const fetcher = (url) =>
   axios.get(url, { withCredentials: true }).then((result) => result.data);
 
-const Card = () => {
+const Card = (props) => {
   const classes = useStyles();
   const tuiRef = useRef();
   const router = useRouter();
 
   const query = router.query;
-  // const [post, setPost] = useState(props.data);
+  const [post, setPost] = useState(props.data);
 
-  // const { data, err } = useSWR(
-  //   `${backUrl}post/getOne?id=${query.id}`,
-  //   fetcher,
-  //   props.data
-  // );
-  const post = useSelector((state) => state.post.orgPost);
+  const { data, err } = useSWR(
+    `${backUrl}post/getOne?id=${query.id}`,
+    fetcher,
+    props.data
+  );
   const isDrawer = useSelector((state) => state.post.isDrawer);
 
-  // useEffect(() => {
-  //   setPost(data);
-  // }, [data]);
+  useEffect(() => {
+    setPost(data);
+  }, [data]);
 
   return (
     <>
@@ -77,12 +76,12 @@ const Card = () => {
         <title>DEV LIFE</title>
         {/* {post && (
           <> */}
-        <meta name='description' content={post.content || ""} />
-        <meta property='og:title' content={post.title || ""} />
-        <meta property='og:description' content={post.content || ""} />
+        <meta name='description' content={props.data.content || ""} />
+        <meta property='og:title' content={props.data.title || ""} />
+        <meta property='og:description' content={props.data.content || ""} />
         <meta
           property='og:image'
-          content={post.imagePath || "https://i.imgur.com/OCGRjWh.png"}
+          content={props.data.imagePath || "https://i.imgur.com/OCGRjWh.png"}
         />
         <meta property='og:url' content={`${backUrl}post/${query.id}` || ""} />
         {/* </>
@@ -122,7 +121,7 @@ const Card = () => {
                     fontSize: "1rem",
                   }}
                 >
-                  {post ? `작성일 : ${changeDateFormat(post.published)}` : ""}
+                  {post ? `작성일 : ${changeDateFormat(post.createdAt)}` : ""}
                 </span>
               </div>
             </div>
@@ -161,15 +160,13 @@ export const getServerSideProps = wrapper.getServerSideProps(
 
     const id = context.req.url.split("/")[2];
 
-    // const data = await fetcher(`${backUrl}post/getOne?id=${id}`);
-    const data = { id };
+    const data = await fetcher(`${backUrl}post/getOne?id=${id}`);
 
-    context.store.dispatch({ type: "GET_POST_ONE_REQUEST", data });
-    // context.store.dispatch({ type: "LOAD_MY_INFO_REQUEST" });
+    context.store.dispatch({ type: "LOAD_MY_INFO_REQUEST" });
     context.store.dispatch(END);
     await context.store.sagaTask.toPromise();
 
-    // return { props: { data } };
+    return { props: { data } };
   }
 );
 
