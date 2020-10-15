@@ -46,11 +46,16 @@ const MyApp = (props) => {
   return (
     <React.Fragment>
       <Head>
-        <title>My page</title>
+        <title>DEV LIFE</title>
         <meta
           name='viewport'
           content='minimum-scale=1, initial-scale=1, width=device-width'
         />
+        <meta name='description' content={"웹 개발 블로그입니다."} />
+        <meta property='og:title' content={"DEV LIFE"} />
+        <meta property='og:description' content={"웹 개발 블로그입니다."} />
+        <meta property='og:image' content={"https://i.imgur.com/OCGRjWh.png"} />
+        <meta property='og:url' content={"https://dev-life.kr"} />
       </Head>
       <ThemeProvider theme={theme}>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
