@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/router";
+import Head from "next/head";
 import useSWR from "swr";
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -10,7 +11,9 @@ import clsx from "clsx";
 import TuiEditor from "../../components/TuiEditor";
 
 import { backUrl } from "../../config/config";
-import Axios from "axios";
+import axios from "axios";
+import wrapper from "../../store/configureStore";
+import { END } from "redux-saga";
 
 const changeDateFormat = (dateStr) => {
   const date = new Date(dateStr);
@@ -46,9 +49,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const fetcher = (url) =>
-  Axios.get(url, { withCredentials: true }).then((result) => result.data);
+  axios.get(url, { withCredentials: true }).then((result) => result.data);
 
-const Card = () => {
+const Card = (props) => {
   const classes = useStyles();
   const tuiRef = useRef();
   const router = useRouter();
@@ -57,65 +60,109 @@ const Card = () => {
 
   const { data: post, err } = useSWR(
     `${backUrl}post/getOne?id=${query.id}`,
-    fetcher
+    fetcher,
+    props.data
   );
   const isDrawer = useSelector((state) => state.post.isDrawer);
 
   return (
-    <main
-      className={clsx(classes.content1, {
-        [classes.contentShift]: isDrawer,
-      })}
-      style={{ width: "100%" }}
-    >
-      <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
-        <form className='page_card_layer'>
-          <div style={{ padding: "30px 30px 10px" }}>
-            <div>
-              <h1
-                style={{
-                  display: "inline",
-                }}
-              >
-                {post && post.title}
-              </h1>
-            </div>
+    <>
+      <Head>
+        <title>DEV LIFE</title>
+        {post && (
+          <>
+            <meta name='description' content={post.content || ""} />
+            <meta property='og:title' content={post.title || ""} />
+            <meta property='og:description' content={post.content || ""} />
+            <meta property='og:image' content={post.imagePath || ""} />
+            <meta
+              property='og:url'
+              content={`${backUrl}post/${query.id}` || ""}
+            />
+          </>
+        )}
+      </Head>
 
-            <div
-              style={{
-                paddingTop: "30px",
-                display: "flex",
-                justifyContent: "space-between",
-              }}
-            >
-              <span
+      <main
+        className={clsx(classes.content1, {
+          [classes.contentShift]: isDrawer,
+        })}
+        style={{ width: "100%" }}
+      >
+        <div
+          style={{ width: "100%", display: "flex", justifyContent: "center" }}
+        >
+          <form className='page_card_layer'>
+            <div style={{ padding: "30px 30px 10px" }}>
+              <div>
+                <h1
+                  style={{
+                    display: "inline",
+                  }}
+                >
+                  {post && post.title}
+                </h1>
+              </div>
+
+              <div
                 style={{
-                  fontSize: "1rem",
+                  paddingTop: "30px",
+                  display: "flex",
+                  justifyContent: "space-between",
                 }}
               >
-                {post ? `작성일 : ${changeDateFormat(post.createdAt)}` : ""}
-              </span>
+                <span
+                  style={{
+                    fontSize: "1rem",
+                  }}
+                >
+                  {post ? `작성일 : ${changeDateFormat(post.createdAt)}` : ""}
+                </span>
+              </div>
             </div>
-          </div>
-          {post && post.imagePath && (
-            <CardMedia
-              className={classes.media}
-              image={post.imagePath}
-              title='Contemplative Reptile'
-            />
-          )}
-          {/* "https://i.imgur.com/qHh3uir.png" */}
-          <div style={{ padding: "30px" }}>
-            <TuiEditor
-              isEditorMode={false}
-              tuiRef={tuiRef}
-              initialContent={post ? post.content : ""}
-            />
-          </div>
-        </form>
-      </div>
-    </main>
+            {post && post.imagePath && (
+              <CardMedia
+                className={classes.media}
+                image={post.imagePath}
+                title='Contemplative Reptile'
+              />
+            )}
+            {/* "https://i.imgur.com/qHh3uir.png" */}
+            <div style={{ padding: "30px" }}>
+              {post && post.content && (
+                <TuiEditor
+                  isEditorMode={false}
+                  tuiRef={tuiRef}
+                  initialContent={post.content}
+                />
+              )}
+            </div>
+          </form>
+        </div>
+      </main>
+    </>
   );
 };
+
+export const getServerSideProps = wrapper.getServerSideProps(
+  async (context) => {
+    const cookie = context.req ? context.req.headers.cookie : "";
+    axios.defaults.headers.Cookie = "";
+
+    if (context.req && cookie) {
+      axios.defaults.headers.Cookie = cookie;
+    }
+
+    const id = context.req.url.split("/")[2];
+
+    const data = await fetcher(`${backUrl}post/getOne?id=${id}`);
+
+    context.store.dispatch({ type: "LOAD_MY_INFO_REQUEST" });
+    context.store.dispatch(END);
+    await context.store.sagaTask.toPromise();
+
+    return { props: { data } };
+  }
+);
 
 export default Card;
