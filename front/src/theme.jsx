@@ -42,7 +42,7 @@ const theme = createMuiTheme({
   typography: {
     // fontFamily: "Raleway, Arial",
     fontFamily: `-apple-system, BlinkMacSystemFont, Helvetica Neue,
-    Apple SD Gothic Neo, 나눔고딕, arial, Malgun Gothic, 맑은 고딕, 
+    Apple SD Gothic Neo, 맑은 고딕, 나눔고딕, arial, Malgun Gothic,  
     Nanum Gothic, Noto Sans KR, Noto Sans CJK KR, 돋움, Dotum,
     Tahoma, Geneva, sans-serif`,
   },

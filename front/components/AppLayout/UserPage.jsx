@@ -115,9 +115,15 @@ const UserPage = ({ children }) => {
           open={isDrawer}
         >
           <div>
-            <div className={(classes.toolbar, classes.toolbarCustomising)}>
+            <div
+              className={(classes.toolbar, classes.toolbarCustomising)}
+              style={{ fontFamilly: "나눔고딕" }}
+            >
               DEV LIFE
-              <span className={classes.toolbarCustomising2}>
+              <span
+                className={classes.toolbarCustomising2}
+                style={{ fontFamilly: "나눔고딕" }}
+              >
                 Front-End Web Developer
               </span>
             </div>
