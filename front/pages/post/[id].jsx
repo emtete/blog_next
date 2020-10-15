@@ -61,7 +61,6 @@ const Card = () => {
   );
   const isDrawer = useSelector((state) => state.post.isDrawer);
 
-  console.log("post : ", post);
   return (
     <main
       className={clsx(classes.content1, {
