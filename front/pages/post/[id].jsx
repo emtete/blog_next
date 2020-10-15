@@ -59,16 +59,16 @@ const Card = (props) => {
   const query = router.query;
   const [post, setPost] = useState(props.data);
 
-  const { data, err } = useSWR(
-    `${backUrl}post/getOne?id=${query.id}`,
-    fetcher,
-    props.data
-  );
+  // const { data, err } = useSWR(
+  //   `${backUrl}post/getOne?id=${query.id}`,
+  //   fetcher,
+  //   props.data
+  // );
   const isDrawer = useSelector((state) => state.post.isDrawer);
 
-  useEffect(() => {
-    setPost(data);
-  }, [data]);
+  // useEffect(() => {
+  //   setPost(data);
+  // }, [data]);
 
   return (
     <>
@@ -76,12 +76,12 @@ const Card = (props) => {
         <title>DEV LIFE</title>
         {/* {post && (
           <> */}
-        <meta name='description' content={props.data.content || ""} />
-        <meta property='og:title' content={props.data.title || ""} />
-        <meta property='og:description' content={props.data.content || ""} />
+        <meta name='description' content={post.content || ""} />
+        <meta property='og:title' content={post.title || ""} />
+        <meta property='og:description' content={post.content || ""} />
         <meta
           property='og:image'
-          content={props.data.imagePath || "https://i.imgur.com/OCGRjWh.png"}
+          content={post.imagePath || "https://i.imgur.com/OCGRjWh.png"}
         />
         <meta property='og:url' content={`${backUrl}post/${query.id}` || ""} />
         {/* </>
@@ -159,7 +159,6 @@ export const getServerSideProps = wrapper.getServerSideProps(
     }
 
     const id = context.req.url.split("/")[2];
-
     const data = await fetcher(`${backUrl}post/getOne?id=${id}`);
 
     context.store.dispatch({ type: "LOAD_MY_INFO_REQUEST" });
