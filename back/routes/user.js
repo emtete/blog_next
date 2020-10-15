@@ -108,6 +108,7 @@ router.post("/signup", async (req, res, next) => {
       email: req.body.email,
       nickname: req.body.nickname,
       password: hashedPassword,
+      isLoggedIn: false,
     });
     res.status(201).send("ok");
   } catch (error) {
