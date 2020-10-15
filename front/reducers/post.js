@@ -320,8 +320,9 @@ const reducer = (state = initialState, action) => {
           title: action.data.title,
           content: action.data.content,
           category: "임시값",
-          categoryId: action.data.categoryId,
+          categoryId: action.data.CategoryId,
           published: action.data.createdAt,
+          imagePath: action.data.imagePath,
         },
       };
 
