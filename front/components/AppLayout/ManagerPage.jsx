@@ -48,12 +48,18 @@ const ManagerPage = ({ children }) => {
           <div>
             <div
               className={(classes.toolbar, classes.toolbarCustomising)}
-              style={{ fontFamily: "나눔고딕" }}
+              style={{
+                fontFamily:
+                  "BlinkMacSystemFont, Apple SD Gothic Neo, Helvetica Neue,  나눔고딕",
+              }}
             >
               DEV LIFE
               <span
                 className={classes.toolbarCustomising2}
-                style={{ fontFamily: "나눔고딕" }}
+                style={{
+                  fontFamily:
+                    "BlinkMacSystemFont, Apple SD Gothic Neo, Helvetica Neue,  나눔고딕",
+                }}
               >
                 Front-End Web Developer
               </span>
