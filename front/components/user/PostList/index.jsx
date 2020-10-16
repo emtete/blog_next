@@ -117,6 +117,7 @@ const PostList = () => {
       className={clsx(classes.content1, {
         [classes.contentShift]: isDrawer,
       })}
+      style={{ width: "100%" }}
     >
       <div id='mArticle'>
         <div className='blog_category'>
