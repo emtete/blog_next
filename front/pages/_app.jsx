@@ -20,6 +20,7 @@ import "tui-editor/dist/tui-editor-contents.min.css";
 import "highlight.js/styles/atom-one-dark.css";
 import "../style/temp.scss";
 import "../style/card.scss";
+import "tui-chart/dist/tui-chart.css";
 // import "highlight.js/styles/monokai-sublime.css";
 
 import wrapper from "../store/configureStore";
