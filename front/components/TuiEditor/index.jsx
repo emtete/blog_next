@@ -22,7 +22,7 @@ const chartOptions = {
   minWidth: 100,
   maxWidth: 600,
   minHeight: 100,
-  maxHeight: 300,
+  maxHeight: 200,
 };
 
 const TuiEditor = ({ isEditorMode, tuiRef, initialContent, setContent }) => {
