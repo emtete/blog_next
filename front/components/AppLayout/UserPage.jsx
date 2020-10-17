@@ -79,11 +79,13 @@ const UserPage = ({ children }) => {
   const onClickItem = useCallback(
     (e) => {
       if (!getIsArray(e.children)) {
-        router.push(
-          `/${e.isCard ? "cards" : "posts"}?categoryId=${e.id}&categoryName=${
-            e.title
-          }`
-        );
+        // router.push(
+        //   `/${e.isCard ? "cards" : "posts"}?categoryId=${e.id}&categoryName=${
+        //     e.title
+        //   }`
+        // );
+        const path = e.isCard ? "cards" : "posts";
+        router.push(`/${path}?id=${e.id}`);
       } else {
         onToggleMenu(e);
       }

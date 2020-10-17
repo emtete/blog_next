@@ -73,7 +73,8 @@ const CardList = () => {
   // 글 목록 호출
   useEffect(() => {
     const data = {
-      CategoryId: query.categoryId,
+      // CategoryId: query.categoryId,
+      CategoryId: query.id,
       includeContent: true,
       userId: me ? me.id : 1,
     };
@@ -85,7 +86,8 @@ const CardList = () => {
       const data = { isDrawer: false };
       dispatch({ type: "SET_TOGGLE_IS_DRAWER_ACTION", data });
     }
-  }, [query.categoryId]);
+    // }, [query.categoryId]);
+  }, [query.id]);
 
   useEffect(() => {
     if (getListDone) dispatch({ type: "GET_POST_LIST_RESET" });
@@ -105,7 +107,8 @@ const CardList = () => {
       <div id='mArticle'>
         <div className='blog_category'>
           <h3 className='tit_cont'>
-            {query.categoryName}
+            {/* {query.categoryName} */}
+            {items && items[0] && items[0].categoryName}
             {me && (
               <button className='link_write' onClick={onClickWrite}>
                 글 쓰기<span className='ico_blog'></span>
@@ -133,8 +136,9 @@ const CardList = () => {
       </div>
       {isViewMode && (
         <CardModal
-          categoryId={query.categoryId}
-          categoryName={query.categoryName}
+          // categoryId={query.categoryId}
+          categoryId={query.id}
+          categoryName={items[0] ? items[0].categoryName : ""}
         />
       )}
     </main>

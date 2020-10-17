@@ -1,4 +1,4 @@
-.card_layer { margin-bottom: 30px; z-index: 1310; }//position: absolute; left: 15%;
+.card_layer { width: 860px; margin-bottom: 30px; z-index: 1310; }//position: absolute; left: 15%;
 .inner_card_layer { border-radius: 1px; border: 1px solid #465467; background: #fff; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); width: 860px; } // width: 70vw; 
 
 .picture_layer {width: 100%};
@@ -34,6 +34,7 @@ h1 { font-size: 2.75rem; }
 
 @media screen and (max-width:860px) {
   h1 {font-size: 1.6rem;}
+  .card_layer { width: 100%; }
   .inner_card_layer { border-radius: 1px; border: 1px solid #465467; background: #fff; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); width: 95%;  margin-left: 2.5%;}
   .tui-editor-contents { font-size: 1rem; }
   .tui-editor-contents h1 { font-size: 1.6rem; border-bottom: none;}

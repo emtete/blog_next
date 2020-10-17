@@ -6,8 +6,9 @@ import { END } from "redux-saga";
 
 import AppLayout from "../components/AppLayout";
 
-const Card = () => {
+const Cards = () => {
   return <CardList />;
+  // return <div style={{ paddingTop: "80px" }}>123</div>;
 };
 
 // export const getServerSideProps = wrapper.getServerSideProps(
@@ -44,4 +45,4 @@ const Card = () => {
 //   }
 // );
 
-export default Card;
+export default Cards;

@@ -74,6 +74,7 @@ const CardModal = ({ categoryId, categoryName }) => {
   const initTitle = post ? post.title : "";
   const initContent = post ? post.content : "";
   const initImagePath = post ? post.imagePath : null;
+  // const categoryName = post ? post.categoryName : null;
 
   const [title, setTitle] = useState(initTitle);
   const [content, setContent] = useState(initContent);
@@ -148,9 +149,9 @@ const CardModal = ({ categoryId, categoryName }) => {
   }, []);
 
   const closeModal = () => {
-    dispatch({ type: "END_IS_VIEW_MODE_ACTION" });
-    dispatch({ type: "SET_SELECTED_POST_ACTION", data: { post: null } });
     setIsEditMode(false);
+    dispatch({ type: "SET_SELECTED_POST_ACTION", data: { post: null } });
+    dispatch({ type: "END_IS_VIEW_MODE_ACTION" });
   };
 
   const onSubmitForm = (e) => {

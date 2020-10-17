@@ -67,13 +67,14 @@ const PostList = () => {
 
   const [postList, setPostList] = useState([]);
   const [newPost, setNewPost] = useState();
+  const [categoryName, setCategoryName] = useState("");
   const [isEditMode, setIsEditMode] = useState(null);
 
   // 글 목록 호출
   useEffect(() => {
     const data = {
       userId: me ? me.id : 1,
-      CategoryId: query.categoryId,
+      CategoryId: query.id,
       includeContent: true,
     };
     dispatch({ type: "GET_POST_LIST_REQUEST", data });
@@ -85,10 +86,11 @@ const PostList = () => {
       const data = { isDrawer: false };
       dispatch({ type: "SET_TOGGLE_IS_DRAWER_ACTION", data });
     }
-  }, [query.categoryId]);
+  }, [query.id]);
 
   useEffect(() => {
     if (getListDone) {
+      items[0] && setCategoryName(items[0].categoryName);
       setPostList([...items]);
       setIsEditMode(null);
       dispatch({ type: "GET_POST_LIST_RESET" });
@@ -122,7 +124,8 @@ const PostList = () => {
       <div id='mArticle'>
         <div className='blog_category'>
           <h3 className='tit_cont'>
-            {query.categoryName}
+            {categoryName}
+            {/* {items && items[0] && items[0].categoryName} */}
             {me && (
               <button className='link_write' onClick={onClickWrite}>
                 {isEditMode ? "취소" : "글 쓰기"}
@@ -135,8 +138,8 @@ const PostList = () => {
               <PostDetail
                 post={post}
                 key={String(post.id) + String(post.date)}
-                CategoryId={query.categoryId}
-                categoryName={query.categoryName}
+                CategoryId={query.id}
+                categoryName={categoryName}
               />
             ))}
           </div>
