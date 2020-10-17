@@ -83,6 +83,7 @@ const TuiEditor = ({ isEditorMode, tuiRef, initialContent, setContent }) => {
           useCommandShortcut={true}
           plugins={
             ([[codeSyntaxHightlight, { hljs }]], [[chart, chartOptions]])
+          }
           ref={tuiRef}
         />
       )}
