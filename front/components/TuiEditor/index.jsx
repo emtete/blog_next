@@ -81,7 +81,8 @@ const TuiEditor = ({ isEditorMode, tuiRef, initialContent, setContent }) => {
           height='600px'
           initialEditType='markdown'
           useCommandShortcut={true}
-          plugins={[[codeSyntaxHightlight, { hljs }]]}
+          plugins={
+            ([[codeSyntaxHightlight, { hljs }]], [[chart, chartOptions]])
           ref={tuiRef}
         />
       )}
