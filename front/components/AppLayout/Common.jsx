@@ -6,7 +6,7 @@ import Cookies from "js-cookie";
 import ListItem from "@material-ui/core/ListItem";
 import { Button } from "@material-ui/core";
 
-// import { modalStyles, getModalStyle } from "../layout/LoginStyles";
+import { makeStyles } from "@material-ui/core/styles";
 
 import useInput from "../../hooks/useInput";
 import LoginModal from "./LoginModal";

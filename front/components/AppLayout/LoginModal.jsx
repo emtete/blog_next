@@ -3,8 +3,8 @@ import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import Cookies from "js-cookie";
 
 import { FormControl, TextField, Button } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 
-// import { modalStyles } from "../layout/LoginStyles";
 import useInput from "../../hooks/useInput";
 
 const modalStyles = makeStyles((theme) => ({
