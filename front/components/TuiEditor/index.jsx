@@ -6,7 +6,9 @@ import codeSyntaxHightlight from "@toast-ui/editor-plugin-code-syntax-highlight"
 import javascript from "highlight.js/lib/languages/javascript";
 import css from "highlight.js/lib/languages/css";
 import { backUrl } from "../../config/config";
-import chart from "@toast-ui/editor-plugin-chart";
+// import chart from "@toast-ui/editor-plugin-chart";
+
+// const chart = dynamic(() => import("./ChartWrap"), { ssr: false });
 
 const Editor = dynamic(() => import("./EditorWrap"), { ssr: false });
 const Viewer = dynamic(() => import("./ViewerWrap"), { ssr: false });
@@ -62,7 +64,8 @@ const TuiEditor = ({ isEditorMode, tuiRef, initialContent, setContent }) => {
           initialEditType='markdown'
           useCommandShortcut={true}
           plugins={
-            ([[codeSyntaxHightlight, { hljs }]], [[chart, chartOptions]])
+            [[codeSyntaxHightlight, { hljs }]]
+            // , [[chart, chartOptions]]
           }
           ref={tuiRef}
           onChange={onChangeContent}
@@ -82,7 +85,8 @@ const TuiEditor = ({ isEditorMode, tuiRef, initialContent, setContent }) => {
           initialEditType='markdown'
           useCommandShortcut={true}
           plugins={
-            ([[codeSyntaxHightlight, { hljs }]], [[chart, chartOptions]])
+            [[codeSyntaxHightlight, { hljs }]]
+            // , [[chart, chartOptions]]
           }
           ref={tuiRef}
         />
