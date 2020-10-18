@@ -96,7 +96,6 @@ const UserPage = ({ children }) => {
   const onToggleMenu = (e) => {
     e.isOpend = !e.isOpend;
     setMenuList([...menuList]);
-    // dispatch({ type: "SET_CATEGORY_TOGGLE_ACTION", data: { id: e.id } });
   };
 
   console.log("UserPage");

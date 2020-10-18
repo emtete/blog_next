@@ -79,31 +79,6 @@ const reducer = (state = initialState, action) => {
         selectedPost: action.data.post,
       };
 
-    case "ADD_POST":
-      return {
-        ...state,
-        // title: action.data.title,
-        mainPosts: [
-          {
-            id: action.data.id,
-            title: action.data.title,
-            date: action.data.date,
-            content: action.data.content,
-          },
-          ...state.mainPosts,
-        ],
-      };
-
-    case "REMOVE_ORG_POST_ACTION":
-      return {
-        ...state,
-        orgPost: {
-          title: "",
-          categoryId: "",
-          content: null,
-        },
-      };
-
     case "WRITE_POST_REQUEST":
       return {
         ...state,

@@ -27,9 +27,6 @@ const ManagerPage = ({ children }) => {
   }, [loadMyInfoDone]);
 
   const handleRouter = (e, path) => {
-    // if (router.pathname === "/newpost") {
-    //   dispatch({ type: "REMOVE_ORG_POST_ACTION" });
-    // }
     router.push(path);
   };
 
