@@ -4,8 +4,19 @@ import Cookies from "js-cookie";
 
 import { FormControl, TextField, Button } from "@material-ui/core";
 
-import { modalStyles } from "../layout/LoginStyles";
+// import { modalStyles } from "../layout/LoginStyles";
 import useInput from "../../hooks/useInput";
+
+const modalStyles = makeStyles((theme) => ({
+  paper: {
+    position: "absolute",
+    width: 400,
+    backgroundColor: theme.palette.background.paper,
+    border: "2px solid #000",
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
+  },
+}));
 
 const LoginModal = () => {
   const dispatch = useDispatch();

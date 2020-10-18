@@ -10,7 +10,7 @@ import { useState, useMemo, useCallback, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 
-import { menuStyles } from "../layout/styles";
+import { menuStyles } from "./style/DrawerStyles";
 import Common from "./Common";
 import LayoutBar from "./LayoutBar";
 

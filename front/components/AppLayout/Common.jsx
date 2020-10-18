@@ -6,11 +6,39 @@ import Cookies from "js-cookie";
 import ListItem from "@material-ui/core/ListItem";
 import { Button } from "@material-ui/core";
 
-import { modalStyles, getModalStyle } from "../layout/LoginStyles";
-import { ToggleButton, menuStyles } from "../layout/styles";
+// import { modalStyles, getModalStyle } from "../layout/LoginStyles";
 
 import useInput from "../../hooks/useInput";
 import LoginModal from "./LoginModal";
+
+function getModalStyle() {
+  const top = 50 + rand();
+  const left = 50 + rand();
+
+  function rand() {
+    return Math.round(Math.random() * 20) - 10;
+  }
+
+  return {
+    top: `${top}%`,
+    left: `${left}%`,
+    transform: `translate(-${top}%, -${left}%)`,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  };
+}
+
+const modalStyles = makeStyles((theme) => ({
+  paper: {
+    position: "absolute",
+    width: 400,
+    backgroundColor: theme.palette.background.paper,
+    border: "2px solid #000",
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
+  },
+}));
 
 const Common = () => {
   const router = useRouter();

@@ -8,7 +8,7 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 
-import { menuStyles } from "../layout/styles";
+import { menuStyles } from "./style/DrawerStyles";
 import Common from "./Common";
 
 const ManagerPage = ({ children }) => {
