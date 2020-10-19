@@ -1,12 +1,17 @@
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 
 import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
 
+// import useSWR from "swr";
+import axios from "axios";
+
 import CardNode from "../components/user/CardList/CardNode";
 import CardModal from "../components/user/CardList/CardModal";
+import { backUrl } from "../config/config";
+import { useState } from "react";
 
 const drawerWidth = 290;
 
@@ -49,31 +54,22 @@ const Cards = () => {
 
   const isDrawer = useSelector((state) => state.post.isDrawer);
   const me = useSelector((state) => state.user.me);
-  const { items, isViewMode, getListDone, getListError } = useSelector(
-    (state) => ({
-      items: state.post.item.items,
-      isViewMode: state.post.isViewMode,
-      getListDone: state.post.getListDone,
-      getListError: state.post.getListError,
-    }),
-    (prev, next) => {
-      return (
-        next.items === prev.items &&
-        next.isViewMode === prev.isViewMode &&
-        next.getListDone === prev.getListDone &&
-        next.getListError === prev.getListError
-      );
-    }
-  );
+  const isViewMode = useSelector((state) => state.post.isViewMode);
 
-  // 글 목록 호출
+  const [items, setItems] = useState([]);
+
   useEffect(() => {
-    const data = {
-      CategoryId: query.id,
-      includeContent: true,
-      userId: me ? me.id : 1,
-    };
-    dispatch({ type: "GET_POST_LIST_REQUEST", data });
+    axios
+      .get(
+        `${backUrl}post/getList?CategoryId=${query.id}&userId=${
+          me ? me.id : 1
+        }&includeContent=${true}`,
+        { withCredentials: true }
+      )
+      .then((result) => setItems(result.data))
+      .catch((err) => {
+        alert(err);
+      });
   }, [query, me]);
 
   useEffect(() => {
@@ -82,11 +78,6 @@ const Cards = () => {
       dispatch({ type: "SET_TOGGLE_IS_DRAWER_ACTION", data });
     }
   }, [query.id]);
-
-  useEffect(() => {
-    if (getListDone) dispatch({ type: "GET_POST_LIST_RESET" });
-    if (getListError) alert(getListError);
-  }, [getListDone, getListError]);
 
   const onClickWrite = useCallback(() => {
     dispatch({ type: "START_IS_VIEW_MODE_ACTION" });
@@ -110,9 +101,10 @@ const Cards = () => {
             )}
           </h3>
           <div style={{ display: "flex", flexWrap: "wrap", width: "100%" }}>
-            {items.map((post, i) => (
-              <CardNode post={post} key={post.id + post.title} />
-            ))}
+            {items &&
+              items.map((post, i) => (
+                <CardNode post={post} key={post.id + post.title} />
+              ))}
           </div>
         </div>
       </div>

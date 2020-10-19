@@ -1,19 +1,19 @@
 import { useRef, useState, useEffect } from "react";
 import { useSelector } from "react-redux";
+import { END } from "redux-saga";
 import { useRouter } from "next/router";
 import Head from "next/head";
-import useSWR from "swr";
 
 import { makeStyles } from "@material-ui/core/styles";
 import { CardMedia } from "@material-ui/core";
 import clsx from "clsx";
 
-import TuiEditor from "../../components/TuiEditor";
-
-import { backUrl } from "../../config/config";
+import useSWR from "swr";
 import axios from "axios";
+
+import TuiEditor from "../../components/TuiEditor";
 import wrapper from "../../store/configureStore";
-import { END } from "redux-saga";
+import { backUrl } from "../../config/config";
 
 const changeDateFormat = (dateStr) => {
   const date = new Date(dateStr);

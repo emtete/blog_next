@@ -286,7 +286,7 @@ const CardModal = ({ categoryId, categoryName }) => {
                     fontSize: "1rem",
                   }}
                 >
-                  {post ? `작성일 : ${changeDateFormat(post.published)}` : ""}
+                  {post ? `작성일 : ${changeDateFormat(post.createdAt)}` : ""}
                 </span>
                 {isWriter && (
                   <span
