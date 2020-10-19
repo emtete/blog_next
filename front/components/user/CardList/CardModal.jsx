@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import dynamic from "next/dynamic";
+import axios from "axios";
 
 import { makeStyles } from "@material-ui/core/styles";
 import { CardMedia, Button } from "@material-ui/core";
@@ -31,7 +32,7 @@ const changeDateFormat = (dateStr) => {
   return `${y} / ${m} / ${d}`;
 };
 
-const CardModal = ({ categoryId, categoryName }) => {
+const CardModal = ({ categoryId, categoryName, setRerender }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const tuiRef = useRef();
@@ -52,41 +53,16 @@ const CardModal = ({ categoryId, categoryName }) => {
     }
   );
 
-  const { writeLoading, writeDone, writeError } = useSelector(
-    (state) => ({
-      writeLoading: state.post.writeLoading,
-      writeDone: state.post.writeDone,
-      writeError: state.post.writeError,
-    }),
-    shallowEqual
-  );
-
-  const { updateLoading, updateDone, updateError } = useSelector(
-    (state) => ({
-      updateLoading: state.post.updateLoading,
-      updateDone: state.post.updateDone,
-      updateError: state.post.updateError,
-    }),
-    shallowEqual
-  );
-
-  const isWriter = post && me ? post.userId === me.id : false;
+  const isWriter = post && me ? post.UserId === me.id : false;
   const initTitle = post ? post.title : "";
   const initContent = post ? post.content : "";
   const initImagePath = post ? post.imagePath : null;
-  // const categoryName = post ? post.categoryName : null;
 
   const [title, setTitle] = useState(initTitle);
   const [content, setContent] = useState(initContent);
   const [imagePath, setImagePath] = useState(initImagePath);
 
-  // const [isEditMode, setIsEditMode] = useState(false);
   const [isEditMode, setIsEditMode] = useState(!post);
-
-  // useEffect(() => {
-  //   // if (imagePaths) setImagePath(imagePaths[0]);
-  //   setIsEditMode();
-  // }, [post]);
 
   useEffect(() => {
     if (imagePaths) setImagePath(imagePaths[0]);
@@ -100,46 +76,6 @@ const CardModal = ({ categoryId, categoryName }) => {
       document.removeEventListener("click", clickOutSideEvent);
     };
   }, []);
-
-  useEffect(() => {
-    //작성 성공
-    if (writeDone) {
-      const data = {
-        CategoryId: categoryId,
-        includeContent: true,
-        userId: me.id,
-      };
-      dispatch({ type: "WRITE_POST_RESET" });
-      dispatch({ type: "GET_POST_LIST_REQUEST", data });
-      dispatch({ type: "END_IS_VIEW_MODE_ACTION" });
-    }
-    //작성 실패
-    if (writeError) {
-      alert(writeError);
-      dispatch({ type: "WRITE_POST_RESET" });
-    }
-  }, [writeDone, writeError]);
-
-  useEffect(() => {
-    //수정 성공
-    if (updateDone) {
-      const data = {
-        CategoryId: categoryId,
-        includeContent: true,
-        userId: me.id,
-      };
-      setIsEditMode(false);
-      dispatch({ type: "UPDATE_POST_RESET" });
-      dispatch({ type: "GET_POST_LIST_REQUEST", data });
-      dispatch({ type: "END_IS_VIEW_MODE_ACTION" });
-    }
-
-    //수정 실패
-    if (updateError) {
-      alert(updateError);
-      dispatch({ type: "UPDATE_POST_RESET" });
-    }
-  }, [updateDone, updateError]);
 
   // 모달 바깥 클릭시, 창 닫기
   const clickOutSideEvent = useCallback((e) => {
@@ -169,7 +105,16 @@ const CardModal = ({ categoryId, categoryName }) => {
         imagePath,
         content,
       };
-      dispatch({ type: "WRITE_POST_REQUEST", data });
+
+      axios
+        .post("/post/write", { data }, { withCredentials: true })
+        .then((result) => {
+          setRerender(true);
+          dispatch({ type: "END_IS_VIEW_MODE_ACTION" });
+        })
+        .catch((err) => {
+          alert(err);
+        });
     } // 수정
     else {
       const data = {
@@ -182,7 +127,17 @@ const CardModal = ({ categoryId, categoryName }) => {
         imagePath,
         content,
       };
-      dispatch({ type: "UPDATE_POST_REQUEST", data });
+
+      axios
+        .post("/post/update", { data }, { withCredentials: true })
+        .then((result) => {
+          setIsEditMode(false);
+          setRerender(true);
+          dispatch({ type: "END_IS_VIEW_MODE_ACTION" });
+        })
+        .catch((err) => {
+          alert(err);
+        });
     }
   };
 

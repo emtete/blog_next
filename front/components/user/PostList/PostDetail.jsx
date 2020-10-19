@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, useCallback } from "react";
-import { useDispatch, useSelector, shallowEqual } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { withStyles } from "@material-ui/core/styles";
 import MuiAccordion from "@material-ui/core/Accordion";
@@ -9,6 +9,8 @@ import AccordionActions from "@material-ui/core/AccordionActions";
 import Typography from "@material-ui/core/Typography";
 import Input from "@material-ui/core/Input";
 import Button from "@material-ui/core/Button";
+
+import axios from "axios";
 
 import TuiEditor from "../../TuiEditor";
 
@@ -54,70 +56,16 @@ const AccordionDetails = withStyles((theme) => ({
   },
 }))(MuiAccordionDetails);
 
-const PostDetail = ({ post, CategoryId, categoryName }) => {
+const PostDetail = ({ post, CategoryId, categoryName, setRerender }) => {
   const tuiRef = useRef();
   const dispatch = useDispatch();
+
   const isNewPost = post.id === "";
   const [isEditMode, setIsEditMode] = useState(isNewPost);
   const [title, setTitle] = useState(post.title);
   const [content, setContent] = useState(post.content);
 
-  const { me } = useSelector(
-    (state) => ({
-      me: state.user.me,
-    }),
-    (prev, next) => {
-      return prev.me === next.me;
-    }
-  );
-
-  const { writeLoading, writeDone, writeError } = useSelector(
-    (state) => ({
-      writeLoading: state.post.writeLoading,
-      writeDone: state.post.writeDone,
-      writeError: state.post.writeError,
-    }),
-    shallowEqual
-  );
-
-  const { updateLoading, updateDone, updateError } = useSelector(
-    (state) => ({
-      updateLoading: state.post.updateLoading,
-      updateDone: state.post.updateDone,
-      updateError: state.post.updateError,
-    }),
-    shallowEqual
-  );
-
-  useEffect(() => {
-    //작성 성공
-    if (writeDone) {
-      const data = { CategoryId, includeContent: true, userId: me.id };
-      dispatch({ type: "WRITE_POST_RESET" });
-      dispatch({ type: "GET_POST_LIST_REQUEST", data });
-    }
-    //작성 실패
-    if (writeError) {
-      alert(writeError);
-      dispatch({ type: "WRITE_POST_RESET" });
-    }
-  }, [writeDone, writeError]);
-
-  useEffect(() => {
-    //수정 성공
-    if (updateDone) {
-      const data = { CategoryId, includeContent: true, userId: me.id };
-      setIsEditMode(false);
-      dispatch({ type: "UPDATE_POST_RESET" });
-      dispatch({ type: "GET_POST_LIST_REQUEST", data });
-    }
-
-    //수정 실패
-    if (updateError) {
-      alert(updateError);
-      dispatch({ type: "UPDATE_POST_RESET" });
-    }
-  }, [updateDone, updateError]);
+  const me = useSelector((state) => state.user.me);
 
   const onClickBtn1 = useCallback(() => {
     if (isEditMode) {
@@ -142,7 +90,15 @@ const PostDetail = ({ post, CategoryId, categoryName }) => {
         CategoryId,
         content,
       };
-      dispatch({ type: "WRITE_POST_REQUEST", data });
+
+      axios
+        .post("/post/write", { data }, { withCredentials: true })
+        .then((result) => {
+          setRerender(true);
+        })
+        .catch((err) => {
+          alert(err);
+        });
     } // 수정
     else {
       const author = "victor_77";
@@ -155,7 +111,16 @@ const PostDetail = ({ post, CategoryId, categoryName }) => {
         CategoryId,
         content,
       };
-      dispatch({ type: "UPDATE_POST_REQUEST", data });
+
+      axios
+        .post("/post/update", { data }, { withCredentials: true })
+        .then((result) => {
+          setRerender(true);
+          setIsEditMode(false);
+        })
+        .catch((err) => {
+          alert(err);
+        });
     }
   };
 

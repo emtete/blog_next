@@ -23,14 +23,6 @@ export const initialState = {
   getListDone: false,
   getListError: null,
 
-  writeLoading: false,
-  writeDone: false,
-  writeError: null,
-
-  updateLoading: false,
-  updateDone: false,
-  updateError: null,
-
   deleteLoading: false,
   deleteDone: false,
   deleteError: null,
@@ -79,38 +71,6 @@ const reducer = (state = initialState, action) => {
         selectedPost: action.data.post,
       };
 
-    case "WRITE_POST_REQUEST":
-      return {
-        ...state,
-        writeLoading: true,
-        writeDone: false,
-        writeError: null,
-      };
-
-    case "WRITE_POST_SUCCESS":
-      return {
-        ...state,
-        writeLoading: false,
-        writeDone: true,
-        writeError: null,
-      };
-
-    case "WRITE_POST_FAILURE":
-      return {
-        ...state,
-        writeLoading: false,
-        writeDone: false,
-        writeError: String(action.error),
-      };
-
-    case "WRITE_POST_RESET":
-      return {
-        ...state,
-        writeLoading: false,
-        writeDone: false,
-        writeError: null,
-      };
-
     case "DELETE_POST_REQUEST":
       return {
         ...state,
@@ -141,38 +101,6 @@ const reducer = (state = initialState, action) => {
         deleteLoading: false,
         deleteDone: false,
         deleteError: null,
-      };
-
-    case "UPDATE_POST_REQUEST":
-      return {
-        ...state,
-        updateLoading: true,
-        updateDone: false,
-        updateError: null,
-      };
-
-    case "UPDATE_POST_SUCCESS":
-      return {
-        ...state,
-        updateLoading: false,
-        updateDone: true,
-        updateError: null,
-      };
-
-    case "UPDATE_POST_FAILURE":
-      return {
-        ...state,
-        updateLoading: false,
-        updateDone: false,
-        updateError: String(action.error),
-      };
-
-    case "UPDATE_POST_RESET":
-      return {
-        ...state,
-        updateLoading: false,
-        updateDone: false,
-        updateError: null,
       };
 
     case "CHANGE_CATEGORY_IN_POST_REQUEST":

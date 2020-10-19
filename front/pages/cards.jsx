@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useMemo } from "react";
+import { useEffect, useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 
@@ -11,7 +11,6 @@ import axios from "axios";
 import CardNode from "../components/user/CardList/CardNode";
 import CardModal from "../components/user/CardList/CardModal";
 import { backUrl } from "../config/config";
-import { useState } from "react";
 
 const drawerWidth = 290;
 
@@ -57,6 +56,8 @@ const Cards = () => {
   const isViewMode = useSelector((state) => state.post.isViewMode);
 
   const [items, setItems] = useState([]);
+  const [categoryName, setCategoryName] = useState("");
+  const [rerender, setRerender] = useState(false);
 
   useEffect(() => {
     axios
@@ -66,11 +67,15 @@ const Cards = () => {
         }&includeContent=${true}`,
         { withCredentials: true }
       )
-      .then((result) => setItems(result.data))
+      .then((result) => {
+        setItems(result.data);
+        result.data[0] && setCategoryName(result.data[0].categoryName);
+      })
       .catch((err) => {
         alert(err);
       });
-  }, [query, me]);
+    setRerender(false);
+  }, [query, me, rerender]);
 
   useEffect(() => {
     if (window.innerWidth < 600) {
@@ -92,8 +97,7 @@ const Cards = () => {
       <div id='mArticle'>
         <div className='blog_category'>
           <h3 className='tit_cont'>
-            {/* {query.categoryName} */}
-            {items && items[0] && items[0].categoryName}
+            {categoryName}
             {me && (
               <button className='link_write' onClick={onClickWrite}>
                 글 쓰기<span className='ico_blog'></span>
@@ -111,7 +115,8 @@ const Cards = () => {
       {isViewMode && (
         <CardModal
           categoryId={query.id}
-          categoryName={items[0] ? items[0].categoryName : ""}
+          categoryName={categoryName ? categoryName : ""}
+          setRerender={setRerender}
         />
       )}
     </main>

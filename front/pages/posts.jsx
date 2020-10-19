@@ -4,7 +4,9 @@ import { useRouter } from "next/router";
 
 import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
+import axios from "axios";
 
+import { backUrl } from "../config/config";
 import PostDetail from "../components/user/PostList/PostDetail";
 
 const drawerWidth = 290;
@@ -49,35 +51,29 @@ const Post = () => {
 
   const isDrawer = useSelector((state) => state.post.isDrawer);
   const me = useSelector((state) => state.user.me);
-  const { items, getListDone, getListError } = useSelector(
-    (state) => ({
-      items: state.post.item.items,
-      getListDone: state.post.getListDone,
-      getListError: state.post.getListError,
-    }),
-    (prev, next) => {
-      return (
-        prev.items === next.items &&
-        prev.getListDone === next.getListDone &&
-        prev.getListError === next.getListError
-      );
-    }
-  );
 
   const [postList, setPostList] = useState([]);
-  const [newPost, setNewPost] = useState();
   const [categoryName, setCategoryName] = useState("");
   const [isEditMode, setIsEditMode] = useState(null);
+  const [rerender, setRerender] = useState(false);
 
-  // 글 목록 호출
   useEffect(() => {
-    const data = {
-      userId: me ? me.id : 1,
-      CategoryId: query.id,
-      includeContent: true,
-    };
-    dispatch({ type: "GET_POST_LIST_REQUEST", data });
-  }, [query, me]);
+    axios
+      .get(
+        `${backUrl}post/getList?CategoryId=${query.id}&userId=${
+          me ? me.id : 1
+        }&includeContent=${true}`,
+        { withCredentials: true }
+      )
+      .then((result) => {
+        setPostList(result.data);
+        result.data[0] && setCategoryName(result.data[0].categoryName);
+      })
+      .catch((err) => {
+        alert(err);
+      });
+    setRerender(false);
+  }, [query, me, rerender]);
 
   useEffect(() => {
     setIsEditMode(null);
@@ -86,16 +82,6 @@ const Post = () => {
       dispatch({ type: "SET_TOGGLE_IS_DRAWER_ACTION", data });
     }
   }, [query.id]);
-
-  useEffect(() => {
-    if (getListDone) {
-      items[0] && setCategoryName(items[0].categoryName);
-      setPostList([...items]);
-      setIsEditMode(null);
-      dispatch({ type: "GET_POST_LIST_RESET" });
-    }
-    if (getListError) alert(getListError);
-  }, [getListDone, getListError]);
 
   const onClickWrite = useCallback(() => {
     if (isEditMode === null) {
@@ -113,8 +99,7 @@ const Post = () => {
   }, [isEditMode, postList]);
 
   return (
-    // <main className={classes.content}>
-    <main //className={`${classes.content} inner_layout_bar`}
+    <main
       className={clsx(classes.content1, {
         [classes.contentShift]: isDrawer,
       })}
@@ -124,7 +109,6 @@ const Post = () => {
         <div className='blog_category'>
           <h3 className='tit_cont'>
             {categoryName}
-            {/* {items && items[0] && items[0].categoryName} */}
             {me && (
               <button className='link_write' onClick={onClickWrite}>
                 {isEditMode ? "취소" : "글 쓰기"}
@@ -139,6 +123,7 @@ const Post = () => {
                 key={String(post.id) + String(post.date)}
                 CategoryId={query.id}
                 categoryName={categoryName}
+                setRerender={setRerender}
               />
             ))}
           </div>

@@ -9,48 +9,6 @@ import {
 } from "redux-saga/effects";
 import axios from "axios";
 
-function writePostAPI(data) {
-  return axios.post("/post/write", { data });
-}
-
-// 비동기 액션 크리에이터
-function* writePost(action) {
-  try {
-    const result = yield call(writePostAPI, action.data);
-    yield put({
-      type: "WRITE_POST_SUCCESS",
-      data: result.data, // 성공 결과
-    });
-  } catch (err) {
-    yield put({
-      // put은 dispatch와 같은 기능을 한다.
-      type: "WRITE_POST_FAILURE",
-      data: err.response.data, // 실패 결과
-    });
-  }
-}
-
-function updatePostAPI(data) {
-  return axios.post("/post/update", { data });
-}
-
-// 비동기 액션 크리에이터
-function* updatePost(action) {
-  try {
-    const result = yield call(updatePostAPI, action.data);
-    yield put({
-      type: "UPDATE_POST_SUCCESS",
-      data: result.data, // 성공 결과
-    });
-  } catch (err) {
-    yield put({
-      // put은 dispatch와 같은 기능을 한다.
-      type: "UPDATE_POST_FAILURE",
-      data: err.response.data, // 실패 결과
-    });
-  }
-}
-
 function deletePostAPI(data) {
   return axios.delete(`/post/${data.id}`);
 }
@@ -167,14 +125,6 @@ function* uploadImages(action) {
   }
 }
 
-function* watchWritePost() {
-  yield takeLatest("WRITE_POST_REQUEST", writePost);
-}
-
-function* watchUpdatePost() {
-  yield takeLatest("UPDATE_POST_REQUEST", updatePost);
-}
-
 function* watchDeletePost() {
   yield takeLatest("DELETE_POST_REQUEST", deletePost);
 }
@@ -197,8 +147,6 @@ function* watchUploadImages() {
 
 export default function* postSaga() {
   yield all([
-    fork(watchWritePost),
-    fork(watchUpdatePost),
     fork(watchDeletePost),
     fork(watchChangeCategoryInPost),
     fork(watchGetPostList),
