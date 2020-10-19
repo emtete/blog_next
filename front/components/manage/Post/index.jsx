@@ -3,6 +3,9 @@ import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import { useRouter } from "next/router";
 import { makeStyles } from "@material-ui/core/styles";
 
+import axios from "axios";
+
+import { backUrl } from "../../../config/config";
 import Post from "./Post";
 
 const useStyles = makeStyles((theme) => ({
@@ -50,6 +53,19 @@ const getChecked = (checkboxGroup) => {
 
 const deepCopy = (obj) => JSON.parse(JSON.stringify(obj));
 
+const exceptHaveChildren = (flatTreeData) => {
+  const excepted = [];
+  flatTreeData.map((node) => {
+    if (!getIsArray(node.children)) excepted.push(node);
+  });
+
+  return excepted;
+};
+
+const getIsArray = (e) => {
+  return Array.isArray(e) && e.length > 0;
+};
+
 const PostManage = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -59,128 +75,45 @@ const PostManage = () => {
   const [changeCategoryId, setChangeCategoryId] = useState("");
   const [checkboxGroup, setCheckboxGroup] = useState({ all: false });
   const [posts, setPosts] = useState([]);
+  const [flatTreeData, setFlatTreeData] = useState([]);
+  const [rerender, setRerender] = useState(false);
 
-  const { me, items, flatTreeData } = useSelector(
-    (state) => ({
-      me: state.user.me,
-      items: state.post.item.items,
-      flatTreeData: state.category.flatTreeData,
-    }),
-    (prev, next) => {
-      return (
-        prev.me === next.me &&
-        prev.items === next.items &&
-        prev.flatTreeData === next.flatTreeData
-      );
-    }
-  );
+  const query = router.query;
 
-  const { getListLoading, getListDone, getListError } = useSelector(
-    (state) => ({
-      getListLoading: state.post.getListLoading,
-      getListDone: state.post.getListDone,
-      getListError: state.post.getListError,
-    }),
-    (prev, next) => {
-      return (
-        prev.getListLoading === next.getListLoading &&
-        prev.getListDone === next.getListDone &&
-        prev.getListError === next.getListError
-      );
-    }
-  );
+  const me = useSelector((state) => state.user.me);
 
-  const { loadMyInfoLoading, loadMyInfoDone, loadMyInfoError } = useSelector(
-    (state) => ({
-      loadMyInfoLoading: state.user.loadMyInfoLoading,
-      loadMyInfoDone: state.user.loadMyInfoDone,
-      loadMyInfoError: state.user.loadMyInfoError,
-    }),
-    (prev, next) => {
-      return (
-        prev.loadMyInfoLoading === next.loadMyInfoLoading &&
-        prev.loadMyInfoDone === next.loadMyInfoDone &&
-        prev.loadMyInfoError === next.loadMyInfoError
-      );
-    }
-  );
-
-  const {
-    getCategoryListLoading,
-    getCategoryListDone,
-    getCategoryListError,
-  } = useSelector(
-    (state) => ({
-      getListLoading: state.category.getListLoading,
-      getListDone: state.category.getListDone,
-      getListError: state.category.getListError,
-    }),
-    (prev, next) => {
-      return (
-        prev.getListLoading === next.getListLoading &&
-        prev.getListDone === next.getListDone &&
-        prev.getListError === next.getListError
-      );
-    }
-  );
-
-  const { changeCategoryDone, changeCategoryError } = useSelector(
-    (state) => ({
-      changeCategoryDone: state.post.changeCategoryDone,
-      changeCategoryError: state.post.changeCategoryError,
-    }),
-    (prev, next) => {
-      return (
-        prev.changeCategoryDone === next.changeCategoryDone &&
-        prev.changeCategoryError === next.changeCategoryError
-      );
-    }
-  );
-
-  // 글 목록 호출
+  // post list
   useEffect(() => {
-    if (me) {
-      const data = { userId: me.id };
-      dispatch({ type: "GET_POST_LIST_REQUEST", data });
-      dispatch({ type: "GET_CATEGORY_LIST_REQUEST", data });
-    }
-  }, [me]);
+    me &&
+      axios
+        .get(`${backUrl}post/getList?userId=${me.id}`, {
+          withCredentials: true,
+        })
+        .then((result) => {
+          setPosts(result.data);
+          setCheckboxGroup(initCheckboxGroup(result.data));
+        })
+        .catch((err) => {
+          alert(err);
+        });
+    setRerender(false);
+  }, [query, me, rerender]);
 
-  // 글 목록 호출
+  // category list
   useEffect(() => {
-    if (changeCategoryDone) {
-      const data = { userId: me.id };
-      dispatch({ type: "GET_POST_LIST_REQUEST", data });
-    }
-    dispatch({ type: "CHANGE_CATEGORY_IN_POST_RESET" });
-  }, [changeCategoryDone]);
-
-  useEffect(() => {
-    // 글 목록 호출 성공
-    if (getListDone) {
-      setPosts(items);
-      setCheckboxGroup(initCheckboxGroup(items));
-      dispatch({ type: "GET_POST_LIST_RESET" });
-    }
-    // 글 목록 호출 실패
-    if (getListError) {
-      alert(getListError);
-    }
-  }, [getListDone, getListError]);
-
-  useEffect(() => {
-    // 카테고리 리스트 호출 성공.
-    // if (changeCategoryDone) {
-    if (getCategoryListDone) {
-      dispatch({ type: "GET_CATEGORY_LIST_RESET" });
-      dispatch({ type: "RESET_INDEX_PATH_ACTION" });
-    }
-    // 카테고리 리스트 호출 중 에러.
-    if (getCategoryListError) {
-      alert(getCategoryListError);
-      dispatch({ type: "GET_CATEGORY_LIST_RESET" });
-    }
-  }, [getCategoryListDone, getCategoryListError]);
+    me &&
+      axios
+        .get(`${backUrl}category/getList?userId=${me.id}`, {
+          withCredentials: true,
+        })
+        .then((result) => {
+          setFlatTreeData(exceptHaveChildren(result.data));
+        })
+        .catch((err) => {
+          alert(err);
+        });
+    setRerender(false);
+  }, [query, me, rerender]);
 
   const onChangeSelect1 = useCallback(
     (e) => {
@@ -192,7 +125,21 @@ const PostManage = () => {
         return;
       }
       const data = { CategoryId: e.target.value, categoryName, postIdArr };
-      dispatch({ type: "CHANGE_CATEGORY_IN_POST_REQUEST", data });
+
+      axios
+        .post(
+          `${backUrl}post/changeCategory`,
+          { data },
+          {
+            withCredentials: true,
+          }
+        )
+        .then((result) => {
+          setRerender(true);
+        })
+        .catch((err) => {
+          alert(err);
+        });
     },
     [changeCategoryId, checkboxGroup]
   );
@@ -201,15 +148,30 @@ const PostManage = () => {
     (e) => {
       setSearchCategoryId(e.target.value);
       const data = { CategoryId: e.target.value, userId: me.id };
-      dispatch({ type: "GET_POST_LIST_REQUEST", data });
+
+      me &&
+        axios
+          .get(
+            `${backUrl}post/getList?userId=${me.id}&CategoryId=${e.target.value}`,
+            {
+              withCredentials: true,
+            }
+          )
+          .then((result) => {
+            setPosts(result.data);
+            // setCheckboxGroup(initCheckboxGroup(result.data));
+          })
+          .catch((err) => {
+            alert(err);
+          });
     },
-    [searchCategoryId]
+    [me, searchCategoryId]
   );
 
   const handleCheckbox = useCallback(
     (e) => {
       if (e.target.value == "all") {
-        setCheckboxGroup(checkAll(items, e.target.checked));
+        setCheckboxGroup(checkAll(posts, e.target.checked));
       } else {
         let clone = deepCopy(checkboxGroup);
         clone[e.target.value] = e.target.checked; // true
@@ -218,6 +180,7 @@ const PostManage = () => {
     },
     [checkboxGroup]
   );
+
   return (
     <main className={classes.content}>
       <div id='mArticle'>
@@ -276,11 +239,12 @@ const PostManage = () => {
           <div className='wrap_list'>
             <ul className='list_post list_post_type2'>
               {posts.map((post) => (
-                <li key={post.id + post.published}>
+                <li key={post.id + post.createdAt}>
                   <Post
                     post={post}
                     handleCheckbox={handleCheckbox}
                     checkboxGroup={checkboxGroup}
+                    setRerender={setRerender}
                   />
                 </li>
               ))}
