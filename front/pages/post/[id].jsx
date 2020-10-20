@@ -59,16 +59,28 @@ const Card = (props) => {
   const query = router.query;
   const [post, setPost] = useState(props.data);
 
-  const { data, err } = useSWR(
-    `${backUrl}post/getOne?id=${query.id}`,
-    fetcher,
-    props.data
-  );
+  // const { data, err } = useSWR(
+  //   `${backUrl}post/getOne?id=${query.id}`,
+  //   fetcher,
+  //   props.data
+  // );
   const isDrawer = useSelector((state) => state.post.isDrawer);
 
+  // useEffect(() => {
+  //   setPost(data);
+  // }, [data]);
+
   useEffect(() => {
-    setPost(data);
-  }, [data]);
+    axios
+      .get(`${backUrl}post/getOne?id=${query.id}`, { withCredentials: true })
+      .then((result) => {
+        setPost(data);
+      })
+      .catch((err) => {
+        alert(err);
+      });
+    // setRerender(false);
+  }, [query]);
 
   return (
     <>
