@@ -84,9 +84,13 @@ const UserPage = ({ children }) => {
         //     e.title
         //   }`
         // );
-        const path = e.isCard ? "cards" : "posts";
+        let path = e.isCard ? "cards" : "posts";
+        if (e.id == 14) {
+          router.push(`/post/25`);
+        } else {
+          router.push(`/${path}/${e.id}`);
+        }
         // router.push(`/${path}?id=${e.id}`);
-        router.push(`/${path}/${e.id}`);
       } else {
         onToggleMenu(e);
       }
