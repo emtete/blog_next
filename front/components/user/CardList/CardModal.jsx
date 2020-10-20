@@ -152,7 +152,7 @@ const CardModal = ({ categoryId, categoryName, setRerender }) => {
   //   [].forEach.call(e.target.files, (f) => {
   //     imageFormData.append("image", f);
   //   });
-
+  // axios.post(`/post/images`, data);
   //   dispatch({ type: "UPLOAD_IMAGES_REQUEST", data: imageFormData });
   // });
 

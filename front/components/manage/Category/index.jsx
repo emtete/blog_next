@@ -39,6 +39,18 @@ const getNode = (treeData, indexPath, idArr) => {
   return result;
 };
 
+// 불러온 treeData를 계층구조로 변환한다.
+const flatToHierarchy = (flatData) => {
+  const clone = deepCopy(flatData);
+  const treeData = [];
+
+  flatData.map((node) => {
+    if (node.depth == 1) {
+      treeData.push(node);
+      node["isOpened"] = false;
+    }
+  });
+
 const useStyles = makeStyles((theme) => ({
   content: {
     flexGrow: 1,
@@ -55,6 +67,8 @@ const Category = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const query = router.query;
+  // const [treeData, setTreeData] = useState([]);
+  // const [rerender, setRerender] = useState(false);
 
   const { me, treeData, treeHelper, isMoveMode, newComponent } = useSelector(
     (state) => ({
@@ -74,6 +88,7 @@ const Category = () => {
       );
     }
   );
+
 
   const { appended, updated, deleted } = useSelector(
     (state) => ({
@@ -129,20 +144,21 @@ const Category = () => {
   }, [me]);
 
   // category list
-  useEffect(() => {
-    me &&
-      axios
-        .get(`${backUrl}category/getList?userId=${me.id}`, {
-          withCredentials: true,
-        })
-        .then((result) => {
-          // setFlatTreeData(exceptHaveChildren(result.data));
-        })
-        .catch((err) => {
-          alert(err);
-        });
-    setRerender(false);
-  }, [query, me]); //rerender
+  // useEffect(() => {
+  //   me &&
+  //     axios
+  //       .get(`${backUrl}category/getList?userId=${me.id}`, {
+  //         withCredentials: true,
+  //       })
+  //       .then((result) => {
+  //         setTreeData(flatToHierarchy(result.data));
+  //         // RESET_INDEX_PATH_ACTION
+  //       })
+  //       .catch((err) => {
+  //         alert(err);
+  //       });
+  //   setRerender(false);
+  // }, [query, me, rerender]); 
 
   useEffect(() => {
     // 변경사항 적용 성공.
