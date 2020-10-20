@@ -74,18 +74,21 @@ const Card = (props) => {
     <>
       <Head>
         <title>DEV LIFE</title>
-        {/* {post && (
-          <> */}
-        <meta name='description' content={post.content || ""} />
-        <meta property='og:title' content={post.title || ""} />
-        <meta property='og:description' content={post.content || ""} />
-        <meta
-          property='og:image'
-          content={post.imagePath || "https://i.imgur.com/OCGRjWh.png"}
-        />
-        <meta property='og:url' content={`${backUrl}post/${query.id}` || ""} />
-        {/* </>
-        )} */}
+        {post && (
+          <>
+            <meta name='description' content={post.content || ""} />
+            <meta property='og:title' content={post.title || ""} />
+            <meta property='og:description' content={post.content || ""} />
+            <meta
+              property='og:image'
+              content={post.imagePath || "https://i.imgur.com/OCGRjWh.png"}
+            />
+            <meta
+              property='og:url'
+              content={`${backUrl}post/${query.id}` || ""}
+            />
+          </>
+        )}
       </Head>
 
       <main
