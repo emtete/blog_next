@@ -2,13 +2,11 @@ import { useState, useCallback, useEffect } from "react";
 import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import { useRouter } from "next/router";
 import { makeStyles } from "@material-ui/core/styles";
-import axios from "axios";
 
 import CategoryAll from "./CategoryAll";
 import CategoryInclude from "./CategoryInclude";
 import CategoryAddBtn from "./CategoryAddBtn";
 import CategoryModal from "./CategoryModal";
-import { backUrl } from "../../../config/config";
 
 const getIsArray = (e) => {
   return Array.isArray(e) && e.length > 0;
@@ -39,18 +37,6 @@ const getNode = (treeData, indexPath, idArr) => {
   return result;
 };
 
-// 불러온 treeData를 계층구조로 변환한다.
-const flatToHierarchy = (flatData) => {
-  const clone = deepCopy(flatData);
-  const treeData = [];
-
-  flatData.map((node) => {
-    if (node.depth == 1) {
-      treeData.push(node);
-      node["isOpened"] = false;
-    }
-  });
-
 const useStyles = makeStyles((theme) => ({
   content: {
     flexGrow: 1,
@@ -66,9 +52,6 @@ const Category = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const router = useRouter();
-  const query = router.query;
-  // const [treeData, setTreeData] = useState([]);
-  // const [rerender, setRerender] = useState(false);
 
   const { me, treeData, treeHelper, isMoveMode, newComponent } = useSelector(
     (state) => ({
@@ -88,7 +71,6 @@ const Category = () => {
       );
     }
   );
-
 
   const { appended, updated, deleted } = useSelector(
     (state) => ({
@@ -120,6 +102,21 @@ const Category = () => {
     }
   );
 
+  const { loadMyInfoLoading, loadMyInfoDone, loadMyInfoError } = useSelector(
+    (state) => ({
+      loadMyInfoLoading: state.user.loadMyInfoLoading,
+      loadMyInfoDone: state.user.loadMyInfoDone,
+      loadMyInfoError: state.user.loadMyInfoError,
+    }),
+    (prev, next) => {
+      return (
+        prev.loadMyInfoLoading === next.loadMyInfoLoading &&
+        prev.loadMyInfoDone === next.loadMyInfoDone &&
+        prev.loadMyInfoError === next.loadMyInfoError
+      );
+    }
+  );
+
   const { getListLoading, getListDone, getListError } = useSelector(
     (state) => ({
       getListLoading: state.category.getListLoading,
@@ -142,23 +139,6 @@ const Category = () => {
       dispatch({ type: "GET_CATEGORY_LIST_REQUEST", data });
     }
   }, [me]);
-
-  // category list
-  // useEffect(() => {
-  //   me &&
-  //     axios
-  //       .get(`${backUrl}category/getList?userId=${me.id}`, {
-  //         withCredentials: true,
-  //       })
-  //       .then((result) => {
-  //         setTreeData(flatToHierarchy(result.data));
-  //         // RESET_INDEX_PATH_ACTION
-  //       })
-  //       .catch((err) => {
-  //         alert(err);
-  //       });
-  //   setRerender(false);
-  // }, [query, me, rerender]); 
 
   useEffect(() => {
     // 변경사항 적용 성공.
