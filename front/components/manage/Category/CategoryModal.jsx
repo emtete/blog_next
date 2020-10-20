@@ -1,8 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import CategorySelect from "./CategorySelect";
-
 const deepCopy = (obj) => JSON.parse(JSON.stringify(obj));
 
 // 두번째 셀렉트 박스의 컨텐츠를 가져온다.
