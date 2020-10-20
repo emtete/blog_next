@@ -87,6 +87,8 @@ const UserPage = ({ children }) => {
         let path = e.isCard ? "cards" : "posts";
         if (e.id == 14) {
           router.push(`/post/25`);
+          // if (e.id == 13) {
+          //   router.push(`/post/29`);
         } else {
           router.push(`/${path}/${e.id}`);
         }
