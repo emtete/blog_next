@@ -74,7 +74,7 @@ const Card = (props) => {
     axios
       .get(`${backUrl}post/getOne?id=${query.id}`, { withCredentials: true })
       .then((result) => {
-        setPost(data);
+        setPost(result.data);
       })
       .catch((err) => {
         alert(err);
