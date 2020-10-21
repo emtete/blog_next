@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
+import { useRouter } from "next/router";
 import Cookies from "js-cookie";
 
 import { FormControl, TextField, Button } from "@material-ui/core";
@@ -19,6 +20,7 @@ const modalStyles = makeStyles((theme) => ({
 }));
 
 const LoginModal = () => {
+  const router = useRouter();
   const dispatch = useDispatch();
   const modalClasses = modalStyles();
   const [id, onChangeId] = useInput("");
@@ -59,6 +61,7 @@ const LoginModal = () => {
       dispatch({ type: "GET_CATEGORY_LIST_REQUEST", data });
       dispatch({ type: "END_LOG_IN_MODE_ACTION" });
       Cookies.set("id", me.id, { expires: 7 });
+      router.push("/");
     }
   }, [logInDone]);
 
