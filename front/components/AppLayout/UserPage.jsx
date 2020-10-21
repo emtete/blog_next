@@ -9,6 +9,7 @@ import Collapse from "@material-ui/core/Collapse";
 import { useState, useMemo, useCallback, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 import { menuStyles } from "./style/DrawerStyles";
 import Common from "./Common";
@@ -132,7 +133,9 @@ const UserPage = ({ children }) => {
                   "BlinkMacSystemFont, Apple SD Gothic Neo, Helvetica Neue,  나눔고딕",
               }}
             >
-              DEV LIFE
+              <Link href='/' style={{ color: "#ffffff" }}>
+                <a>DEV LIFE</a>
+              </Link>
               <span
                 className={classes.toolbarCustomising2}
                 style={{

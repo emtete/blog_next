@@ -1,17 +1,22 @@
 a {
-  color: #333;
+  color: #ffffff;
   text-decoration: none;
 }
 
 a:-webkit-any-link {
   color: -webkit-link;
   cursor: pointer;
-  text-decoration: underline;
+  // text-decoration: underline;
+  text-decoration: none;
 }
 
 a:active,
+a:visited,
+a:link,
 a:hover {
-  text-decoration: underline;
+  color: #ffffff;
+  text-decoration: none;
+  cursor: pointer;
 }
 
 button {

@@ -1,6 +1,7 @@
 import { useState, useMemo, useCallback, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Drawer from "@material-ui/core/Drawer";
@@ -50,7 +51,9 @@ const ManagerPage = ({ children }) => {
                   "BlinkMacSystemFont, Apple SD Gothic Neo, Helvetica Neue,  나눔고딕",
               }}
             >
-              DEV LIFE
+              <Link href='/' style={{ color: "#ffffff" }}>
+                <a>DEV LIFE</a>
+              </Link>
               <span
                 className={classes.toolbarCustomising2}
                 style={{
