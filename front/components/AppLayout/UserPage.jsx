@@ -46,10 +46,9 @@ const UserPage = ({ children }) => {
     }
   );
 
-  useEffect(() => {
-    console.log("treeDatass", treeData);
-    // setMenuList(deepCopy(treeData));
-  }, [treeData]);
+  // useEffect(() => {
+  // setMenuList(deepCopy(treeData));
+  // }, [treeData]);
 
   useEffect(() => {
     const data = { userId: me ? me.id : 1 };
