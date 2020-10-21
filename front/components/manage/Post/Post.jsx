@@ -15,8 +15,10 @@ const changeDateFormat = (dateStr) => {
 const Post = ({ post, handleCheckbox, checkboxGroup, setRerender }) => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const orgPost = useSelector((state) => state.post.orgPost);
 
+  // const [isNotice, setIsNotice] = useState(false);
+
+  const orgPost = useSelector((state) => state.post.orgPost);
   const deleteLoading = useSelector((state) => state.post.deleteLoading);
   const deleteDone = useSelector((state) => state.post.deleteDone);
   const deleteError = useSelector((state) => state.post.deleteError);
@@ -25,6 +27,20 @@ const Post = ({ post, handleCheckbox, checkboxGroup, setRerender }) => {
   const onClickDelete = () => {
     axios
       .delete(`/post/${post.id}`, { withCredentials: true })
+      .then((result) => {
+        setRerender(true);
+      })
+      .catch((err) => {
+        alert(err);
+      });
+  };
+
+  const onClickNotice = (id) => {
+    // setIsNotice((prev) => !prev);
+    console.log(post.isNotice);
+    const data = { isNotice: !post.isNotice, id };
+    axios
+      .post(`/post/setNotice`, { data }, { withCredentials: true })
       .then((result) => {
         setRerender(true);
       })
@@ -50,9 +66,12 @@ const Post = ({ post, handleCheckbox, checkboxGroup, setRerender }) => {
       </div>
       <div className='post_cont'>
         <strong className='tit_post tit_ellip'>
-          <a title={post.title} className='link_cont' target='_blank'>
+          <span //title={post.title}
+            className='link_cont'
+            target='_blank'
+          >
             {post.title}
-          </a>
+          </span>
         </strong>
         <a>
           <span className='txt_cate txt_ellip'>{post.categoryName}</span>
@@ -63,6 +82,12 @@ const Post = ({ post, handleCheckbox, checkboxGroup, setRerender }) => {
       <div className='post_btn'>
         <div className='info_btn'>
           <div>
+            <span
+              className={`btn_post ${!post.isNotice && "disabled"}`}
+              onClick={() => onClickNotice(post.id)}
+            >
+              공지
+            </span>
             <span className='btn_post' onClick={onClickDelete}>
               샥제
             </span>

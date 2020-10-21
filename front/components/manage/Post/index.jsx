@@ -159,7 +159,7 @@ const PostManage = () => {
           )
           .then((result) => {
             setPosts(result.data);
-            // setCheckboxGroup(initCheckboxGroup(result.data));
+            setCheckboxGroup(initCheckboxGroup(result.data));
           })
           .catch((err) => {
             alert(err);
