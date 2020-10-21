@@ -69,6 +69,8 @@ const Common = () => {
 
   const handleLogin = () => {
     if (me) {
+      const data = { userId: 1 };
+      dispatch({ type: "GET_CATEGORY_LIST_REQUEST", data });
       dispatch({ type: "LOG_OUT_REQUEST" });
       Cookies.remove("id");
       router.push("/");

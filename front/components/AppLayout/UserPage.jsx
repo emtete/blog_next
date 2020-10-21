@@ -46,6 +46,9 @@ const UserPage = ({ children }) => {
     }
   );
 
+  const loadMyInfoDone = useSelector((state) => state.user.loadMyInfoDone);
+  const loadMyInfoError = useSelector((state) => state.user.loadMyInfoError);
+
   // useEffect(() => {
   // setMenuList(deepCopy(treeData));
   // }, [treeData]);
@@ -53,7 +56,7 @@ const UserPage = ({ children }) => {
   useEffect(() => {
     const data = { userId: me ? me.id : 1 };
     dispatch({ type: "GET_CATEGORY_LIST_REQUEST", data });
-  }, []);
+  }, [loadMyInfoDone]);
 
   // useEffect(() => {
   //   const data = { userId: me ? me.id : 1 };
