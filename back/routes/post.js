@@ -85,49 +85,47 @@ router.post("/changeCategory", async (req, res, next) => {
   }
 });
 
+// changeCategory
+router.post("/setNotice", async (req, res, next) => {
+  const data = req.body.data;
+  const isNotice = data.isNotice;
+  const id = data.id;
+
+  try {
+    // for (let i in postIdArr) {
+    await Post.update(
+      {
+        isNotice,
+      },
+      { where: { id } }
+    );
+    // }
+
+    res.status(201).send("ok");
+  } catch (err) {
+    console.error(err);
+    next(err); // status 500
+  }
+});
+
 router.get("/getList", async (req, res, next) => {
   try {
     const query = req.query;
     const where = {};
     const searchCondition = {
       where,
-      include: [
-        {
-          model: Category,
-          // attributes: [Sequelize.col("parent")],
-          attributes: [
-            [
-              Sequelize.fn(
-                "CONCAT",
-                Sequelize.col("Category.parent"),
-                Sequelize.col("Category.priority")
-              ),
-              "parentPriority",
-            ],
-          ],
-          // where: {}
-        },
-      ],
-      order: [
-        // ["parentPriority", "ASC"],
-        // [Category, "priority", "ASC"],
-        [
-          Sequelize.fn(
-            "CONCAT",
-            Sequelize.col("parent"),
-            Sequelize.col("priority")
-          ),
-          "ASC",
-        ],
-        // Sequelize.fn("concat", Sequelize.col("firstname"), Sequelize.col("lastname")
-      ],
+      // order: [["priority", "ASC"]],
     };
-
     if (query && !query.includeContent) {
       searchCondition["attributes"] = {
         exclude: ["content"],
       };
     }
+
+    if (query && query.limit !== undefined) {
+      where["limit"] = query.limit;
+    }
+
     if (query && query.CategoryId !== undefined) {
       where["CategoryId"] = query.CategoryId;
     }
