@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { END } from "redux-saga";
 import { useRouter } from "next/router";
 import Head from "next/head";
+// import RemoveMarkdown from "remove-markdown";
 
 import { makeStyles } from "@material-ui/core/styles";
 import { CardMedia } from "@material-ui/core";
@@ -66,7 +67,7 @@ const Card = (props) => {
   );
 
   const isDrawer = useSelector((state) => state.post.isDrawer);
-
+  // console.log("post : ", RemoveMarkdown(post.content));
   // useEffect(() => {
   //   setPost(data);
   // }, [data]);

@@ -1,9 +1,11 @@
+const Sequelize = require("sequelize");
 const express = require("express");
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 
 const { Post } = require("../models");
+const { Category } = require("../models");
 const { search } = require("./category");
 const { isLoggedIn } = require("./middlewares");
 
@@ -87,7 +89,39 @@ router.get("/getList", async (req, res, next) => {
   try {
     const query = req.query;
     const where = {};
-    const searchCondition = { where };
+    const searchCondition = {
+      where,
+      include: [
+        {
+          model: Category,
+          // attributes: [Sequelize.col("parent")],
+          attributes: [
+            [
+              Sequelize.fn(
+                "CONCAT",
+                Sequelize.col("Category.parent"),
+                Sequelize.col("Category.priority")
+              ),
+              "parentPriority",
+            ],
+          ],
+          // where: {}
+        },
+      ],
+      order: [
+        // ["parentPriority", "ASC"],
+        // [Category, "priority", "ASC"],
+        [
+          Sequelize.fn(
+            "CONCAT",
+            Sequelize.col("parent"),
+            Sequelize.col("priority")
+          ),
+          "ASC",
+        ],
+        // Sequelize.fn("concat", Sequelize.col("firstname"), Sequelize.col("lastname")
+      ],
+    };
 
     if (query && !query.includeContent) {
       searchCondition["attributes"] = {
