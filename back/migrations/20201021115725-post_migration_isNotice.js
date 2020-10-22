@@ -8,7 +8,7 @@ module.exports = {
      * Example:
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
-    return await queryInterface.addColumn("posts", "isNotice", {
+    return await queryInterface.addColumn("Posts", "isNotice", {
       type: Sequelize.DataTypes.BOOLEAN,
       allowNull: false,
       unique: false,
