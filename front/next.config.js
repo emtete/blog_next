@@ -4,9 +4,9 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
 
 module.exports = withBundleAnalyzer({
   compress: true,
-  basePath:
+  assetPrefix:
     process.env.NODE_ENV === "production"
-      ? "https://dev-life.kr"
+      ? `https://dev-life.kr`
       : "http://localhost:3000",
   webpack(config, { webpack }) {
     const prod = process.env.NODE_ENV === "production";
