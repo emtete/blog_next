@@ -57,7 +57,11 @@ const Post = ({ post, handleCheckbox, checkboxGroup, setRerender }) => {
           id={`inpCheck${post.id}`}
           className='inp_check'
           onChange={handleCheckbox}
-          checked={checkboxGroup[post.id]}
+          checked={
+            checkboxGroup[post.id] !== undefined
+              ? checkboxGroup[post.id]
+              : false
+          }
           value={post.id}
         />
         <label htmlFor={`inpCheck${post.id}`} className='ico_blog ico_checkbox'>
