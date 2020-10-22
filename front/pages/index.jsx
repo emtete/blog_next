@@ -159,7 +159,7 @@ const Home = (props) => {
                   }}
                 >
                   <Link
-                    href={`http://localhost:3000/post/${post.id}`}
+                    href={`https://dev-life.kr/post/${post.id}`}
                     style={{
                       display: "block",
                       overflow: "hidden",
