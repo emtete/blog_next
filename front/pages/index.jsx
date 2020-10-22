@@ -159,7 +159,7 @@ const Home = (props) => {
                   }}
                 >
                   <Link
-                    href={`https://dev-life.kr/post/${post.id}`}
+                    href={`/post/${post.id}`}
                     style={{
                       display: "block",
                       overflow: "hidden",

@@ -51,7 +51,7 @@ const ManagerPage = ({ children }) => {
                   "BlinkMacSystemFont, Apple SD Gothic Neo, Helvetica Neue,  나눔고딕",
               }}
             >
-              <Link href='https://dev-life.kr' style={{ color: "#ffffff" }}>
+              <Link href='/' style={{ color: "#ffffff" }}>
                 <a>DEV LIFE</a>
               </Link>
               <span
