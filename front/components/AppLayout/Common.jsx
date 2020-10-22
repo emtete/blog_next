@@ -63,9 +63,9 @@ const Common = () => {
   }, []);
 
   useEffect(() => {
-    if (loadMyInfoDone) dispatch({ type: "LOAD_MY_INFO_RESET" });
+    // if (loadMyInfoDone) dispatch({ type: "LOAD_MY_INFO_RESET" });
     if (loadMyInfoError) alert(loadMyInfoError);
-  }, [loadMyInfoDone, loadMyInfoError]);
+  }, [loadMyInfoError]); //loadMyInfoDone
 
   const handleLogin = () => {
     if (me) {

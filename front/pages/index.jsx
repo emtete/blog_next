@@ -54,6 +54,8 @@ const Home = (props) => {
   const query = router.query;
   const me = useSelector((state) => state.user.me);
   const isDrawer = useSelector((state) => state.post.isDrawer);
+  const loadMyInfoDone = useSelector((state) => state.user.loadMyInfoDone);
+  const loadMyInfoError = useSelector((state) => state.user.loadMyInfoError);
 
   // const [hasMorePosts, setHasMorePosts] = useState(true);
   const [lastId, setLastId] = useState(-1);
@@ -86,7 +88,8 @@ const Home = (props) => {
 
   const getScrollList = useCallback(() => {
     setIsLoading(true);
-    lastId &&
+    console.log("lastId : ", lastId);
+    lastId !== undefined &&
       axios
         .get(
           `${backUrl}post/getScrollList?userId=${
@@ -97,7 +100,12 @@ const Home = (props) => {
         .then((result) => {
           setIsLoading(false);
           const data = result.data;
-          setPostList((prev) => prev.concat(data));
+          // console.log("data", data);
+          if (postList) {
+            setPostList((prev) => prev.concat(data));
+          } else {
+            setPostList(data);
+          }
           setLastId(data[data.length - 1]?.id);
           // setHasMorePosts(data.length === 10);
         })
@@ -117,10 +125,18 @@ const Home = (props) => {
     }
   }, [getScrollList, isLoading, lastId]); //hasMorePosts
 
+  // useEffect(() => {
+  //   !props.data && getNotice();
+  //   props.data && getScrollList();
+  // }, [props.data]);
+
   useEffect(() => {
-    !props.data && getNotice();
-    props.data && getScrollList();
-  }, [props.data]);
+    if (loadMyInfoDone) {
+      setLastId(-1);
+      getNotice();
+      getScrollList();
+    }
+  }, [query, loadMyInfoDone, me]);
 
   useEffect(() => {
     window.addEventListener("scroll", onScroll);
@@ -243,38 +259,38 @@ const Home = (props) => {
   );
 };
 
-export const getServerSideProps = wrapper.getServerSideProps(
-  async (context) => {
-    const cookie = context.req ? context.req.headers.cookie : "";
-    axios.defaults.headers.Cookie = "";
+// export const getServerSideProps = wrapper.getServerSideProps(
+//   async (context) => {
+//     const cookie = context.req ? context.req.headers.cookie : "";
+//     axios.defaults.headers.Cookie = "";
 
-    if (context.req && cookie) {
-      axios.defaults.headers.Cookie = cookie;
-    }
+//     if (context.req && cookie) {
+//       axios.defaults.headers.Cookie = cookie;
+//     }
 
-    const cookieArr = cookie && cookie.split("; ");
-    let cookieObj = {};
-    for (let i in cookieArr) {
-      cookieObj[cookieArr[i].split("=")[0]] = cookieArr[i].split("=")[1];
-    }
+//     const cookieArr = cookie && cookie.split("; ");
+//     let cookieObj = {};
+//     for (let i in cookieArr) {
+//       cookieObj[cookieArr[i].split("=")[0]] = cookieArr[i].split("=")[1];
+//     }
 
-    // const data = {
-    const userId = cookieObj.id || 1;
-    //   CategoryId: context.query.categoryId,
-    //   includeContent: true,
-    // };
+//     // const data = {
+//     const userId = cookieObj.id || 1;
+//     //   CategoryId: context.query.categoryId,
+//     //   includeContent: true,
+//     // };
 
-    // const id = context.req.url.split("/")[2];
-    const data = await fetcher(
-      `${backUrl}post/getList?userId=${userId}&includeContent=${true}&isNotice=${1}`
-    );
+//     // const id = context.req.url.split("/")[2];
+//     const data = await fetcher(
+//       `${backUrl}post/getList?userId=${userId}&includeContent=${true}&isNotice=${1}`
+//     );
 
-    context.store.dispatch({ type: "LOAD_MY_INFO_REQUEST" });
-    context.store.dispatch(END);
-    await context.store.sagaTask.toPromise();
+//     context.store.dispatch({ type: "LOAD_MY_INFO_REQUEST" });
+//     context.store.dispatch(END);
+//     await context.store.sagaTask.toPromise();
 
-    return { props: { data } };
-  }
-);
+//     return { props: { data } };
+//   }
+// );
 
 export default Home;
