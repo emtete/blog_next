@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Head from "next/head";
 import wrapper from "../store/configureStore";
 import axios from "axios";
@@ -51,17 +51,84 @@ const fetcher = (url) =>
 const Home = (props) => {
   const classes = useStyles();
   const router = useRouter();
+  const query = router.query;
   const me = useSelector((state) => state.user.me);
   const isDrawer = useSelector((state) => state.post.isDrawer);
 
-  const { data: postList, err } = useSWR(
-    // `${backUrl}post/getList?userId=${me ? me.id : 1}`
-    `${backUrl}post/getList?userId=${me ? me.id : 1}&includeContent=${true}`,
-    fetcher,
-    props.data
-  );
+  // const [hasMorePosts, setHasMorePosts] = useState(true);
+  const [lastId, setLastId] = useState(-1);
+  const [postList, setPostList] = useState(props.data);
+  const [isLoading, setIsLoading] = useState(false);
 
-  console.log(postList);
+  // const { data, err } = useSWR(
+  //   `${backUrl}post/getList?userId=${
+  //     me ? me.id : 1
+  //   }&includeContent=${true}&isNotice=${1}`,
+  //   fetcher,
+  //   props.data
+  // );
+
+  function getNotice() {
+    axios
+      .get(
+        `${backUrl}post/getList?userId=${
+          me ? me.id : 1
+        }&includeContent=${true}&isNotice=${1}`,
+        { withCredentials: true }
+      )
+      .then((result) => {
+        setPostList(result.data);
+      })
+      .catch((err) => {
+        alert(err);
+      });
+  }
+
+  const getScrollList = useCallback(() => {
+    setIsLoading(true);
+    lastId &&
+      axios
+        .get(
+          `${backUrl}post/getScrollList?userId=${
+            me ? me.id : 1
+          }&lastId=${lastId}`,
+          { withCredentials: true }
+        )
+        .then((result) => {
+          setIsLoading(false);
+          const data = result.data;
+          setPostList((prev) => prev.concat(data));
+          setLastId(data[data.length - 1]?.id);
+          // setHasMorePosts(data.length === 10);
+        })
+        .catch((err) => {
+          setIsLoading(false);
+          alert(err);
+        });
+  }, [isLoading, postList, lastId, me]); //hasMorePosts
+
+  const onScroll = useCallback(() => {
+    const upperIndex = window.pageYOffset;
+    const screenHeight = document.documentElement.clientHeight;
+    const entireHeight = document.documentElement.scrollHeight;
+
+    if (upperIndex + screenHeight > entireHeight - 300 && lastId != 1) {
+      !isLoading && lastId && getScrollList();
+    }
+  }, [getScrollList, isLoading, lastId]); //hasMorePosts
+
+  useEffect(() => {
+    !props.data && getNotice();
+    props.data && getScrollList();
+  }, [props.data]);
+
+  useEffect(() => {
+    window.addEventListener("scroll", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, [onScroll]);
+
   return (
     <>
       <Head>
@@ -149,7 +216,8 @@ const Home = (props) => {
                       style={{
                         fontSize: "12px",
                         textDecoration: "none",
-                        color: "#3db39e",
+                        // color: "#3db39e",
+                        color: "#556cd6",
                       }}
                     >
                       {post.categoryName}
@@ -198,7 +266,7 @@ export const getServerSideProps = wrapper.getServerSideProps(
 
     // const id = context.req.url.split("/")[2];
     const data = await fetcher(
-      `${backUrl}post/getList?userId=${userId}&includeContent=${true}`
+      `${backUrl}post/getList?userId=${userId}&includeContent=${true}&isNotice=${1}`
     );
 
     context.store.dispatch({ type: "LOAD_MY_INFO_REQUEST" });

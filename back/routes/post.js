@@ -1,4 +1,5 @@
 const Sequelize = require("sequelize");
+const { Op } = require("sequelize");
 const express = require("express");
 const multer = require("multer");
 const path = require("path");
@@ -122,8 +123,38 @@ router.get("/getList", async (req, res, next) => {
       };
     }
 
-    if (query && query.limit !== undefined) {
-      where["limit"] = query.limit;
+    if (query && query.isNotice !== undefined) {
+      where["isNotice"] = query.isNotice;
+    }
+
+    if (query && query.CategoryId !== undefined) {
+      where["CategoryId"] = query.CategoryId;
+    }
+
+    if (query && query.userId !== undefined) {
+      where["UserId"] = query.userId;
+    }
+    const post = await Post.findAll(searchCondition);
+    res.status(201).json(post);
+  } catch (err) {
+    console.error(err);
+    next(err); // status 500
+  }
+});
+
+router.get("/getScrollList", async (req, res, next) => {
+  try {
+    const query = req.query;
+    const where = {};
+    const searchCondition = {
+      where,
+      order: [["id", "DESC"]],
+      limit: 10,
+    };
+    where["isNotice"] = 0;
+
+    if (query && query.lastId !== undefined && query.lastId != -1) {
+      where["id"] = { [Op.lt]: parseInt(query.lastId, 10) };
     }
 
     if (query && query.CategoryId !== undefined) {
