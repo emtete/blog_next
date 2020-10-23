@@ -104,6 +104,7 @@ const CardModal = ({ categoryId, categoryName, setRerender }) => {
         CategoryId: categoryId,
         imagePath,
         content,
+        isNotice: 0,
       };
 
       axios
@@ -126,6 +127,7 @@ const CardModal = ({ categoryId, categoryName, setRerender }) => {
         CategoryId: categoryId,
         imagePath,
         content,
+        isNotice: 0,
       };
 
       axios

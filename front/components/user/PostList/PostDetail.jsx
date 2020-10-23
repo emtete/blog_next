@@ -89,6 +89,7 @@ const PostDetail = ({ post, CategoryId, categoryName, setRerender }) => {
         categoryName,
         CategoryId,
         content,
+        isNotice: 0,
       };
 
       axios
@@ -110,6 +111,7 @@ const PostDetail = ({ post, CategoryId, categoryName, setRerender }) => {
         categoryName,
         CategoryId,
         content,
+        isNotice: 0,
       };
 
       axios
