@@ -51,8 +51,7 @@ const Common = () => {
 
   const loadMyInfoDone = useSelector((state) => state.user.loadMyInfoDone);
   const loadMyInfoError = useSelector((state) => state.user.loadMyInfoError);
-
-  const orgPost = useSelector((state) => state.post.orgPost);
+  const logOutDone = useSelector((state) => state.user.logOutDone);
 
   useEffect(() => {
     setIsManage(router.pathname.split("/")[1] === "manage");
@@ -67,13 +66,16 @@ const Common = () => {
     if (loadMyInfoError) alert(loadMyInfoError);
   }, [loadMyInfoError]); //loadMyInfoDone
 
+  useEffect(() => {
+    logOutDone && router.push("/");
+  }, [logOutDone]);
+
   const handleLogin = () => {
     if (me) {
-      const data = { userId: 1 };
-      dispatch({ type: "GET_CATEGORY_LIST_REQUEST", data });
       dispatch({ type: "LOG_OUT_REQUEST" });
       Cookies.remove("id");
-      router.push("/");
+      const data = { userId: 1 };
+      dispatch({ type: "GET_CATEGORY_LIST_REQUEST", data });
     } else {
       dispatch({ type: "START_LOG_IN_MODE_ACTION" });
     }
