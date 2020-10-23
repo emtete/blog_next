@@ -57,29 +57,25 @@ const Home = (props) => {
   const loadMyInfoDone = useSelector((state) => state.user.loadMyInfoDone);
   const loadMyInfoError = useSelector((state) => state.user.loadMyInfoError);
 
-  // const [hasMorePosts, setHasMorePosts] = useState(true);
-  const [lastId, setLastId] = useState(-1);
-  const [postList, setPostList] = useState(props.data);
+  const [postList, setPostList] = useState(props.data || null);
+  const [hasMorePosts, setHasMorePosts] = useState(props.data.length === 10);
   const [isLoading, setIsLoading] = useState(false);
+  const [isFirst, setIsFirst] = useState(true);
+  const [numberOfRequest, setNumberOfRequest] = useState(postList ? 1 : 0);
 
-  // const { data, err } = useSWR(
-  //   `${backUrl}post/getList?userId=${
-  //     me ? me.id : 1
-  //   }&includeContent=${true}&isNotice=${1}`,
-  //   fetcher,
-  //   props.data
-  // );
+  const url = `${backUrl}post/getScrollList?userId=${
+    me ? me.id : 1
+  }&numberOfRequest=${numberOfRequest * 10}`;
 
-  function getNotice() {
+  function getFirstList() {
     axios
-      .get(
-        `${backUrl}post/getList?userId=${
-          me ? me.id : 1
-        }&includeContent=${true}&isNotice=${1}`,
-        { withCredentials: true }
-      )
+      .get(`${backUrl}post/getScrollList?userId=${me ? me.id : 1}`, {
+        withCredentials: true,
+      })
       .then((result) => {
         setPostList(result.data);
+        setNumberOfRequest(1);
+        setHasMorePosts(result.data.length === 10);
       })
       .catch((err) => {
         alert(err);
@@ -88,55 +84,44 @@ const Home = (props) => {
 
   const getScrollList = useCallback(() => {
     setIsLoading(true);
-    console.log("lastId : ", lastId);
-    lastId !== undefined &&
-      axios
-        .get(
-          `${backUrl}post/getScrollList?userId=${
-            me ? me.id : 1
-          }&lastId=${lastId}`,
-          { withCredentials: true }
-        )
-        .then((result) => {
-          setIsLoading(false);
-          const data = result.data;
-          // console.log("data", data);
-          if (postList) {
-            setPostList((prev) => prev.concat(data));
-          } else {
-            setPostList(data);
-          }
-          setLastId(data[data.length - 1]?.id);
-          // setHasMorePosts(data.length === 10);
-        })
-        .catch((err) => {
-          setIsLoading(false);
-          alert(err);
-        });
-  }, [isLoading, postList, lastId, me]); //hasMorePosts
+    axios
+      .get(url, { withCredentials: true })
+      .then((result) => {
+        setIsLoading(false);
+        const data = result.data;
+        if (postList) {
+          setPostList((prev) => prev.concat(data));
+        } else {
+          setPostList(data);
+        }
+        setNumberOfRequest((prev) => prev + 1);
+        setHasMorePosts(data.length === 10);
+      })
+      .catch((err) => {
+        setIsLoading(false);
+        alert(err);
+      });
+  }, [isLoading, postList, me, url]); //hasMorePosts
 
   const onScroll = useCallback(() => {
     const upperIndex = window.pageYOffset;
     const screenHeight = document.documentElement.clientHeight;
     const entireHeight = document.documentElement.scrollHeight;
+    const searchCondition = upperIndex + screenHeight > entireHeight - 300;
 
-    if (upperIndex + screenHeight > entireHeight - 300 && lastId != 1) {
-      !isLoading && lastId && getScrollList();
-    }
-  }, [getScrollList, isLoading, lastId]); //hasMorePosts
-
-  // useEffect(() => {
-  //   !props.data && getNotice();
-  //   props.data && getScrollList();
-  // }, [props.data]);
-
-  useEffect(() => {
-    if (loadMyInfoDone) {
-      setLastId(-1);
-      getNotice();
+    if (!isLoading && searchCondition && hasMorePosts) {
       getScrollList();
     }
-  }, [query, loadMyInfoDone, me]);
+  }, [getScrollList, isLoading, hasMorePosts, numberOfRequest]); //hasMorePosts
+
+  // 로그인 정보가 변경되는 경우
+  useEffect(() => {
+    // console.log(postList);
+    if (loadMyInfoDone && !isFirst) {
+      getFirstList();
+    }
+    setIsFirst(false);
+  }, [me?.id]); // isChanged
 
   useEffect(() => {
     window.addEventListener("scroll", onScroll);
@@ -259,38 +244,39 @@ const Home = (props) => {
   );
 };
 
-// export const getServerSideProps = wrapper.getServerSideProps(
-//   async (context) => {
-//     const cookie = context.req ? context.req.headers.cookie : "";
-//     axios.defaults.headers.Cookie = "";
+export const getServerSideProps = wrapper.getServerSideProps(
+  async (context) => {
+    const cookie = context.req ? context.req.headers.cookie : "";
+    axios.defaults.headers.Cookie = "";
 
-//     if (context.req && cookie) {
-//       axios.defaults.headers.Cookie = cookie;
-//     }
+    if (context.req && cookie) {
+      axios.defaults.headers.Cookie = cookie;
+    }
 
-//     const cookieArr = cookie && cookie.split("; ");
-//     let cookieObj = {};
-//     for (let i in cookieArr) {
-//       cookieObj[cookieArr[i].split("=")[0]] = cookieArr[i].split("=")[1];
-//     }
+    const cookieArr = cookie && cookie.split("; ");
+    let cookieObj = {};
+    for (let i in cookieArr) {
+      cookieObj[cookieArr[i].split("=")[0]] = cookieArr[i].split("=")[1];
+    }
 
-//     // const data = {
-//     const userId = cookieObj.id || 1;
-//     //   CategoryId: context.query.categoryId,
-//     //   includeContent: true,
-//     // };
+    // const data = {
+    const userId = cookieObj.id || 1;
+    //   CategoryId: context.query.categoryId,
+    //   includeContent: true,
+    // };
 
-//     // const id = context.req.url.split("/")[2];
-//     const data = await fetcher(
-//       `${backUrl}post/getList?userId=${userId}&includeContent=${true}&isNotice=${1}`
-//     );
+    // const id = context.req.url.split("/")[2];
+    const data = await fetcher(
+      // `${backUrl}post/getScrollList?userId=${userId}&includeContent=${true}&isNotice=${1}`
+      `${backUrl}post/getScrollList?userId=${userId}`
+    );
 
-//     context.store.dispatch({ type: "LOAD_MY_INFO_REQUEST" });
-//     context.store.dispatch(END);
-//     await context.store.sagaTask.toPromise();
+    context.store.dispatch({ type: "LOAD_MY_INFO_REQUEST" });
+    context.store.dispatch(END);
+    await context.store.sagaTask.toPromise();
 
-//     return { props: { data } };
-//   }
-// );
+    return { props: { data } };
+  }
+);
 
 export default Home;

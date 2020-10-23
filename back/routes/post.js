@@ -148,13 +148,24 @@ router.get("/getScrollList", async (req, res, next) => {
     const where = {};
     const searchCondition = {
       where,
-      order: [["id", "DESC"]],
-      limit: 10,
+      order: [
+        ["isNotice", "DESC"],
+        ["id", "DESC"],
+      ],
+      // limit: [10, 10],
+      // limit: [20],
     };
-    where["isNotice"] = 0;
+    // where["isNotice"] = 0;
 
-    if (query && query.lastId !== undefined && query.lastId != -1) {
-      where["id"] = { [Op.lt]: parseInt(query.lastId, 10) };
+    // if (query && query.lastId !== undefined && query.lastId != -1) {
+    //   where["id"] = { [Op.lt]: parseInt(query.lastId, 10) };
+    // }
+    // numberOfRequest
+    if (query && query.numberOfRequest !== undefined) {
+      const num = parseInt(query.numberOfRequest);
+      searchCondition.limit = [num, 10];
+    } else {
+      searchCondition.limit = [10];
     }
 
     if (query && query.CategoryId !== undefined) {
