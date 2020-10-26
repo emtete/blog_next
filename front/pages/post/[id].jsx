@@ -58,13 +58,13 @@ const Card = (props) => {
   const router = useRouter();
 
   const query = router.query;
-  // const [post, setPost] = useState(props.data);
+  const [post, setPost] = useState(props.data);
 
-  const { data: post, err } = useSWR(
-    `${backUrl}post/getOne?id=${query.id}`,
-    fetcher,
-    props.data
-  );
+  // const { data: post, err } = useSWR(
+  //   `${backUrl}post/getOne?id=${query.id}`,
+  //   fetcher,
+  //   props.data
+  // );
 
   const isDrawer = useSelector((state) => state.post.isDrawer);
   // console.log("post : ", RemoveMarkdown(post.content));
