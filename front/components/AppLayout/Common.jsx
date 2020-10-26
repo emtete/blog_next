@@ -71,10 +71,8 @@ const Common = () => {
   }, [logOutDone]);
 
   useEffect(() => {
-    if (window.innerWidth > 600) {
-      const data = { isDrawer: true };
-      dispatch({ type: "SET_TOGGLE_IS_DRAWER_ACTION", data });
-    }
+    const data = { isDrawer: window.innerWidth > 600 };
+    dispatch({ type: "SET_TOGGLE_IS_DRAWER_ACTION", data });
   }, [router.pathname]);
 
   const handleLogin = () => {

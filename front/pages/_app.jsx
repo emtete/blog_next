@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import PropTypes from "prop-types";
 
 import Head from "next/head";
@@ -8,7 +8,7 @@ import { ThemeProvider } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import theme from "../src/theme";
 
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import UserPage from "../components/AppLayout/UserPage";
 import ManagerPage from "../components/AppLayout/ManagerPage";
@@ -29,6 +29,7 @@ import wrapper from "../store/configureStore";
 const MyApp = (props) => {
   const { Component, pageProps } = props;
   const router = useRouter();
+  const dispatch = useDispatch();
   const [isManage, setIsManage] = useState(false);
 
   const isAdminMode = useSelector((state) => state.user.isAdminMode);
@@ -36,6 +37,33 @@ const MyApp = (props) => {
   React.useEffect(() => {
     setIsManage(router.pathname.split("/")[1] === "manage");
   }, [router.pathname]);
+
+  // React.useEffect(() => {
+  //   //
+  // }, []);
+
+  React.useEffect(() => {
+    function abc() {
+      // alert(window.innerWidth);
+      // if (isDrawer) {
+      const data = { isDrawer: window.innerWidth > 600 };
+      dispatch({ type: "SET_TOGGLE_IS_DRAWER_ACTION", data });
+      // }
+    }
+    // console.log(333);
+    // if (router.pathname == "/") {
+    // setTimeout(
+    //   () => dispatch({ type: "SET_TOGGLE_IS_DRAWER_ACTION", data }),
+    //   1000
+    // );
+    // }
+    // alert(window.innerWidth);
+    window.addEventListener("resize", abc);
+    // alert(window.innerWidth);
+    return () => {
+      window.removeEventListener("resize", abc);
+    };
+  }, []);
 
   React.useEffect(() => {
     // Remove the server-side injected CSS.
