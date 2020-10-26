@@ -72,7 +72,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const LayoutBar = () => {
+const LayoutBar = ({ handleDrawerToggle }) => {
   const dispatch = useDispatch();
   const classes = useStyles();
   const theme = useTheme();
@@ -93,13 +93,16 @@ const LayoutBar = () => {
       <CssBaseline />
       <AppBar
         position='fixed'
-        className={clsx(classes.appBar, {
-          [classes.appBarShift]: isDrawer,
-        })}
+        className={
+          classes.appBar
+          //   clsx(classes.appBar, {
+          //   [classes.appBarShift]: isDrawer,
+          // })
+        }
       >
         <Toolbar>
           {/* <Typography variant='h6' noWrap> */}
-          {isDrawer ? (
+          {/* {isDrawer ? (
             <NavigateBeforeIcon
               style={{ cursor: "pointer" }}
               onClick={handleDrawerClose}
@@ -109,8 +112,16 @@ const LayoutBar = () => {
               style={{ cursor: "pointer" }}
               onClick={handleDrawerOpen}
             />
-          )}
-
+          )} */}
+          <IconButton
+            color='inherit'
+            aria-label='open drawer'
+            edge='start'
+            onClick={handleDrawerToggle}
+            className={classes.menuButton}
+          >
+            <MenuIcon />
+          </IconButton>
           {/* <MenuIcon style={{ cursor: "pointer" }} onClick={handleDrawerOpen} /> */}
           {/* <IconButton
             color='inherit'

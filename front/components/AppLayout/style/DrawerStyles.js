@@ -10,10 +10,10 @@ export const menuStyles = makeStyles((theme) => ({
     height: "100%",
   },
   drawer: {
-    // [theme.breakpoints.up("sm")]: {
-    width: drawerWidth,
-    flexShrink: 0,
-    // },
+    [theme.breakpoints.up("sm")]: {
+      width: drawerWidth,
+      flexShrink: 0,
+    },
   },
   appBar: {
     [theme.breakpoints.up("sm")]: {
@@ -54,6 +54,7 @@ export const menuStyles = makeStyles((theme) => ({
   },
   drawerPaperMobile: {
     width: "100%",
+    height: "90%",
     backgroundColor: "#0c2a40",
   },
   content: {

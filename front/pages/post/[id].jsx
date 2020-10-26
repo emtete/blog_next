@@ -34,11 +34,16 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: "80px",
     flexGrow: 1,
     padding: theme.spacing(3),
-    transition: theme.transitions.create("margin", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    marginLeft: -drawerWidth,
+    // marginLeft: drawerWidth,
+    [theme.breakpoints.down("xs")]: {
+      marginLeft: 0,
+      // width: drawerWidth,
+      // flexShrink: 0,
+    },
+    // transition: theme.transitions.create("margin", {
+    //   easing: theme.transitions.easing.sharp,
+    //   duration: theme.transitions.duration.leavingScreen,
+    // }),
   },
   contentShift: {
     transition: theme.transitions.create("margin", {
@@ -100,6 +105,7 @@ const Card = (props) => {
 
   return (
     <>
+      {/* <UserPage /> */}
       <Head>
         <title>DEV LIFE</title>
         {post && (
@@ -126,10 +132,14 @@ const Card = (props) => {
       </Head>
 
       <main
-        className={clsx(classes.content1, {
-          [classes.contentShift]: isDrawer,
-        })}
-        style={{ width: "100%" }}
+        className={
+          // clsx(
+          classes.content1
+          //     , {
+          //   [classes.contentShift]: isDrawer,
+          // })
+        }
+        // style={{ width: "100%" }}
       >
         <div
           style={{ width: "100%", display: "flex", justifyContent: "center" }}

@@ -19,15 +19,19 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: "50%",
   },
   content1: {
-    width: "100%",
     paddingTop: "80px",
     flexGrow: 1,
     padding: theme.spacing(3),
-    transition: theme.transitions.create("margin", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    marginLeft: -drawerWidth,
+    // marginLeft: drawerWidth,
+    [theme.breakpoints.down("xs")]: {
+      marginLeft: 0,
+      // width: drawerWidth,
+      // flexShrink: 0,
+    },
+    // transition: theme.transitions.create("margin", {
+    //   easing: theme.transitions.easing.sharp,
+    //   duration: theme.transitions.duration.leavingScreen,
+    // }),
   },
   contentShift: {
     transition: theme.transitions.create("margin", {
@@ -134,6 +138,8 @@ const Home = (props) => {
 
   return (
     <>
+      {/* <UserPage /> */}
+      {/* <nav className={classes.drawer} aria-label="mailbox folders"></nav> */}
       <Head>
         <title>DEV LIFE</title>
         <meta name='description' content={"웹 개발 블로그입니다."} />
@@ -143,9 +149,14 @@ const Home = (props) => {
         <meta property='og:url' content={"https://dev-life.kr"} />
       </Head>
       <main
-        className={clsx(classes.content1, {
-          [classes.contentShift]: isDrawer,
-        })}
+        className={
+          classes.content1
+          // clsx(
+          //   , {
+          //   [classes.contentShift]: isDrawer,
+          // }
+          // )
+        }
       >
         <div>
           {postList &&

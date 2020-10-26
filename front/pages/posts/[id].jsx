@@ -24,11 +24,16 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: "80px",
     flexGrow: 1,
     padding: theme.spacing(3),
-    transition: theme.transitions.create("margin", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    marginLeft: -drawerWidth,
+    // marginLeft: drawerWidth,
+    [theme.breakpoints.down("xs")]: {
+      marginLeft: 0,
+      // width: drawerWidth,
+      // flexShrink: 0,
+    },
+    // transition: theme.transitions.create("margin", {
+    //   easing: theme.transitions.easing.sharp,
+    //   duration: theme.transitions.duration.leavingScreen,
+    // }),
   },
   contentShift: {
     transition: theme.transitions.create("margin", {
@@ -99,37 +104,43 @@ const Post = () => {
   }, [isEditMode, postList]);
 
   return (
-    <main
-      className={clsx(classes.content1, {
-        [classes.contentShift]: isDrawer,
-      })}
-      style={{ width: "100%" }}
-    >
-      <div id='mArticle'>
-        <div className='blog_category'>
-          <h3 className='tit_cont'>
-            {categoryName}
-            {me && (
-              <button className='link_write' onClick={onClickWrite}>
-                {isEditMode ? "취소" : "글 쓰기"}
-                <span className='ico_blog'></span>
-              </button>
-            )}
-          </h3>
-          <div>
-            {postList.map((post, i) => (
-              <PostDetail
-                post={post}
-                key={String(post.id) + String(post.date)}
-                CategoryId={query.id}
-                categoryName={categoryName}
-                setRerender={setRerender}
-              />
-            ))}
+    <>
+      <main
+        className={
+          // clsx(
+          classes.content1
+          //   , {
+          //   [classes.contentShift]: isDrawer,
+          // })
+        }
+        // style={{ width: "100%" }}
+      >
+        <div id='mArticle'>
+          <div className='blog_category'>
+            <h3 className='tit_cont'>
+              {categoryName}
+              {me && (
+                <button className='link_write' onClick={onClickWrite}>
+                  {isEditMode ? "취소" : "글 쓰기"}
+                  <span className='ico_blog'></span>
+                </button>
+              )}
+            </h3>
+            <div>
+              {postList.map((post, i) => (
+                <PostDetail
+                  post={post}
+                  key={String(post.id) + String(post.date)}
+                  CategoryId={query.id}
+                  categoryName={categoryName}
+                  setRerender={setRerender}
+                />
+              ))}
+            </div>
           </div>
         </div>
-      </div>
-    </main>
+      </main>
+    </>
   );
 };
 

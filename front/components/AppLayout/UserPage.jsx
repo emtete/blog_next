@@ -15,6 +15,7 @@ import Link from "next/link";
 import { menuStyles } from "./style/DrawerStyles";
 import Common from "./Common";
 import LayoutBar from "./LayoutBar";
+import ResponseWrap from "./ResponseWrap";
 
 const getIsArray = (element) => {
   return Array.isArray(element) && element.length > 0;
@@ -27,6 +28,7 @@ const UserPage = ({ children }) => {
   const router = useRouter();
   const dispatch = useDispatch();
   const [menuList, setMenuList] = useState([]);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const isDrawer = useSelector((state) => state.post.isDrawer);
   const me = useSelector((state) => state.user.me);
@@ -49,6 +51,10 @@ const UserPage = ({ children }) => {
 
   const loadMyInfoDone = useSelector((state) => state.user.loadMyInfoDone);
   const loadMyInfoError = useSelector((state) => state.user.loadMyInfoError);
+
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
 
   useEffect(() => {
     const data = { userId: me ? me.id : 1 };
@@ -80,6 +86,7 @@ const UserPage = ({ children }) => {
         } else {
           router.push(`/${path}/${e.id}`, undefined, { shallow: true });
         }
+        handleDrawerToggle();
       } else {
         onToggleMenu(e);
       }
@@ -97,16 +104,19 @@ const UserPage = ({ children }) => {
 
   // const onClickTitle = useCallback(() => {
   //   router.push("/", undefined, { shallow: true });
-  // }, []);
+  //   handleDrawerToggle();
+  // }, [handleDrawerToggle]);
+  const onClickTitle = () => {
+    handleDrawerToggle();
+    router.push("/", undefined, { shallow: true });
+  };
 
   console.log("UserPage");
   return (
     <div className={classes.root}>
-      {/* <CssBaseline /> */}
-
       <nav className={classes.drawer} aria-label='mailbox folders'>
-        <LayoutBar />
-        <Hidden xsDown implementation='css'>
+        <LayoutBar handleDrawerToggle={handleDrawerToggle} />
+        <ResponseWrap size='xsDown'>
           <Drawer
             classes={{
               paper: classes.drawerPaper,
@@ -115,7 +125,7 @@ const UserPage = ({ children }) => {
             // variant='permanent'
             variant='persistent'
             anchor='left'
-            open={isDrawer}
+            open={true}
           >
             <div>
               <div
@@ -125,10 +135,9 @@ const UserPage = ({ children }) => {
                     "BlinkMacSystemFont, Apple SD Gothic Neo, Helvetica Neue,  나눔고딕",
                 }}
               >
-                <Link href='/' style={{ color: "#ffffff" }}>
-                  <a>DEV LIFE</a>
-                  {/* onClick={onClickTitle} */}
-                </Link>
+                {/* <Link href='/' style={{ color: "#ffffff" }}> */}
+                <a onClick={onClickTitle}>DEV LIFE</a>
+                {/* </Link> */}
                 <span
                   className={classes.toolbarCustomising2}
                   style={{
@@ -190,7 +199,94 @@ const UserPage = ({ children }) => {
               </List>
             </div>
           </Drawer>
-        </Hidden>
+        </ResponseWrap>
+
+        <ResponseWrap size='smUp'>
+          <Drawer
+            classes={{
+              paper: classes.drawerPaperMobile,
+            }}
+            // drawer
+            variant='temporary'
+            // variant='persistent'
+            anchor='top'
+            open={false}
+            open={mobileOpen}
+            onClose={handleDrawerToggle}
+          >
+            <div>
+              <div
+                className={(classes.toolbar, classes.toolbarCustomising)}
+                style={{
+                  fontFamily:
+                    "BlinkMacSystemFont, Apple SD Gothic Neo, Helvetica Neue,  나눔고딕",
+                }}
+              >
+                {/* <Link href='/' style={{ color: "#ffffff" }}> */}
+                <a onClick={onClickTitle}>DEV LIFE</a>
+                {/* </Link> */}
+                <span
+                  className={classes.toolbarCustomising2}
+                  style={{
+                    fontFamily:
+                      "BlinkMacSystemFont, Apple SD Gothic Neo, Helvetica Neue,  나눔고딕",
+                  }}
+                >
+                  Front-End Web Developer
+                </span>
+              </div>
+              <List>
+                <Common />
+
+                {menuList.map((e, index) => (
+                  <div key={e.id}>
+                    <ListItem
+                      button
+                      key={e.id}
+                      style={{ color: "#dbdfe2" }}
+                      onClick={() => onClickItem(e)}
+                    >
+                      <ListItemText
+                        primary={e.title}
+                        style={{ paddingLeft: "20px", color: "#dbdfe2" }}
+                      />
+                      {Array.isArray(e.children) && e.children.length > 0 ? (
+                        e.isOpend ? (
+                          <ExpandLess />
+                        ) : (
+                          <ExpandMore />
+                        )
+                      ) : null}
+                    </ListItem>
+                    {Array.isArray(e.children) && e.children.length > 0 && (
+                      <Collapse in={e.isOpend} timeout='auto' unmountOnExit>
+                        <List component='div' disablePadding>
+                          {e.children.map((ee, iindex) => (
+                            <ListItem
+                              key={ee.id}
+                              button
+                              className={classes.nested}
+                              style={{ color: "#dbdfe2" }}
+                              onClick={() => onClickItem(ee)}
+                            >
+                              <ListItemText
+                                primary={ee.title}
+                                style={{
+                                  paddingLeft: "30px",
+                                  color: "#dbdfe2",
+                                }}
+                              />
+                            </ListItem>
+                          ))}
+                        </List>
+                      </Collapse>
+                    )}
+                  </div>
+                ))}
+              </List>
+            </div>
+          </Drawer>
+        </ResponseWrap>
       </nav>
       {children}
     </div>
