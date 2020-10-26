@@ -35,7 +35,7 @@ if (process.env.NODE_ENV === "production") {
   app.use(helmet());
   app.use(
     cors({
-      origin: "https://dev-life.kr",
+      origin: ["https://dev-life.kr","http://localhost:3000"]
       credentials: true,
     })
   );
