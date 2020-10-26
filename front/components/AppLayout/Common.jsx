@@ -75,7 +75,7 @@ const Common = () => {
       const data = { isDrawer: true };
       dispatch({ type: "SET_TOGGLE_IS_DRAWER_ACTION", data });
     }
-  }, []);
+  }, [router.pathname]);
 
   const handleLogin = () => {
     if (me) {
