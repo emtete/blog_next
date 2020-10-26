@@ -76,7 +76,7 @@ const UserPage = ({ children }) => {
   }, [getListDone, getListError]);
 
   const onClickItem = useCallback(
-    (e) => {
+    (e, isMobile) => {
       if (!getIsArray(e.children)) {
         let path = e.isCard ? "cards" : "posts";
         if (e.id == 14) {
@@ -86,7 +86,7 @@ const UserPage = ({ children }) => {
         } else {
           router.push(`/${path}/${e.id}`, undefined, { shallow: true });
         }
-        handleDrawerToggle();
+        isMobile && handleDrawerToggle();
       } else {
         onToggleMenu(e);
       }
@@ -101,15 +101,15 @@ const UserPage = ({ children }) => {
     },
     [menuList]
   );
-
-  // const onClickTitle = useCallback(() => {
-  //   router.push("/", undefined, { shallow: true });
-  //   handleDrawerToggle();
-  // }, [handleDrawerToggle]);
-  const onClickTitle = () => {
-    handleDrawerToggle();
+  // onClickDesktopTitle
+  const onClickTitle = (isMobile) => {
+    isMobile && handleDrawerToggle();
     router.push("/", undefined, { shallow: true });
   };
+  // const onClickMobileTitle = () => {
+  //   handleDrawerToggle();
+  //   router.push("/", undefined, { shallow: true });
+  // };
 
   console.log("UserPage");
   return (
@@ -136,7 +136,7 @@ const UserPage = ({ children }) => {
                 }}
               >
                 {/* <Link href='/' style={{ color: "#ffffff" }}> */}
-                <a onClick={onClickTitle}>DEV LIFE</a>
+                <a onClick={() => onClickTitle(false)}>DEV LIFE</a>
                 {/* </Link> */}
                 <span
                   className={classes.toolbarCustomising2}
@@ -157,7 +157,7 @@ const UserPage = ({ children }) => {
                       button
                       key={e.id}
                       style={{ color: "#dbdfe2" }}
-                      onClick={() => onClickItem(e)}
+                      onClick={() => onClickItem(e, false)}
                     >
                       <ListItemText
                         primary={e.title}
@@ -223,7 +223,7 @@ const UserPage = ({ children }) => {
                 }}
               >
                 {/* <Link href='/' style={{ color: "#ffffff" }}> */}
-                <a onClick={onClickTitle}>DEV LIFE</a>
+                <a onClick={() => onClickTitle(true)}>DEV LIFE</a>
                 {/* </Link> */}
                 <span
                   className={classes.toolbarCustomising2}
@@ -244,7 +244,7 @@ const UserPage = ({ children }) => {
                       button
                       key={e.id}
                       style={{ color: "#dbdfe2" }}
-                      onClick={() => onClickItem(e)}
+                      onClick={() => onClickItem(e, true)}
                     >
                       <ListItemText
                         primary={e.title}
