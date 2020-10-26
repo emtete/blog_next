@@ -65,6 +65,19 @@ const Card = (props) => {
   //   fetcher,
   //   props.data
   // );
+  useEffect(() => {
+    !props.data &&
+      axios
+        .get(`${backUrl}post/getOne?id=${query.id}`, {
+          withCredentials: true,
+        })
+        .then((result) => {
+          setPost(result.data);
+        })
+        .catch((err) => {
+          alert(err);
+        });
+  }, [props.data]);
 
   const isDrawer = useSelector((state) => state.post.isDrawer);
   // console.log("post : ", RemoveMarkdown(post.content));
