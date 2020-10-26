@@ -108,14 +108,18 @@ const Card = (props) => {
     <>
       {/* <UserPage /> */}
       <Head>
-        <title>DEV LIFE</title>
+        <title>{post ? `${post.title} - DEV LIFE` : "DEV LIFE"}</title>
+
         {post && (
           <>
             <meta
               name='description'
               content={RemoveMarkdown(post.content) || ""}
             />
-            <meta property='og:title' content={post.title || ""} />
+            <meta
+              property='og:title'
+              content={`${post.title} - DEV LIFE` || ""}
+            />
             <meta
               property='og:description'
               content={RemoveMarkdown(post.content) || ""}
