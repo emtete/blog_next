@@ -60,7 +60,7 @@ const Home = (props) => {
   const loadMyInfoError = useSelector((state) => state.user.loadMyInfoError);
 
   const [postList, setPostList] = useState(props.data || null);
-  const [hasMorePosts, setHasMorePosts] = useState(props.data.length === 10);
+  const [hasMorePosts, setHasMorePosts] = useState(true); // props.data.length === 10 ||
   const [isLoading, setIsLoading] = useState(false);
   const [isFirst, setIsFirst] = useState(true);
   const [numberOfRequest, setNumberOfRequest] = useState(postList ? 1 : 0);
@@ -119,7 +119,7 @@ const Home = (props) => {
   // 로그인 정보가 변경되는 경우
   useEffect(() => {
     // console.log(postList);
-    if (loadMyInfoDone && !isFirst) {
+    if (loadMyInfoDone && isFirst) {
       getFirstList();
     }
     setIsFirst(false);
