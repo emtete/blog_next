@@ -1,5 +1,5 @@
 const fs = require("fs");
-// const fetch = require("node-fetch");
+const fetch = require("node-fetch");
 const prettier = require("prettier");
 const axios = require("axios");
 
@@ -11,16 +11,16 @@ const YOUR_AWESOME_DOMAIN = "https://dev-life.kr";
 const formatted = (sitemap) => prettier.format(sitemap, { parser: "html" });
 
 (async () => {
-  // const fetchPosts = await fetch(fetchUrl)
+  const fetchPosts = await fetch(fetchUrl)
+    .then((res) => console.log(res)) //res.json()
+    .catch((err) => console.log(err));
+
+  // const fetchPosts = axios
+  //   .get(fetchUrl, {
+  //     withCredentials: true,
+  //   })
   //   .then((res) => res.json())
   //   .catch((err) => console.log(err));
-
-  const fetchPosts = axios
-    .get(fetchUrl, {
-      withCredentials: true,
-    })
-    .then((res) => res.json())
-    .catch((err) => console.log(err));
 
   console.log("fetchPosts : ", fetchPosts);
 
