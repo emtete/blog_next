@@ -190,8 +190,8 @@ router.get("/getPostIds", async (req, res, next) => {
       // where: { id: req.query.id },
     });
 
-    // res.status(201).json(post);
-    res.status(201).json({ result: "success" });
+    res.status(201).json(post);
+    // res.status(201).json({ result: "success" });
   } catch (err) {
     console.error(err);
     next(err); // status 500
