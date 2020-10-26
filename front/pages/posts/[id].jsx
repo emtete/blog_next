@@ -75,13 +75,13 @@ const Post = () => {
     setRerender(false);
   }, [query, me, rerender]);
 
-  useEffect(() => {
-    setIsEditMode(null);
-    if (window.innerWidth < 600) {
-      const data = { isDrawer: false };
-      dispatch({ type: "SET_TOGGLE_IS_DRAWER_ACTION", data });
-    }
-  }, [query.id]);
+  // useEffect(() => {
+  //   setIsEditMode(null);
+  //   if (window.innerWidth < 600) {
+  //     const data = { isDrawer: false };
+  //     dispatch({ type: "SET_TOGGLE_IS_DRAWER_ACTION", data });
+  //   }
+  // }, [query.id]);
 
   const onClickWrite = useCallback(() => {
     if (isEditMode === null) {

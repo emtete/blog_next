@@ -14,7 +14,7 @@ export const initialState = {
     totalCount: 0,
     items: [],
   },
-  isDrawer: true,
+  isDrawer: false,
   imagePaths: null,
   isViewMode: false,
   selectedPost: null,

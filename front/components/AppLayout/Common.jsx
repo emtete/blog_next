@@ -70,6 +70,13 @@ const Common = () => {
     logOutDone && router.push("/");
   }, [logOutDone]);
 
+  useEffect(() => {
+    if (window.innerWidth > 600) {
+      const data = { isDrawer: true };
+      dispatch({ type: "SET_TOGGLE_IS_DRAWER_ACTION", data });
+    }
+  }, []);
+
   const handleLogin = () => {
     if (me) {
       dispatch({ type: "LOG_OUT_REQUEST" });

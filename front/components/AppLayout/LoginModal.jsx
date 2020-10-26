@@ -58,9 +58,11 @@ const LoginModal = () => {
   useEffect(() => {
     if (logInDone) {
       const data = { userId: me ? me.id : 1 };
+      const expiresTime = new Date(new Date().getTime() + 30 * 60 * 1000);
+
       dispatch({ type: "GET_CATEGORY_LIST_REQUEST", data });
       dispatch({ type: "END_LOG_IN_MODE_ACTION" });
-      Cookies.set("id", me.id, { expires: 7 });
+      Cookies.set("id", me.id, { expires: expiresTime });
       router.push("/");
     }
   }, [logInDone]);

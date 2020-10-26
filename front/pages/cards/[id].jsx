@@ -77,12 +77,12 @@ const Cards = () => {
     setRerender(false);
   }, [query, me, rerender]);
 
-  useEffect(() => {
-    if (window.innerWidth < 600) {
-      const data = { isDrawer: false };
-      dispatch({ type: "SET_TOGGLE_IS_DRAWER_ACTION", data });
-    }
-  }, [query.id]);
+  // useEffect(() => {
+  //   if (window.innerWidth < 600) {
+  //     const data = { isDrawer: false };
+  //     dispatch({ type: "SET_TOGGLE_IS_DRAWER_ACTION", data });
+  //   }
+  // }, [query.id]);
 
   const onClickWrite = useCallback(() => {
     dispatch({ type: "START_IS_VIEW_MODE_ACTION" });
