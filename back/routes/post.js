@@ -183,6 +183,20 @@ router.get("/getScrollList", async (req, res, next) => {
   }
 });
 
+router.get("/getPostIds", async (req, res, next) => {
+  try {
+    const post = await Post.findAll({
+      attributes: [id],
+      // where: { id: req.query.id },
+    });
+
+    res.status(201).json(post);
+  } catch (err) {
+    console.error(err);
+    next(err); // status 500
+  }
+});
+
 router.get("/getOne", async (req, res, next) => {
   try {
     const post = await Post.findOne({

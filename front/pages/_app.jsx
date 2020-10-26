@@ -20,6 +20,7 @@ import "tui-editor/dist/tui-editor-contents.min.css";
 import "highlight.js/styles/atom-one-dark.css";
 import "../style/temp.scss";
 import "../style/card.scss";
+import "../style/main.scss";
 // import "tui-chart/dist/tui-chart.css";
 // import "highlight.js/styles/monokai-sublime.css";
 
@@ -52,11 +53,6 @@ const MyApp = (props) => {
           name='viewport'
           content='minimum-scale=1, initial-scale=1, width=device-width'
         />
-        {/* <meta name='description' content={"웹 개발 블로그입니다."} />
-        <meta property='og:title' content={"DEV LIFE"} />
-        <meta property='og:description' content={"웹 개발 블로그입니다."} />
-        <meta property='og:image' content={"https://i.imgur.com/OCGRjWh.png"} />
-        <meta property='og:url' content={"https://dev-life.kr"} /> */}
       </Head>
       <ThemeProvider theme={theme}>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}

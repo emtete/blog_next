@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { END } from "redux-saga";
 import { useRouter } from "next/router";
 import Head from "next/head";
-// import RemoveMarkdown from "remove-markdown";
+import RemoveMarkdown from "remove-markdown";
 
 import { makeStyles } from "@material-ui/core/styles";
 import { CardMedia } from "@material-ui/core";
@@ -91,9 +91,15 @@ const Card = (props) => {
         <title>DEV LIFE</title>
         {post && (
           <>
-            <meta name='description' content={post.content || ""} />
+            <meta
+              name='description'
+              content={RemoveMarkdown(post.content) || ""}
+            />
             <meta property='og:title' content={post.title || ""} />
-            <meta property='og:description' content={post.content || ""} />
+            <meta
+              property='og:description'
+              content={RemoveMarkdown(post.content) || ""}
+            />
             <meta
               property='og:image'
               content={post.imagePath || "https://i.imgur.com/OCGRjWh.png"}

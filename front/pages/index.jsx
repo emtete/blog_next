@@ -19,6 +19,7 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: "50%",
   },
   content1: {
+    width: "100%",
     paddingTop: "80px",
     flexGrow: 1,
     padding: theme.spacing(3),
@@ -52,6 +53,7 @@ const Home = (props) => {
   const classes = useStyles();
   const router = useRouter();
   const query = router.query;
+
   const me = useSelector((state) => state.user.me);
   const isDrawer = useSelector((state) => state.post.isDrawer);
   const loadMyInfoDone = useSelector((state) => state.user.loadMyInfoDone);
@@ -144,76 +146,23 @@ const Home = (props) => {
         className={clsx(classes.content1, {
           [classes.contentShift]: isDrawer,
         })}
-        style={{ width: "100%" }}
       >
         <div>
           {postList &&
             postList.map((post) => (
-              <div
-                key={post.id + post.title}
-                style={{ width: "820px", margin: "0 auto" }}
-              >
-                <div
-                  style={{
-                    padding: "35px 0",
-                    borderBottom: "1px solid #ebebeb",
-                  }}
-                >
-                  <Link
-                    href={`/post/${post.id}`}
-                    style={{
-                      display: "block",
-                      overflow: "hidden",
-                      textDecoration: "none",
-                    }}
-                  >
+              <div key={post.id + post.title} className='row_wrap_1'>
+                <div className='row_wrap_2'>
+                  <Link href={`/post/${post.id}`}>
                     <a style={{ color: "black" }}>
-                      <strong
-                        // class='tit_post'
-                        style={{
-                          display: "block",
-                          fontWeight: "normal",
-                          fontSize: "28px",
-                          textOverflow: "ellipsis",
-                          overflow: "hidden",
-                          whiteSpace: "nowrap",
-                        }}
-                      >
-                        {post.title}
-                      </strong>
-                      <p
-                        // class='txt_post'
-                        style={{
-                          display: "-webkit-box",
-                          display: "-ms-flexbox",
-                          display: "box",
-                          overflow: "hidden",
-                          maxHeight: "80px",
-                          marginTop: "1px",
-                          fontSize: "16px",
-                          lineHeight: "28px",
-                          color: "#666",
-                          verticalAlign: "top",
-                          wordBreak: "break-all",
-                          WebkitBoxOrient: "vertical",
-                          WebkitLineClamp: 3,
-                        }}
-                      >
+                      <strong className='row_title'>{post.title}</strong>
+                      <p className='row_content'>
                         {RemoveMarkdown(post.content)}
                       </p>
                     </a>
                   </Link>
-                  <div
-                    // class='detail_info'
-                    style={{
-                      marginTop: "16px",
-                      fontSize: "12px",
-                      color: "#aaa",
-                    }}
-                  >
+                  <div className='row_info'>
                     <a
                       href='/'
-                      // class='link_cate'
                       style={{
                         fontSize: "12px",
                         textDecoration: "none",
@@ -223,16 +172,7 @@ const Home = (props) => {
                     >
                       {post.categoryName}
                     </a>
-                    <span
-                      // class='txt_bar'
-                      style={{
-                        display: "inline-block",
-                        width: "1px",
-                        height: "9px",
-                        margin: "0 5px",
-                        backgroundColor: "#ebebeb",
-                      }}
-                    ></span>
+                    <span className='row_bar'></span>
                     {changeDateFormat(post.createdAt)}
                   </div>
                 </div>
