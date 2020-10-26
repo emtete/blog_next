@@ -1,5 +1,5 @@
 const fs = require("fs");
-const fetch = require("node-fetch");
+// const fetch = require("node-fetch");
 const prettier = require("prettier");
 const axios = require("axios");
 
