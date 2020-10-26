@@ -186,7 +186,7 @@ router.get("/getScrollList", async (req, res, next) => {
 router.get("/getPostIds", async (req, res, next) => {
   try {
     const post = await Post.findAll({
-      attributes: [id],
+      attributes: ["id"],
       // where: { id: req.query.id },
     });
 
