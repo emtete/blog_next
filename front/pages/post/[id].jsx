@@ -31,6 +31,7 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: "50%",
   },
   content1: {
+    width: "100%",
     paddingTop: "80px",
     flexGrow: 1,
     padding: theme.spacing(3),
