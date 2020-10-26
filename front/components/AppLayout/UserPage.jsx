@@ -267,7 +267,7 @@ const UserPage = ({ children }) => {
                               button
                               className={classes.nested}
                               style={{ color: "#dbdfe2" }}
-                              onClick={() => onClickItem(ee)}
+                              onClick={() => onClickItem(ee, true)}
                             >
                               <ListItemText
                                 primary={ee.title}
