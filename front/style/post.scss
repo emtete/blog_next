@@ -1,0 +1,16 @@
+.post_page { width: 800px ;display: flex; justify-Content: center }
+.post_header { padding: 30px 30px 10px; }
+.post_date { padding-Top: 30px; display: flex; justify-Content: space-between; font-Size: 1rem}
+.post_content { padding: 30px }
+
+@media screen and (max-width:1100px) {
+  .post_page { width: 100%; }
+  .post_header { padding: 30px 30px 10px; }
+  .post_content { padding: 15px }
+}
+
+@media screen and (max-width:860px) {
+  // .post_page { width: 100%; }
+  .post_header { padding: 30px 0px 10px 0px; }
+  .post_content { padding: 0px }
+}

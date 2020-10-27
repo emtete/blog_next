@@ -21,6 +21,7 @@ import "highlight.js/styles/atom-one-dark.css";
 import "../style/temp.scss";
 import "../style/card.scss";
 import "../style/main.scss";
+import "../style/post.scss";
 // import "tui-chart/dist/tui-chart.css";
 // import "highlight.js/styles/monokai-sublime.css";
 

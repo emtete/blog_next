@@ -34,12 +34,18 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     paddingTop: "80px",
     flexGrow: 1,
-    padding: theme.spacing(3),
+    padding: theme.spacing(2),
     // marginLeft: drawerWidth,
+    // [theme.breakpoints.down("600")]: {
+    //   marginLeft: 5,
+    // },
     [theme.breakpoints.down("xs")]: {
       marginLeft: 0,
-      // width: drawerWidth,
-      // flexShrink: 0,
+      padding: "80px 8px 16px 8px",
+    },
+    [theme.breakpoints.up("1100")]: {
+      display: "flex",
+      justifyContent: "center",
     },
     // transition: theme.transitions.create("margin", {
     //   easing: theme.transitions.easing.sharp,
@@ -136,43 +142,16 @@ const Card = (props) => {
         )}
       </Head>
 
-      <main
-        className={
-          // clsx(
-          classes.content1
-          //     , {
-          //   [classes.contentShift]: isDrawer,
-          // })
-        }
-        // style={{ width: "100%" }}
-      >
-        <div
-          style={{ width: "100%", display: "flex", justifyContent: "center" }}
-        >
+      <main className={classes.content1}>
+        <div className='post_page'>
           <form className='page_card_layer'>
-            <div style={{ padding: "30px 30px 10px" }}>
+            <div className='post_header'>
               <div>
-                <h1
-                  style={{
-                    display: "inline",
-                  }}
-                >
-                  {post && post.title}
-                </h1>
+                <h1>{post && post.title}</h1>
               </div>
 
-              <div
-                style={{
-                  paddingTop: "30px",
-                  display: "flex",
-                  justifyContent: "space-between",
-                }}
-              >
-                <span
-                  style={{
-                    fontSize: "1rem",
-                  }}
-                >
+              <div className='post_date'>
+                <span>
                   {post ? `작성일 : ${changeDateFormat(post.createdAt)}` : ""}
                 </span>
               </div>
@@ -185,7 +164,7 @@ const Card = (props) => {
               />
             )}
             {/* "https://i.imgur.com/qHh3uir.png" */}
-            <div style={{ padding: "30px" }}>
+            <div className='post_content'>
               {post && post.content && (
                 <TuiEditor
                   isEditorMode={false}
