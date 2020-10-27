@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon app",
-    "start": "NODE_ENV=production pm2 start app.js --output <./log/output.log> --error <./log/err.log>"
+    "start": "NODE_ENV=production pm2 start app.js --output <./log/output.log>"
   },
   "author": "victor_77",
   "license": "ISC",
