@@ -3,6 +3,7 @@ const path = require("path");
 const cors = require("cors");
 const session = require("express-session");
 // const session = require("cookie-session");
+const MemoryStore = require("memorystore")(session);
 const cookieParser = require("cookie-parser");
 const passport = require("passport");
 const dotenv = require("dotenv");
@@ -68,6 +69,10 @@ const sessionObj = {
   saveUninitialized: false,
   resave: false,
   secret: process.env.COOKIE_SECRET,
+  store: new MemoryStore({
+    // checkPeriod: 86400000, // prune expired entries every 24h
+    checkPeriod: 1000 * 60 * 30,
+  }),
 };
 
 if (process.env.NODE_ENV === "production") {
