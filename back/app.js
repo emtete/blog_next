@@ -2,7 +2,6 @@ const express = require("express");
 const path = require("path");
 const cors = require("cors");
 const session = require("express-session");
-// const session = require("cookie-session");
 const MemoryStore = require("memorystore")(session);
 const cookieParser = require("cookie-parser");
 const passport = require("passport");

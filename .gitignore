@@ -6,9 +6,11 @@
 /back/.env
 /back/uploads
 /back/.DS_Store
+/back/seeders
 
 /next_blog.pem
 .DS_Store
 
 /next_blog_dump.sql
+/next_blog_dump_lasted.sql
 /backup.sql
