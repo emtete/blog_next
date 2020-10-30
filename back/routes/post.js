@@ -28,7 +28,7 @@ router.post("/write", async (req, res, next) => {
   }
 });
 
-router.post("/update", async (req, res, next) => {
+router.post("/update", isLoggedIn, async (req, res, next) => {
   const data = req.body.data;
   try {
     await Post.update(
@@ -49,7 +49,7 @@ router.post("/update", async (req, res, next) => {
   }
 });
 
-router.delete("/:postId", async (req, res, next) => {
+router.delete("/:postId", isLoggedIn, async (req, res, next) => {
   try {
     await Post.destroy({
       where: { id: req.params.postId },

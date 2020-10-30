@@ -1,6 +1,7 @@
 const express = require("express");
 
 const { Category } = require("../models");
+const { isLoggedIn, isNotLoggedIn } = require("./middlewares");
 
 const router = express.Router();
 
@@ -16,7 +17,7 @@ const getObj = (node, userId) => {
   };
 };
 
-router.post("/apply", async (req, res, next) => {
+router.post("/apply", isLoggedIn, async (req, res, next) => {
   const appended = req.body.data.appended;
   const updated = req.body.data.updated;
   const deleted = req.body.data.deleted;
