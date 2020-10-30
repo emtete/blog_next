@@ -66,28 +66,21 @@ const Post = () => {
   useEffect(() => {
     axios
       .get(
-        `${backUrl}post/getList?CategoryId=${query.id}&userId=${
+        `${backUrl}post/getListCategory?CategoryId=${query.id}&userId=${
           me ? me.id : 1
         }&includeContent=${true}`,
         { withCredentials: true }
       )
       .then((result) => {
-        setPostList(result.data);
-        result.data[0] && setCategoryName(result.data[0].categoryName);
+        setPostList(result.data[0]);
+        setCategoryName(result.data[1]);
+        // result.data[0] && setCategoryName(result.data[0].categoryName);
       })
       .catch((err) => {
         alert(err);
       });
     setRerender(false);
   }, [query, me, rerender]);
-
-  // useEffect(() => {
-  //   setIsEditMode(null);
-  //   if (window.innerWidth < 600) {
-  //     const data = { isDrawer: false };
-  //     dispatch({ type: "SET_TOGGLE_IS_DRAWER_ACTION", data });
-  //   }
-  // }, [query.id]);
 
   const onClickWrite = useCallback(() => {
     if (isEditMode === null) {
@@ -106,16 +99,7 @@ const Post = () => {
 
   return (
     <>
-      <main
-        className={
-          // clsx(
-          classes.content1
-          //   , {
-          //   [classes.contentShift]: isDrawer,
-          // })
-        }
-        // style={{ width: "100%" }}
-      >
+      <main className={classes.content1}>
         <div id='mArticle'>
           <div className='blog_category'>
             <h3 className='tit_cont'>

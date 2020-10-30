@@ -109,6 +109,34 @@ router.post("/setNotice", async (req, res, next) => {
   }
 });
 
+router.get("/getListCategory", async (req, res, next) => {
+  try {
+    const query = req.query;
+    const where = {};
+    const searchCondition = {
+      where,
+      // order: [["priority", "ASC"]],
+    };
+
+    if (query && query.CategoryId !== undefined) {
+      where["CategoryId"] = query.CategoryId;
+    }
+
+    if (query && query.userId !== undefined) {
+      where["UserId"] = query.userId;
+    }
+    const post = await Post.findAll(searchCondition);
+    const category = await Category.findAll({
+      attributes: ["title"],
+      where: { id: query.CategoryId },
+    });
+    res.status(201).json([post, category[0].title]);
+  } catch (err) {
+    console.error(err);
+    next(err); // status 500
+  }
+});
+
 router.get("/getList", async (req, res, next) => {
   try {
     const query = req.query;
