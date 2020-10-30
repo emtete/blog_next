@@ -102,6 +102,10 @@ const PostDetail = ({ post, CategoryId, categoryName, setRerender }) => {
         });
     } // 수정
     else {
+      if (post.id != me.id) {
+        alert("작성자만 글을 수정할 수 있습니다.");
+        return;
+      }
       const author = "victor_77";
       const data = {
         id: post.id,

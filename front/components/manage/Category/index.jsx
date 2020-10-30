@@ -171,6 +171,10 @@ const Category = () => {
 
   const onClickSave = useCallback(
     (e) => {
+      if (treeData[0].UserId != me.id) {
+        alert("작성자만 카테고리를 삭제할 수 있습니다.");
+        return;
+      }
       const data = {};
 
       const appendedNode = getNode(treeData, treeHelper.indexPath, appended);
