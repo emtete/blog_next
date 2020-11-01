@@ -86,7 +86,7 @@ const Cards = () => {
         .catch((err) => {
           alert(err);
         });
-    }
+
     setRerender(false);
   }, [query.id, rerender]);
 
