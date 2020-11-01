@@ -71,7 +71,7 @@ const Cards = () => {
   const [rerender, setRerender] = useState(false);
   // console.log(query.id);
   useEffect(() => {
-    query.id &&
+    query.id != undefined &&
       axios
         .get(url, { withCredentials: true })
         .then((result) => {
