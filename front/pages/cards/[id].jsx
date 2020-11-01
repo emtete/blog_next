@@ -71,7 +71,7 @@ const Cards = () => {
   const [rerender, setRerender] = useState(false);
   // console.log(query.id);
   useEffect(() => {
-    if (query != undefined && query.id != undefined) {
+    query.id &&
       axios
         .get(
           `${backUrl}post/getList?CategoryId=${query.id}&userId=${
