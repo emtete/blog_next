@@ -64,7 +64,7 @@ const Cards = () => {
   const [items, setItems] = useState([]);
   const [categoryName, setCategoryName] = useState("");
   const [rerender, setRerender] = useState(false);
-
+  // console.log(query.id);
   useEffect(() => {
     axios
       .get(
@@ -81,7 +81,7 @@ const Cards = () => {
         alert(err);
       });
     setRerender(false);
-  }, [query, me, rerender]);
+  }, [router.query.id, me, rerender]);
 
   // useEffect(() => {
   //   if (window.innerWidth < 600) {
