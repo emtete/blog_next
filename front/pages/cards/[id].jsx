@@ -62,17 +62,17 @@ const Cards = () => {
   const isViewMode = useSelector((state) => state.post.isViewMode);
 
   const [items, setItems] = useState([]);
+  const [url, setUrl] = useState(
+    `${backUrl}post/getList?CategoryId=${query.id}&userId=${
+      me ? me.id : 1
+    }&includeContent=${true}`
+  );
   const [categoryName, setCategoryName] = useState("");
   const [rerender, setRerender] = useState(false);
   // console.log(query.id);
   useEffect(() => {
     axios
-      .get(
-        `${backUrl}post/getList?CategoryId=${query.id}&userId=${
-          me ? me.id : 1
-        }&includeContent=${true}`,
-        { withCredentials: true }
-      )
+      .get(url, { withCredentials: true })
       .then((result) => {
         setItems(result.data);
         result.data[0] && setCategoryName(result.data[0].categoryName);
@@ -81,7 +81,7 @@ const Cards = () => {
         alert(err);
       });
     setRerender(false);
-  }, [router.query.id, me, rerender]);
+  }, [url, rerender]);
 
   // useEffect(() => {
   //   if (window.innerWidth < 600) {
