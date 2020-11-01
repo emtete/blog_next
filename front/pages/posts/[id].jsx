@@ -64,23 +64,24 @@ const Post = () => {
   const [rerender, setRerender] = useState(false);
 
   useEffect(() => {
-    axios
-      .get(
-        `${backUrl}post/getListCategory?CategoryId=${query.id}&userId=${
-          me ? me.id : 1
-        }&includeContent=${true}`,
-        { withCredentials: true }
-      )
-      .then((result) => {
-        setPostList(result.data[0]);
-        setCategoryName(result.data[1]);
-        // result.data[0] && setCategoryName(result.data[0].categoryName);
-      })
-      .catch((err) => {
-        alert(err);
-      });
+    query.id &&
+      axios
+        .get(
+          `${backUrl}post/getListCategory?CategoryId=${query.id}&userId=${
+            me ? me.id : 1
+          }&includeContent=${true}`,
+          { withCredentials: true }
+        )
+        .then((result) => {
+          setPostList(result.data[0]);
+          setCategoryName(result.data[1]);
+          // result.data[0] && setCategoryName(result.data[0].categoryName);
+        })
+        .catch((err) => {
+          alert(err);
+        });
     setRerender(false);
-  }, [query, me, rerender]);
+  }, [query.id, me, rerender]);
 
   const onClickWrite = useCallback(() => {
     if (isEditMode === null) {

@@ -71,7 +71,6 @@ const Cards = () => {
   const [rerender, setRerender] = useState(false);
   // console.log(query.id);
   useEffect(() => {
-    console.log(url);
     if (query != undefined && query.id != undefined) {
       axios
         .get(
