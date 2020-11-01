@@ -72,7 +72,7 @@ const Cards = () => {
   // console.log(query.id);
   useEffect(() => {
     console.log(url);
-    if (query.id != undefined) {
+    if (query != undefined && query.id != undefined) {
       axios
         .get(url, { withCredentials: true })
         .then((result) => {
