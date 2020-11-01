@@ -74,7 +74,12 @@ const Cards = () => {
     console.log(url);
     if (query != undefined && query.id != undefined) {
       axios
-        .get(url, { withCredentials: true })
+        .get(
+          `${backUrl}post/getList?CategoryId=${query.id}&userId=${
+            me ? me.id : 1
+          }&includeContent=${true}`,
+          { withCredentials: true }
+        )
         .then((result) => {
           setItems(result.data);
           result.data[0] && setCategoryName(result.data[0].categoryName);
