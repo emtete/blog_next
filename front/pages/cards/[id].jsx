@@ -71,17 +71,18 @@ const Cards = () => {
   const [rerender, setRerender] = useState(false);
   // console.log(query.id);
   useEffect(() => {
-    axios
-      .get(url, { withCredentials: true })
-      .then((result) => {
-        setItems(result.data);
-        result.data[0] && setCategoryName(result.data[0].categoryName);
-      })
-      .catch((err) => {
-        alert(err);
-      });
+    query.id &&
+      axios
+        .get(url, { withCredentials: true })
+        .then((result) => {
+          setItems(result.data);
+          result.data[0] && setCategoryName(result.data[0].categoryName);
+        })
+        .catch((err) => {
+          alert(err);
+        });
     setRerender(false);
-  }, [url, rerender]);
+  }, [query.id, rerender]);
 
   // useEffect(() => {
   //   if (window.innerWidth < 600) {
