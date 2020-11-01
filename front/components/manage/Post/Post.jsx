@@ -25,7 +25,7 @@ const Post = ({ post, handleCheckbox, checkboxGroup, setRerender }) => {
   const me = useSelector((state) => state.user.me);
 
   const onClickDelete = () => {
-    if (post.id != me.id) {
+    if (post.UserId != me.id) {
       alert("작성자만 글을 삭제할 수 있습니다.");
       return;
     }
