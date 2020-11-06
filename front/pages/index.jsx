@@ -129,8 +129,8 @@ const Home = (props) => {
     console.log("isFirst : ", isFirst);
     if (loadMyInfoDone && isFirst) {
       getFirstList();
+      setIsFirst(false);
     }
-    setIsFirst(false);
   }, [me?.id, loadMyInfoDone]); // isChanged
 
   useEffect(() => {
