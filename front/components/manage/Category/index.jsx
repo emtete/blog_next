@@ -237,7 +237,7 @@ const Category = () => {
                   <CategoryAll />
 
                   {me &&
-                    getListDone &&
+                    !getListLoading &&
                     treeData.map((data) => (
                       <CategoryInclude key={data.title + data.id} data={data} />
                     ))}
