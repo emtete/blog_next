@@ -4,7 +4,7 @@ import wrapper from "../store/configureStore";
 import axios from "axios";
 import { END } from "redux-saga";
 import useSWR from "swr";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
@@ -57,6 +57,7 @@ const fetcher = (url) =>
 const Home = (props) => {
   const classes = useStyles();
   const router = useRouter();
+  const dispatch = useDispatch();
   const query = router.query;
 
   const me = useSelector((state) => state.user.me);
@@ -127,6 +128,7 @@ const Home = (props) => {
   useEffect(() => {
     // console.log(postList);
     if (loadMyInfoDone && isFirst) {
+    // if (isFirst) {
       getFirstList();
     }
     setIsFirst(false);
@@ -189,30 +191,30 @@ const Home = (props) => {
   );
 };
 
-export const getServerSideProps = wrapper.getServerSideProps(
-  async (context) => {
-    const cookie = context.req ? context.req.headers.cookie : "";
-    axios.defaults.headers.Cookie = "";
+// export const getServerSideProps = wrapper.getServerSideProps(
+//   async (context) => {
+//     const cookie = context.req ? context.req.headers.cookie : "";
+//     axios.defaults.headers.Cookie = "";
 
-    if (context.req && cookie) {
-      axios.defaults.headers.Cookie = cookie;
-    }
+//     if (context.req && cookie) {
+//       axios.defaults.headers.Cookie = cookie;
+//     }
 
-    const cookieArr = cookie && cookie.split("; ");
-    let cookieObj = {};
-    for (let i in cookieArr) {
-      cookieObj[cookieArr[i].split("=")[0]] = cookieArr[i].split("=")[1];
-    }
+//     const cookieArr = cookie && cookie.split("; ");
+//     let cookieObj = {};
+//     for (let i in cookieArr) {
+//       cookieObj[cookieArr[i].split("=")[0]] = cookieArr[i].split("=")[1];
+//     }
 
-    const userId = cookieObj.id || 1;
-    const data = await fetcher(`${backUrl}post/getScrollList?userId=${userId}`);
+//     const userId = cookieObj.id || 1;
+//     const data = await fetcher(`${backUrl}post/getScrollList?userId=${userId}`);
 
-    context.store.dispatch({ type: "LOAD_MY_INFO_REQUEST" });
-    context.store.dispatch(END);
-    await context.store.sagaTask.toPromise();
+//     context.store.dispatch({ type: "LOAD_MY_INFO_REQUEST" });
+//     context.store.dispatch(END);
+//     await context.store.sagaTask.toPromise();
 
-    return { props: { data } };
-  }
+//     return { props: { data } };
+//   }
 );
 
 export default Home;
