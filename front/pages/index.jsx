@@ -128,7 +128,7 @@ const Home = (props) => {
   useEffect(() => {
     // console.log(postList);
     if (loadMyInfoDone && isFirst) {
-    // if (isFirst) {
+      // if (isFirst) {
       getFirstList();
     }
     setIsFirst(false);
@@ -215,6 +215,6 @@ const Home = (props) => {
 
 //     return { props: { data } };
 //   }
-);
+// );
 
 export default Home;
