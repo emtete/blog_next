@@ -171,7 +171,7 @@ const Category = () => {
 
   const onClickSave = useCallback(
     (e) => {
-      if (treeData[0] != undefined && treeData[0].UserId != me.id) {
+      if (Array.isArray(treeData) && treeData[0].UserId != me.id) {
         alert("작성자만 카테고리를 수정할 수 있습니다.");
         return;
       }
