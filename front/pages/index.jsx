@@ -65,7 +65,9 @@ const Home = (props) => {
   const loadMyInfoError = useSelector((state) => state.user.loadMyInfoError);
 
   const [postList, setPostList] = useState(props.data || null);
-  const [hasMorePosts, setHasMorePosts] = useState(props.data.length === 10); // props.data.length === 10 ||
+  const [hasMorePosts, setHasMorePosts] = useState(
+    props.data && props.data.length === 10
+  ); // props.data.length === 10 ||
   const [isLoading, setIsLoading] = useState(false);
   const [isFirst, setIsFirst] = useState(true);
   const [numberOfRequest, setNumberOfRequest] = useState(postList ? 1 : 0);
