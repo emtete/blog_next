@@ -236,9 +236,10 @@ const Category = () => {
                 <div className='list_order'>
                   <CategoryAll />
 
-                  {treeData.map((data) => (
-                    <CategoryInclude key={data.title + data.id} data={data} />
-                  ))}
+                  {me &&
+                    treeData.map((data) => (
+                      <CategoryInclude key={data.title + data.id} data={data} />
+                    ))}
                 </div>
 
                 <CategoryAddBtn />
