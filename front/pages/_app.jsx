@@ -8,8 +8,8 @@ import { ThemeProvider } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import theme from "../src/theme";
 
-import { useSelector, useDispatch, useStore } from "react-redux";
-import { PersistGate } from "redux-persist/integration/react";
+import { useSelector, useDispatch } from "react-redux";
+// import { PersistGate } from "redux-persist/integration/react";
 
 import UserPage from "../components/AppLayout/UserPage";
 import ManagerPage from "../components/AppLayout/ManagerPage";
@@ -32,7 +32,7 @@ const MyApp = (props) => {
   const { Component, pageProps } = props;
   const router = useRouter();
   const dispatch = useDispatch();
-  const store = useStore((state) => state);
+  // const store = useStore((state) => state);
   const [isManage, setIsManage] = useState(false);
 
   const isAdminMode = useSelector((state) => state.user.isAdminMode);
@@ -90,17 +90,17 @@ const MyApp = (props) => {
         <CssBaseline />
         {/* <Component {...pageProps} /> */}
         {isManage ? (
-          <PersistGate persistor={store.__persistor}>
-            <ManagerPage>
-              <Component {...pageProps} />
-            </ManagerPage>
-          </PersistGate>
+          // <PersistGate persistor={store.__persistor}>
+          <ManagerPage>
+            <Component {...pageProps} />
+          </ManagerPage>
         ) : (
-          <PersistGate persistor={store.__persistor}>
-            <UserPage>
-              <Component {...pageProps} />
-            </UserPage>
-          </PersistGate>
+          // </PersistGate>
+          // <PersistGate persistor={store.__persistor}>
+          <UserPage>
+            <Component {...pageProps} />
+          </UserPage>
+          // </PersistGate>
         )}
       </ThemeProvider>
     </React.Fragment>
