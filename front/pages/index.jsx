@@ -125,7 +125,7 @@ const Home = (props) => {
 
   // 로그인 정보가 변경되는 경우
   useEffect(() => {
-    // console.log(postList);
+    console.log("loadMyInfoDone : ", loadMyInfoDone);
     if (loadMyInfoDone && isFirst) {
       getFirstList();
     }
