@@ -125,13 +125,18 @@ const Home = (props) => {
 
   // 로그인 정보가 변경되는 경우
   useEffect(() => {
-    console.log("loadMyInfoDone : ", loadMyInfoDone);
-    console.log("isFirst : ", isFirst);
     if (loadMyInfoDone && isFirst) {
       getFirstList();
       setIsFirst(false);
     }
   }, [me?.id, loadMyInfoDone]); // isChanged
+
+  useEffect(() => {
+    if (loadMyInfoDone) {
+      getFirstList();
+      setIsFirst(false);
+    }
+  }, [me?.id]); // isChanged
 
   useEffect(() => {
     window.addEventListener("scroll", onScroll);
