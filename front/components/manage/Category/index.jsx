@@ -134,7 +134,8 @@ const Category = () => {
 
   // 카테고리 목록 호출
   useEffect(() => {
-    if (me) {
+    alert(me.id);
+    if (me.id) {
       const data = { userId: me.id };
       dispatch({ type: "GET_CATEGORY_LIST_REQUEST", data });
     }
