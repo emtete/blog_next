@@ -131,7 +131,7 @@ const Home = (props) => {
       getFirstList();
     }
     setIsFirst(false);
-  }, [me?.id]); // isChanged
+  }, [me?.id, loadMyInfoDone]); // isChanged
 
   useEffect(() => {
     window.addEventListener("scroll", onScroll);

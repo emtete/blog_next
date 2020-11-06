@@ -58,7 +58,6 @@ const Common = () => {
   }, [router.pathname]);
 
   useEffect(() => {
-    console.log("LOAD_MY_INFO_REQUEST");
     dispatch({ type: "LOAD_MY_INFO_REQUEST" });
   }, []);
 
