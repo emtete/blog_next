@@ -68,6 +68,7 @@ const Common = () => {
 
   useEffect(() => {
     logOutDone && router.push("/");
+    dispatch({ type: "LOG_OUT_RESET" });
   }, [logOutDone]);
 
   useEffect(() => {
@@ -87,8 +88,10 @@ const Common = () => {
   };
 
   const handleAdminMode = () => {
+    dispatch({ type: "LOAD_MY_INFO_REQUEST" });
     if (isManage) {
       // dispatch({ type: "END_ADMIN_MODE_ACTION" });
+      alert(33);
       router.push("/");
     } else {
       // dispatch({ type: "START_ADMIN_MODE_ACTION" });

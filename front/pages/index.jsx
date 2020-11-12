@@ -125,11 +125,13 @@ const Home = (props) => {
 
   // 로그인 정보가 변경되는 경우
   useEffect(() => {
-    if (loadMyInfoDone && isFirst) {
+    // if (loadMyInfoDone && isFirst) {
+    if (isFirst) {
       getFirstList();
       setIsFirst(false);
     }
-  }, [me?.id, loadMyInfoDone]); // isChanged
+    // }, [me?.id, loadMyInfoDone]); // isChanged
+  }, [isFirst]); // isChanged
 
   useEffect(() => {
     if (loadMyInfoDone) {
