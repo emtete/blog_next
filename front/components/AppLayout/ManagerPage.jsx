@@ -23,7 +23,6 @@ const ManagerPage = ({ children }) => {
   // 새로고침 혹은 주소로 접근시 처리.
   useEffect(() => {
     if (loadMyInfoDone && !me) {
-      alert(11);
       router.push("/");
     }
   }, [loadMyInfoDone]);

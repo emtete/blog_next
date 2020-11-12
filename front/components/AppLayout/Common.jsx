@@ -91,7 +91,6 @@ const Common = () => {
     dispatch({ type: "LOAD_MY_INFO_REQUEST" });
     if (isManage) {
       // dispatch({ type: "END_ADMIN_MODE_ACTION" });
-      alert(33);
       router.push("/");
     } else {
       // dispatch({ type: "START_ADMIN_MODE_ACTION" });
